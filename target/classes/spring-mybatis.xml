@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <context:component-scan base-package="com.reyoung" />
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties"/>
+    </bean>
+
+    <!--配置mysql数据库信息-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"  init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+    <!--配置sqlserver数据库信息-->
+    <bean id="sqlServerDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+
+        <property name="driverClassName" value="${jdbc.sqlserver.driver}" />
+        <property name="url" value="${jdbc.sqlserver.url}" />
+        <property name="username" value="${jdbc.sqlserver.username}" />
+        <property name="password" value="${jdbc.sqlserver.password}" />
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
+
+    </bean>
+
+    <!--配置-->
+    <bean id="sqlServerDataSource1" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+
+        <property name="driverClassName" value="${jdbc.sqlserver.driver}" />
+        <property name="url" value="${jdbc.sqlserver.url1}" />
+        <property name="username" value="${jdbc.sqlserver.username}" />
+        <property name="password" value="${jdbc.sqlserver.password}" />
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
+
+    </bean>
+
+    <bean id="multipleDataSource" class="com.reyoung.multidatasource.MultipleDataSource">
+
+        <!--指定默认数据源-->
+        <property name="defaultTargetDataSource" ref="dataSource" />
+
+        <!--配置其他的数据源-->
+        <property name="targetDataSources">
+
+            <!--配置其他的数据源名称-->
+             <map>
+
+                <entry key="dataSource" value-ref="dataSource" />
+
+                <entry key="sqlServerDataSource" value-ref="sqlServerDataSource" />
+
+                 <entry key="sqlServerDataSource1" value-ref="sqlServerDataSource1" />
+
+            </map>
+
+        </property>
+
+    </bean>
+
+    <!-- spring和MyBatis整合，通过spring来管理MyBatis的SqlSessionFactory会话工厂 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+
+        <!--  指定数据库连接池引用  适用于单数据源的情况-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+
+        <!--多数据源使用的情况-->
+        <property name="dataSource" ref="multipleDataSource" />
+
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath:com/reyoung/mapper/*.xml" />
+
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->    <!--配置mapper代理, 动态实现dao接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+
+        <property name="basePackage" value="com.reyoung.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+
+    </bean>
+
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!--<bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>-->
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="publish*" />
+            <tx:method name="save*" />
+            <tx:method name="add*" />
+            <tx:method name="update*" />
+            <tx:method name="insert*" />
+            <tx:method name="create*" />
+            <tx:method name="del*" />
+            <tx:method name="load*" />
+            <tx:method name="init*" />
+
+            <tx:method name="*" read-only="true" />
+
+        </tx:attributes>
+
+    </tx:advice>
+
+    <!--AOP配置-->
+    <aop:config>
+        
+        <aop:pointcut id="myPointcut" expression="execution(public * com.reyoung.serviceimpl.*.*(..))" />
+
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="myPointcut"  />
+
+    </aop:config>
+
+    <!--重要！！！！！此处用于拦截serverimpl层dataSource注解 用于多数据源使用  -->
+    <bean id="dataSourceAspect" class="com.reyoung.multidatasource.DataSourceAspect" />
+
+        <aop:config>
+
+            <aop:aspect ref="dataSourceAspect">
+
+                <aop:pointcut id="dataSourcePointcut"
+                              expression="execution(* com.reyoung.service.*.*(..))" />
+                <aop:before pointcut-ref="dataSourcePointcut" method="intercept" />
+
+            </aop:aspect>
+
+        </aop:config>
+
+</beans>

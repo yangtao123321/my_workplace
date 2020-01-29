@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.PositionDao">
+
+    <select id="findallposition" resultMap="positionMap">
+
+        SELECT * FROM position;
+
+    </select>
+
+    <resultMap id="positionMap" type="com.reyoung.model.Position">
+
+        <id column="posid" property="posid" />
+        <result column="posname" property="posname" />
+        <result column="approflag" property="approflag" />
+        <result column="agreeflag" property="agreeflag" />
+        <result column="backflag" property="backflag" />
+
+    </resultMap>
+
+
+
+
+</mapper>
