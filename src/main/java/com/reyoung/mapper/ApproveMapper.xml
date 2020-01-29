@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.ApproveDao">
+
+    <insert id="addapprovebyappro" parameterType="com.reyoung.model.Approve">
+
+        INSERT INTO approve(uid,flowinfoid,arrivetime,approflag) VALUES(#{user.uid},#{flowinfos.flowinfoid},#{arrivetime},#{approflag});
+
+    </insert>
+
+    <select id="findapprobyapp" parameterType="com.reyoung.model.Approve" resultType="java.lang.Integer">
+
+        SELECT COUNT(*) FROM approve WHERE uid=#{user.uid} AND flowinfoid=#{flowinfos.flowinfoid};
+
+    </select>
+
+    <select id="findapprolistbyappro" parameterType="com.reyoung.model.Approve" resultMap="approMap">
+
+        SELECT
+        a.approid,
+        a.arrivetime,
+        a.dealtime,
+        a.signature,
+        a.suggest,
+        a.approflag,
+        b.uid,
+        b.username,
+        b.`password`,
+        b.truename,
+        b.position,
+        b.department,
+        b.signaturepath,
+        b.email,
+        b.section,
+        c.flowinfoid,
+        c.flowabstract,
+        c.person,
+        c.startime,
+        c.endtime,
+        c.incident,
+        c.flag,
+        c.flows,
+        c.user,
+        d.deptid,
+        d.deptname
+        FROM
+        approve a,
+        USER b,
+        flowinfos c,
+        department d
+        WHERE
+        a.flowinfoid=c.flowinfoid
+        AND
+        b.uid=a.uid
+        AND
+        b.department=d.deptid;
+
+    </select>
+
+    <select id="findapprolistbyflowinfoid" parameterType="com.reyoung.model.Flowinfos" resultMap="approMap">
+
+        SELECT
+        a.approid,
+        a.arrivetime,
+        a.dealtime,
+        a.signature,
+        a.suggest,
+        a.approflag,
+        b.uid,
+        b.username,
+        b.`password`,
+        b.truename,
+        b.position,
+        b.department,
+        b.signaturepath,
+        b.email,
+        b.section,
+        c.flowinfoid,
+        c.flowabstract,
+        c.person,
+        c.startime,
+        c.endtime,
+        c.incident,
+        c.flag,
+        c.flows,
+        c.user,
+        d.deptid,
+        d.deptname
+        FROM
+        approve a,
+        USER b,
+        flowinfos c,
+        department d
+        WHERE
+        a.flowinfoid=c.flowinfoid
+        AND
+        b.uid=a.uid
+        AND
+        b.department=d.deptid
+        AND
+        a.flowinfoid=#{flowinfoid};
+
+    </select>
+
+    <select id="findapprovebyuidandfid" parameterType="com.reyoung.model.Approve" resultMap="approMap">
+
+        SELECT
+        a.approid,
+        a.arrivetime,
+        a.dealtime,
+        a.signature,
+        a.suggest,
+        a.approflag,
+        b.uid,
+        b.username,
+        b.`password`,
+        b.truename,
+        b.position,
+        b.department,
+        b.signaturepath,
+        b.email,
+        b.section,
+        c.flowinfoid,
+        c.flowabstract,
+        c.person,
+        c.startime,
+        c.endtime,
+        c.incident,
+        c.flag,
+        c.flows,
+        c.user,
+        d.deptid,
+        d.deptname
+        FROM
+        approve a,
+        USER b,
+        flowinfos c,
+        department d
+        WHERE
+        a.flowinfoid=c.flowinfoid
+        AND
+        b.uid=a.uid
+        AND
+        b.department=d.deptid
+        AND
+        b.uid=#{user.uid}
+        AND
+        c.flowinfoid=#{flowinfos.flowinfoid};
+
+
+    </select>
+
+    <resultMap id="approMap" type="com.reyoung.model.Approve">
+
+        <id column="approid" property="approid" />
+        <result column="uid" property="user.uid" />
+        <result column="flowinfoid" property="flowinfos.flowinfoid" />
+        <result column="arrivetime" property="arrivetime" />
+        <result column="dealtime" property="dealtime" />
+        <result column="signature" property="signature" />
+        <result column="suggest" property="suggest" />
+        <result column="approflag" property="approflag" />
+
+        <association property="user" javaType="com.reyoung.model.User">
+
+            <id column="uid" property="uid" />
+            <result column="username" property="username" />
+            <result column="password" property="password" />
+            <result column="truename" property="truename" />
+            <result column="position" property="position.posid" />
+            <result column="department" property="department.deptid" />
+            <result column="signaturepath" property="signaturepath" />
+            <result column="email" property="email" />
+            <result column="section" property="section.sectionid" />
+
+            <association property="department" javaType="com.reyoung.model.Department">
+
+                <id column="deptid" property="deptid" />
+                <result column="deptname" property="deptname" />
+
+            </association>
+
+        </association>
+
+        <association property="flowinfos" javaType="com.reyoung.model.Flowinfos">
+
+            <id column="flowinfoid" property="flowinfoid" />
+            <result column="flowabstract" property="flowabstract" />
+            <result column="person" property="person" />
+            <result column="startime" property="startime" />
+            <result column="endtime" property="endtime" />
+            <result column="incident" property="incident" />
+            <result column="flag" property="flag" />
+            <result column="flows" property="flows.flowid" />
+            <result column="user" property="user.uid" />
+
+        </association>
+
+    </resultMap>
+
+</mapper>

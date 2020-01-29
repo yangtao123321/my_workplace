@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.UserDao">
+
+    <insert id="addaccount" parameterType="com.reyoung.model.User">
+
+        INSERT INTO user(uid,username,password,truename,position,department,email,section) VALUES(NULL,#{username},#{password},#{truename},#{position.posid},#{department.deptid},#{email},#{section.sectionid});
+
+    </insert>
+
+    <select id="findnamexit" parameterType="com.reyoung.model.User" resultType="java.lang.Integer">
+
+        SELECT COUNT(*) FROM user WHERE username=#{username};
+
+    </select>
+
+
+
+    <!--SELECT * FROM user WHERE username=#{username} AND password=#{password};-->
+    <select id="checkdologin" parameterType="com.reyoung.model.User" resultMap="userMap">
+
+        SELECT
+        `user`.uid,
+        `user`.username,
+        `user`.`password`,
+        `user`.truename,
+        `user`.signaturepath,
+        `user`.email,
+        department.deptid,
+        department.deptname,
+        position.posid,
+        position.posname,
+        position.approflag,
+        position.agreeflag,
+        position.backflag,
+        section.sectionid,
+        section.sectionname
+        FROM
+        `user`,
+        department,
+        section,
+        position
+        WHERE
+        position.posid = `user`.position
+        AND `user`.department = department.deptid
+        AND section.sectionid = `user`.section
+        AND `user`.username=#{username}
+        AND `user`.password=#{password};
+
+    </select>
+
+    <select id="finduserbyname" parameterType="com.reyoung.model.User" resultType="com.reyoung.model.User">
+
+        SELECT * FROM user WHERE username=#{username};
+
+    </select>
+
+    <update id="updatepas" parameterType="com.reyoung.model.User">
+
+        UPDATE user SET password=#{password} WHERE username=#{username};
+
+    </update>
+
+    <resultMap id="userMap" type="com.reyoung.model.User">
+
+        <id column="uid" property="uid" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="truename" property="truename" />
+        <result column="position" property="position.posid" />
+        <result column="department" property="department.deptid" />
+        <result column="signaturepath" property="signaturepath" />
+        <result column="email" property="email" />
+
+
+        <association property="department" javaType="com.reyoung.model.Department">
+
+            <id column="deptid" property="deptid" />
+            <result column="deptname" property="deptname" />
+
+        </association>
+
+        <association property="position" javaType="com.reyoung.model.Position">
+
+            <id column="posid" property="posid"  />
+            <result column="posname" property="posname" />
+            <result column="approflag" property="approflag" />
+            <result column="agreeflag" property="agreeflag" />
+            <result column="backflag" property="backflag" />
+
+        </association>
+
+        <association property="section" javaType="com.reyoung.model.Section">
+
+            <id column="sectionid" property="sectionid" />
+            <result column="sectionname" property="sectionname" />
+
+
+
+        </association>
+
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.DepartmentDao">
+
+    <select id="findalldepartment" resultMap="departMap">
+
+        SELECT * FROM department;
+
+    </select>
+
+    <select id="finddepartmentbydid" parameterType="com.reyoung.model.User" resultMap="departMap">
+
+        SELECT * FROM department WHERE deptid=#{department.deptid};
+
+    </select>
+
+    <resultMap id="departMap" type="com.reyoung.model.Department">
+
+        <id column="deptid" property="deptid" />
+        <result column="deptname" property="deptname" />
+
+    </resultMap>
+
+</mapper>

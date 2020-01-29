@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.FlowinfosDao">
+
+    <insert id="addflowinfo" parameterType="com.reyoung.model.Flowinfos">
+
+        INSERT INTO flowinfos(flows,flowabstract,person,startime,user,incident,flag) VALUES(#{flows.flowid},#{flowabstract},#{person},#{startime},#{user.uid},#{incident},#{flag});
+
+    </insert>
+
+    <select id="findallflowinfos" resultMap="flowinfoMap">
+
+        SELECT
+        a.flowinfoid,
+        a.flowabstract,
+        a.person,
+        a.startime,
+        a.endtime,
+        a.incident,
+        a.flag,
+        b.flowid,
+        b.flowname,
+        c.uid,
+        c.username,
+        c.`password`,
+        c.truename,
+        c.position,
+        c.department,
+        c.signaturepath,
+        c.email,
+        c.section,
+        d.deptid,
+		d.deptname
+        FROM
+        flowinfos a,
+        flows b,
+        `user` c,
+        department d
+        WHERE
+        a.`user` = c.uid
+        AND
+        a.flows = b.flowid
+        AND
+        d.deptid=c.department;
+
+    </select>
+
+    <select id="findflwoinfobyfid" parameterType="com.reyoung.model.Flowinfos" resultMap="flowinfoMap">
+
+        SELECT
+        a.flowinfoid,
+        a.flowabstract,
+        a.person,
+        a.startime,
+        a.endtime,
+        a.incident,
+        a.flag,
+        b.flowid,
+        b.flowname,
+        c.uid,
+        c.username,
+        c.`password`,
+        c.truename,
+        c.position,
+        c.department,
+        c.signaturepath,
+        c.email,
+        c.section,
+        d.deptid,
+		d.deptname
+        FROM
+        flowinfos a,
+        flows b,
+        `user` c,
+        department d
+        WHERE
+        a.`user` = c.uid
+        AND
+        a.flows = b.flowid
+        AND
+        d.deptid=c.department
+        AND
+        a.flowinfoid=#{flowinfoid};
+
+    </select>
+
+    <resultMap id="flowinfoMap" type="com.reyoung.model.Flowinfos">
+
+        <id column="flowinfoid" property="flowinfoid" />
+        <result column="flowabstract" property="flowabstract" />
+        <result column="person" property="person" />
+        <result column="startime" property="startime" />
+        <result column="endtime" property="endtime" />
+        <result column="incident" property="incident" />
+        <result column="flag" property="flag" />
+        <result column="flows" property="flows.flowid" />
+        <result column="user" property="user.uid" />
+
+        <association property="flows" javaType="com.reyoung.model.Flows">
+
+            <id column="flowid" property="flowid" />
+            <result column="flowname" property="flowname" />
+
+        </association>
+
+        <association property="user" javaType="com.reyoung.model.User">
+
+            <id column="uid" property="uid" />
+            <result column="username" property="username" />
+            <result column="password" property="password" />
+            <result column="truename" property="truename" />
+            <result column="position" property="position.posid" />
+            <result column="department" property="department.deptid" />
+            <result column="signaturepath" property="signaturepath" />
+            <result column="email" property="email" />
+            <result column="section" property="section.sectionid" />
+
+            <association property="department" javaType="com.reyoung.model.Department">
+
+                <id column="deptid" property="deptid" />
+                <result column="deptname" property="deptname" />
+
+            </association>
+
+        </association>
+
+    </resultMap>
+
+</mapper>
