@@ -10,6 +10,7 @@
 <html>
 
 <head>
+
     <title>滤芯计划审批页面</title>
 
     <script language="JavaScript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
@@ -29,14 +30,47 @@
 
             });
 
-
             //同意了
             $(document).on('click','.agree',function() {
 
-                alert("1");
+                var flowinfosid=$(".flowinfoid").text();
+
+                var suggest=$(".suggestval").val().trim();
+
+                //发送ajax请求后台服务器
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/agreeflowinfobyuser.do",
+                    type:"post",
+                    beforeSend: function (){
+
+                        $(".suggestval").after("<div class='load'><img src='${pageContext.request.contextPath}/picture/load.gif' /></div>");
+
+                    },
+                    async:true,
+                    data:{"flowinfos.flowinfoid":flowinfosid,"suggest":suggest,"approflag":"1"},
+                    dataType:"json",
+                    success:function(data) {
+
+                        $(".load").remove();
+
+                        if(data=='1') {
+
+
+
+
+
+                        }
+
+                        alert(data);
+
+                    },
+                    error:function () { //请求数据失败
+                        alert("服务器繁忙!");
+                    }
+
+                });
 
             });
-
 
         });
 
@@ -172,6 +206,15 @@
 
         }
 
+        .load{
+
+            position: relative;
+            height: 10px;
+            text-align: center;
+            margin-top: 3%;
+
+        }
+
     </style>
 
 </head>
@@ -182,7 +225,7 @@
 
 <div class="mai">
 
-    <div hidden="hidden">${flowinfos.flowinfoid}</div>
+    <div hidden="hidden" class="flowinfoid">${flowinfos.flowinfoid}</div>
 
     <div style="font-weight: bold;margin-top: 1%;margin-left: 1%">申请信息</div>
 
@@ -271,18 +314,94 @@
             <td width="10%" style="border-right: none;font-weight: bold">审批签名</td>
         </tr>
 
-        <tr>
-            <td style="border-left: none">发起步骤</td>
-            <td>305车间</td>
-            <td>同意</td>
-            <td>2019/12/13 08:09:36</td>
-            <td>同意采购了</td>
-            <td style="border-right: none"></td>
-        </tr>
+        <c:forEach items="${appro}" var="approve">
+
+            <c:choose>
+
+                <c:when test="${approve.user.position.posid==1}">
+
+                    <tr>
+
+                        <td style="border-left: none">发起步骤</td>
+                        <td>${approve.user.truename}</td>
+                        <td></td>
+                        <td>${approve.dealtime}</td>
+                        <td>${approve.suggest}</td>
+                        <td style="border-right: none"></td>
+
+                    </tr>
+
+
+                </c:when>
+
+                <c:otherwise>
+
+                    <tr>
+
+                        <c:choose>
+
+                            <c:when test="${approve.user.position.posid==2}">
+
+                                <td style="border-left: none">单位负责人审核</td>
+                                <td>${approve.user.truename}</td>
+                                <c:choose>
+
+                                    <c:when test="${approve.approflag==1}">
+
+                                        <td>同意</td>
+
+                                    </c:when>
+
+
+                                    <c:when test="${approve.approflag==2}">
+
+                                        <td>退回</td>
+
+                                    </c:when>
+
+                                </c:choose>
+                                <td>${approve.dealtime}</td>
+                                <td>${approve.suggest}</td>
+                                <td style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
+
+                            </c:when>
+
+
+                            <c:when test="${approve.user.position.posid==3}">
+
+                                <td style="border-left: none">部门经理审核</td>
+                                <td>${approve.user.truename}</td>
+                                <td>${approve.approflag}</td>
+                                <td>${approve.dealtime}</td>
+                                <td>${approve.suggest}</td>
+                                <td style="border-right: none">${approve.signature}</td>
+
+                            </c:when>
+
+
+                            <c:when test="${approve.user.position.posid==4}">
+
+                                <td style="border-left: none">总裁审核</td>
+                                <td>${approve.user.department.deptname}</td>
+                                <td>${approve.approflag}</td>
+                                <td>${approve.dealtime}</td>
+                                <td>${approve.suggest}</td>
+                                <td style="border-right: none">${approve.signature}</td>
+
+                            </c:when>
+
+
+                        </c:choose>
+
+                    </tr>
+
+                </c:otherwise>
+
+            </c:choose>
+
+        </c:forEach>
 
     </table>
-
-    ${filterpla}
 
 </div>
 

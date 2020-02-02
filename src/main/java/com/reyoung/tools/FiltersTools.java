@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.reyoung.model.FilterDetail;
 import com.reyoung.model.FilterPlan;
+import com.reyoung.model.Flowinfos;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -135,9 +136,9 @@ public class FiltersTools {
         PdfPCell cell1 = new PdfPCell(new Paragraph(str,setlvxinfont()));
 
         cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell1.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell1.setBorderWidth(0.5f);
-        cell1.setMinimumHeight(50);
+        cell1.setMinimumHeight(30);
         cell1.setColspan(row);
         cell1.setRowspan(col);
         cell1.disableBorderSide(2);
@@ -165,6 +166,23 @@ public class FiltersTools {
 
     }
 
+
+    //负责产生天成图片的单元格对象
+    public static PdfPCell createpdfcell(Image image,int row,int col) {
+
+        PdfPCell cell1 = new PdfPCell(image);
+
+        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell1.setBorderWidth(0.5f);
+        cell1.setMinimumHeight(80);
+        cell1.setColspan(row);
+        cell1.setRowspan(col);
+        cell1.disableBorderSide(1);
+
+        return cell1;
+
+    }
 
     public static void main(String[] args) throws IOException, DocumentException {
 
@@ -215,69 +233,75 @@ public class FiltersTools {
 
         f.setFilterDetails(details);
 
-        makereport(f);
+       // makereport(f,asd);
 
     }
 
+    public static void makereport(FilterPlan f,Flowinfos flowinfos) {
 
-    public static void makereport(FilterPlan f) throws DocumentException, IOException {
+        System.out.println(f);
 
-        Rectangle rectangle=new Rectangle(PageSize.A4);//设置A4纸
+        System.out.println(flowinfos);
 
-        Document d=new Document(rectangle,35,30,10,10);
+        try{
 
-        PdfWriter pdfWriter = PdfWriter.getInstance(d, new FileOutputStream("D:/luxin1.pdf"));
+            Rectangle rectangle=new Rectangle(PageSize.A4);//设置A4纸
 
-        d.open();
+            Document d=new Document(rectangle,35,30,10,10);
 
-        Paragraph elements = new Paragraph("购  买  滤  芯  计  划  表", setChineseFont());
+            PdfWriter pdfWriter = PdfWriter.getInstance(d, new FileOutputStream("D:/"+flowinfos.getFlowabstract()+".pdf"));
 
-        elements.setAlignment(Element.ALIGN_CENTER);
+            d.open();
 
-        d.add(elements);
+            Paragraph elements = new Paragraph(f.getFiltertotle(), setChineseFont());
 
-        Image img = Image.getInstance("D://zhangzong.jpg");
+            elements.setAlignment(Element.ALIGN_CENTER);
 
-        Image cui=Image.getInstance("D://cuilingling.jpg");
+            d.add(elements);
 
-        Image zhao=Image.getInstance("D://zhaowei.jpg");
+            Image img = Image.getInstance("D://zhangzong.jpg");
 
-        img.scaleToFit(65, 65);
+            Image cui=Image.getInstance("D://cuilingling.jpg");
 
-        cui.scaleToFit(50,50);
+            Image zhao=Image.getInstance("D://zhaowei.jpg");
 
-        zhao.scaleToFit(50,50);
+            img.scaleToFit(65, 65);
 
-        img.setAbsolutePosition(90,360);
-        //zhao.setAbsolutePosition(90,360);
+            cui.scaleToFit(50,50);
 
-        d.add(img);
+            zhao.scaleToFit(50,50);
 
-        //d.add(zhao);
+            //设置绝对路径
+            img.setAbsolutePosition(90,360);
+            //zhao.setAbsolutePosition(90,360);
 
-        //d.newPage();
+            //d.add(img);
 
-        //创建表格对象
-        PdfPTable datatable = new PdfPTable(8);
+            //d.add(zhao);
 
-        datatable.setSpacingBefore(20);
+            //d.newPage();
 
-        //int[] cellsWidth = { 1, 1, 1, 1, 1, 1 };
+            //创建表格对象
+            PdfPTable datatable = new PdfPTable(8);
 
-        //datatable.setWidths(cellsWidth);
-        datatable.setTotalWidth(new float[] { 50, 100, 90, 100,70,60,100,100 });
+            datatable.setSpacingBefore(20);
 
-        datatable.setWidthPercentage(100);// 表格的宽度百分比
+            //int[] cellsWidth = { 1, 1, 1, 1, 1, 1 };
 
-        //datatable.getDefaultCell().setPadding(2);// 单元格的间隔
-        datatable.getDefaultCell().setBorderWidth(0.1f);// 边框宽度
-        // 设置表格的底色
-        datatable.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-        datatable.getDefaultCell().setHorizontalAlignment(Element.BODY);
+            //datatable.setWidths(cellsWidth);
+            datatable.setTotalWidth(new float[] { 50, 100, 90, 100,70,60,100,100 });
 
-        //datatable.getDefaultCell().setMinimumHeight(30);
+            datatable.setWidthPercentage(100);// 表格的宽度百分比
 
-        //构建每个单元格
+            //datatable.getDefaultCell().setPadding(2);// 单元格的间隔
+            datatable.getDefaultCell().setBorderWidth(0.1f);// 边框宽度
+            // 设置表格的底色
+            datatable.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+            datatable.getDefaultCell().setHorizontalAlignment(Element.BODY);
+
+            //datatable.getDefaultCell().setMinimumHeight(30);
+
+            //构建每个单元格
             /*PdfPCell cell1 = new PdfPCell(new Paragraph("时间:",setbodyfont()));
 
             cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -285,66 +309,61 @@ public class FiltersTools {
             cell1.setBorderWidth(0);
             cell1.setMinimumHeight(25);*/
 
-        PdfPCell pCell = createlvxintitlecell("提报单位", 1, 1);
+            PdfPCell pCell = createlvxintitlecell("提报单位", 1, 1);
 
-        datatable.addCell(pCell);
+            datatable.addCell(pCell);
 
-        //datatable.addCell(createlvxintitlecell(f.getAppdep(), 7, 1));
+            datatable.addCell(createlvxintitlecell(f.getUser().getTruename(), 7, 1));
 
-        datatable.addCell(createlvxintitlecell("提报日期", 1, 1));
+            datatable.addCell(createlvxintitlecell("提报日期", 1, 1));
 
-        datatable.addCell(createlvxintitlecell(f.getApplytime().toString(), 7, 1));
+            datatable.addCell(createlvxintitlecell(GetYear.getformdate(f.getApplytime1()), 7, 1));
 
-        datatable.addCell(createlvxintitlecell("提报人", 1, 1));
+            datatable.addCell(createlvxintitlecell("提报人", 1, 1));
 
-        datatable.addCell(createlvxintitlecell(f.getApplyperson(), 7, 1));
+            datatable.addCell(createlvxintitlecell(f.getApplyperson(), 7, 1));
 
+            Integer s=f.getFilterDetails().size()+1;
 
-        Integer s=f.getFilterDetails().size()+1;
+            datatable.addCell(createlvxintitlecell("购买明细", 1, s));
 
+            datatable.addCell(createlvxincaizhicell("材质", 1, 1));
+            datatable.addCell(createlvxincaizhicell("型号", 1, 1));
+            datatable.addCell(createlvxincaizhicell("尺寸", 1, 1));
+            datatable.addCell(createlvxincaizhicell("接口", 1, 1));
+            datatable.addCell(createlvxincaizhicell("数量", 1, 1));
+            datatable.addCell(createlvxincaizhicell("要求", 1, 1));
+            datatable.addCell(createlvxincaizhicell("用途", 1, 1));
 
-        datatable.addCell(createlvxintitlecell("购买明细", 1, s));
+            for (FilterDetail filterDetail:f.getFilterDetails()) {
 
-        datatable.addCell(createlvxincaizhicell("材质", 1, 1));
-        datatable.addCell(createlvxincaizhicell("型号", 1, 1));
-        datatable.addCell(createlvxincaizhicell("尺寸", 1, 1));
-        datatable.addCell(createlvxincaizhicell("接口", 1, 1));
-        datatable.addCell(createlvxincaizhicell("数量", 1, 1));
-        datatable.addCell(createlvxincaizhicell("要求", 1, 1));
-        datatable.addCell(createlvxincaizhicell("用途", 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailname(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailtype(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailsize(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailinterface(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailnum(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getRek(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getUseing(), 1, 1));
 
+            }
 
-        for (FilterDetail filterDetail:f.getFilterDetails()) {
+            datatable.addCell(createlvxintitlecell("采购要求", 1, 1));
 
-            datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailname(), 1, 1));
-            datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailtype(), 1, 1));
-            datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailsize(), 1, 1));
-            datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailinterface(), 1, 1));
-            datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailnum(), 1, 1));
-            datatable.addCell(createlvxincaizhicell(filterDetail.getRek(), 1, 1));
-            datatable.addCell(createlvxincaizhicell(filterDetail.getUseing(), 1, 1));
+            datatable.addCell(createlvxintitlecell(f.getBuyrequires(), 7, 1));
 
-        }
+            datatable.addCell(createlvxintitlecell("签 字 批 准", 8, 1));
 
-        datatable.addCell(createlvxintitlecell("采购要求", 1, 1));
+            datatable.addCell(createlvxinsignaturenamecell("单位负责人:", 3, 1));
 
-        datatable.addCell(createlvxintitlecell(f.getBuyrequires(), 7, 1));
+            datatable.addCell(createlvxinsignaturenamecell("文件小组负责人:", 2, 1));
 
-        datatable.addCell(createlvxintitlecell("签字批准", 8, 1));
+            datatable.addCell(createlvxinsignaturenamecell("部门经理:", 3, 1));
 
-        datatable.addCell(createlvxinsignaturenamecell("单位负责人:", 3, 1));
+            datatable.addCell(createpdfcell(img, 3, 1));
 
-        datatable.addCell(createlvxinsignaturenamecell("文件小组负责人:", 2, 1));
+            datatable.addCell(createpdfcell(img, 2, 1));
 
-        datatable.addCell(createlvxinsignaturenamecell("部门经理:", 3, 1));
-
-        datatable.addCell(createlvxinsignaturecell("", 3, 1));
-
-        datatable.addCell(createlvxinsignaturecell("", 2, 1));
-
-        datatable.addCell(createlvxinsignaturecell("", 3, 1));
-
-
+            datatable.addCell(createpdfcell(img, 3, 1));
 
         /*PdfPCell cell = createpdfcell("2019/12/26", 3);
 
@@ -420,9 +439,16 @@ public class FiltersTools {
 
         datatable.addCell(createpdfcell(zhao,0));*/
 
-        d.add(datatable);
+            d.add(datatable);
 
-        d.close();
+            d.close();
+
+        }catch (Exception e) {
+
+
+
+        }
+
 
 
     }

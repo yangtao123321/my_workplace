@@ -5,9 +5,15 @@
 
 <mapper namespace="com.reyoung.dao.FlowinfosDao">
 
+    <update id="updateflowinfobyflowinfoid" parameterType="com.reyoung.model.Flowinfos">
+
+        UPDATE flowinfos SET flag=#{flag},achieve=#{achieve} WHERE flowinfoid=#{flowinfoid};
+
+    </update>
+
     <insert id="addflowinfo" parameterType="com.reyoung.model.Flowinfos">
 
-        INSERT INTO flowinfos(flows,flowabstract,person,startime,user,incident,flag) VALUES(#{flows.flowid},#{flowabstract},#{person},#{startime},#{user.uid},#{incident},#{flag});
+        INSERT INTO flowinfos(flows,flowabstract,person,startime,user,incident,flag,achieve) VALUES(#{flows.flowid},#{flowabstract},#{person},#{startime},#{user.uid},#{incident},#{flag},0);
 
     </insert>
 
@@ -21,6 +27,7 @@
         a.endtime,
         a.incident,
         a.flag,
+        a.achieve,
         b.flowid,
         b.flowname,
         c.uid,
@@ -58,6 +65,7 @@
         a.endtime,
         a.incident,
         a.flag,
+        a.achieve,
         b.flowid,
         b.flowname,
         c.uid,
@@ -96,6 +104,7 @@
         <result column="endtime" property="endtime" />
         <result column="incident" property="incident" />
         <result column="flag" property="flag" />
+        <result column="achieve" property="achieve" />
         <result column="flows" property="flows.flowid" />
         <result column="user" property="user.uid" />
 

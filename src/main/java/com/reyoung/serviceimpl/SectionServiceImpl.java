@@ -23,4 +23,12 @@ public class SectionServiceImpl implements SectionService {
     public List<Section> findallsection() {
         return sectionDao.findallsection();
     }
+
+    @Override
+    public Section findsectionbyid(Integer sectionid) {
+
+        return sectionDao.findsectionbyid(sectionid);
+
+    }
+
 }

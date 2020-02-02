@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.reyoung.model.*;
-import com.reyoung.service.FilterDetailService;
-import com.reyoung.service.FilterPlanService;
-import com.reyoung.service.FlowinfosService;
-import com.reyoung.service.SectionService;
+import com.reyoung.service.*;
 import com.reyoung.tools.GetYear;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +33,9 @@ public class FilterController {
 
     @Resource(name = "flowinfosService")
     private FlowinfosService flowinfosService;
+
+    @Resource(name = "approveService")
+    private ApproveService approveService;
 
     @RequestMapping("/climpfilterpage.do")
     public String climpfilterpage(HttpServletRequest request) {
@@ -174,6 +174,8 @@ public class FilterController {
 
         Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
 
+        User user= (User)request.getSession().getAttribute("userinfo");
+
         if (flowinfos1.getFlows().getFlowname().equals("滤芯采购流程")) {//滤芯采购流程审批页面
 
             FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
@@ -181,7 +183,16 @@ public class FilterController {
             //查询滤芯计划详情表 并将结果添加到filterplan中
             filterPlan.setFilterDetails(filterDetailService.findfilterdetailbyfid(filterPlan));
 
-            request.setAttribute("filterpla",filterPlan);
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(filterPlan.getReceive());
+
+            request.setAttribute("filterpla", filterPlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
 
             return "WEB-INF/filter/FilterApprove";
 
@@ -196,6 +207,24 @@ public class FilterController {
         }
 
         return null;
+
+    }
+
+    //审批同意了
+    @RequestMapping("/agreeflowinfobyuser.do")
+    public @ResponseBody String agreeflowinfobyuser(HttpServletRequest request,Flowinfos flowinfos,Approve approve) {
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        approve.setUser(user);
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(approve.getFlowinfos());
+
+        approve.setFlowinfos(flowinfos1);
+
+//        System.out.println(approve);
+
+        return flowinfosService.updateflowinfobyflowinfoid(approve)+"";
 
     }
 

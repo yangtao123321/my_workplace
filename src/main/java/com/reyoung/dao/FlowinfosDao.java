@@ -17,4 +17,7 @@ public interface FlowinfosDao {
 
     public Flowinfos findflwoinfobyfid(Flowinfos flowinfos);
 
+    //审批flowinfos
+    public Integer updateflowinfobyflowinfoid(Flowinfos flowinfos);
+
 }

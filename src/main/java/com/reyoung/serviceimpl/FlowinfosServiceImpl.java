@@ -1,17 +1,23 @@
 package com.reyoung.serviceimpl;
 
+import com.reyoung.dao.FilterDetailDao;
+import com.reyoung.dao.FilterPlanDao;
 import com.reyoung.dao.FlowinfosDao;
 import com.reyoung.model.Approve;
+import com.reyoung.model.FilterPlan;
 import com.reyoung.model.Flowinfos;
 import com.reyoung.model.User;
 import com.reyoung.multidatasource.DataSource;
 import com.reyoung.pager.PageBean;
 import com.reyoung.service.ApproveService;
 import com.reyoung.service.FlowinfosService;
+import com.reyoung.tools.FiltersTools;
 import com.reyoung.tools.GetYear;
+import com.reyoung.tools.Mail;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +31,15 @@ public class FlowinfosServiceImpl implements FlowinfosService {
     @Resource(name = "flowinfosDao")
     private FlowinfosDao flowinfosDao;
 
-
     @Resource(name = "approveService")
     private ApproveService approveService;
+
+    @Resource(name = "filterPlanDao")
+    private FilterPlanDao filterPlanDao;
+
+
+    @Resource(name = "filterDetailDao")
+    private FilterDetailDao filterDetailDao;
 
     @Override
     public Integer addflowinfo(Flowinfos flowinfos) {
@@ -41,9 +53,21 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
         List<Flowinfos> flowinfoses = flowinfosDao.findallflowinfos();
 
+        List<Flowinfos> flowinfoses2=new ArrayList<>();
+
+        for (Flowinfos f:flowinfoses) {//筛选出未完成的流程
+
+            if (f.getAchieve()==0) {
+
+                flowinfoses2.add(f);
+
+            }
+
+        }
+
         List<Flowinfos> flowinfoses1=new ArrayList<>();
 
-        for (Flowinfos f:flowinfoses) {
+        for (Flowinfos f:flowinfoses2) {
 
             //筛选出部门来  同一个部门的流程信息进入
             if (user.getSection().getSectionid()==f.getUser().getSection().getSectionid()) {
@@ -116,9 +140,22 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
         List<Flowinfos> flowinfoses = flowinfosDao.findallflowinfos();
 
+        List<Flowinfos> newflowinfoses=new ArrayList<>();
+
+        for (Flowinfos f:flowinfoses) {//筛选出未完成的流程
+
+            if (f.getAchieve()==0) {
+
+                newflowinfoses.add(f);
+
+            }
+
+        }
+
+
         List<Flowinfos> flowinfoses1=new ArrayList<>();
 
-            for (Flowinfos f:flowinfoses) {
+            for (Flowinfos f:newflowinfoses) {
 
                 //筛选出部门来  同一个部门的流程信息进入
                 if (user.getSection().getSectionid()==f.getUser().getSection().getSectionid()) {
@@ -177,7 +214,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
                 }
 
             }
-
 
         for (Flowinfos f:flowinfoses1) {
 
@@ -302,5 +338,175 @@ public class FlowinfosServiceImpl implements FlowinfosService {
         return flowinfosDao.findflwoinfobyfid(flowinfos);
 
     }
+
+    @Override
+    public Integer updateflowinfobyflowinfoid(Approve approve) {
+
+        Flowinfos flowinfos = approve.getFlowinfos();
+
+        User user = approve.getUser();
+
+        if (approve.getFlowinfos().getFlows().getFlowname().equals("滤芯采购流程")) {
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos);
+
+            if (user.getUsername().equals("zhangna")) {//张主任审批滤芯计划   审批条件需要修改向下加一层
+
+                approve.setDealtime(GetYear.gettimes());
+
+                approve.setSignature(user.getSignaturepath());
+
+                Integer res = approveService.updateapprobyuidandfid(approve);
+
+                if (res==1) {//审批记录审核完成了
+
+                    Flowinfos f=approve.getFlowinfos();
+                    f.setFlag(approve.getUser().getPosition().getAgreeflag()+2);
+
+                    Integer r = flowinfosDao.updateflowinfobyflowinfoid(f);
+
+                    if (r==1) {
+
+                        return 1;
+
+                    }
+
+                }
+
+
+
+            }else if (user.getPosition().getPosid()==2) {
+
+                for (Approve a:approves) {
+
+                    if (a.getUser().getPosition().getPosid()==2&&a.getApproflag()>0&&a.getUser().getUid()!=user.getUid()&&!user.getUsername().equals("zhangna")) {//筛选出单位负责人并且已经审批过得
+
+                        //此时已经有人审批过了，返回 2表示有人已经审批过了
+
+                        return 2;
+
+                    }
+
+                }
+
+                //如果没有人审批过需要查询出自己的审批记录更新审批值
+                //approveService.
+                Approve approve1 = approveService.findapprovebyuidandfid(approve);
+
+                //处理事件
+                approve1.setDealtime(GetYear.gettimes());
+                approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSuggest(approve.getSuggest());
+                approve1.setApproflag(approve.getApproflag());
+
+                //更新审批操作
+                Integer res = approveService.updateapprobyuidandfid(approve1);
+
+                if (res==1) {//审批记录更新成功后，更新flowinfo中的审批记录
+
+                    Flowinfos f=approve.getFlowinfos();
+                    f.setFlag(approve.getUser().getPosition().getAgreeflag());
+
+                    Integer r = flowinfosDao.updateflowinfobyflowinfoid(f);
+
+                    if (r==1) {
+
+                        return 1;
+
+                    }
+
+                }
+
+            }else if (user.getPosition().getPosid()==3) {//部门经理审批   可以指定流程是否到这一步便结束
+
+                approve.setDealtime(GetYear.gettimes());
+
+                approve.setSignature(user.getSignaturepath());
+
+                Integer res = approveService.updateapprobyuidandfid(approve);
+
+                if (res==1) {//审批记录更新完成了
+
+                    //更新flowinfo中的审批的数值
+//                  System.out.println("部门经理审批"+approve+"***");
+
+                    FilterPlan filterPlan = filterPlanDao.findfilterplanbyincident(approve.getFlowinfos());
+
+                    if (approve.getUser().getSection().getSectionid()==filterPlan.getReceive()) {
+
+                        flowinfos.setFlag(user.getPosition().getAgreeflag()+2);
+
+                        flowinfos.setAchieve(1);
+
+                        Integer r = flowinfosDao.updateflowinfobyflowinfoid(flowinfos);
+
+                        if (r==1) {//审批成功了，需要发送一封附件给相关人员
+
+                            FilterPlan plan = filterPlanDao.findfilterplanbyincident(flowinfos);
+
+                            plan.setFilterDetails(filterDetailDao.findfilterdetailbyfid(plan));
+
+                            FiltersTools.makereport(plan,flowinfos);
+
+                            File file=new File("D:\\"+flowinfos.getFlowabstract()+".pdf");
+
+                            try {
+
+                                Mail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3","yangtao@reyoung.com","","流程审批通过","你好,附件是审批完成的计划表",file);
+
+                            } catch (Exception e) {
+
+
+
+                            }
+
+
+                            return 1;
+
+                        }
+
+
+                    }else {
+
+                        flowinfos.setFlag(user.getPosition().getAgreeflag()+2);
+
+                        flowinfosDao.updateflowinfobyflowinfoid(flowinfos);
+
+                    }
+
+
+                }
+
+
+
+
+
+            }else if (user.getPosition().getPosid()==4) {//公司总裁审批
+
+
+
+            }
+
+
+
+
+
+
+        }else if (flowinfos.getFlows().getFlowname().equals("维修保养流程")) {
+
+
+
+        }else if (flowinfos.getFlows().getFlowname().equals("其他采购流程")) {
+
+
+
+        }
+
+
+
+        return null;
+
+    }
+
 
 }

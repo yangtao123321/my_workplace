@@ -13,5 +13,7 @@ public interface SectionDao {
 
     public List<Section> findallsection();
 
+    public Section findsectionbyid(Integer sectionid);
+
 
 }

@@ -23,4 +23,7 @@ public interface ApproveDao {
     //根据uid、fid 查询approve
     public Approve findapprovebyuidandfid(Approve approve);
 
+    //更新审批操作
+    public Integer updateapprobyuidandfid(Approve approve);
+
 }

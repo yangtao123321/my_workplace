@@ -14,9 +14,15 @@ public interface ApproveService {
 
     public List<Approve> findapprolistbyflowinfoid(Flowinfos flowinfos);
 
+    public List<Approve> findapprovedlistbyflowinfoid(Flowinfos flowinfos);
+
     public Integer addapprovebyappro(Approve approve);
 
     //根据uid、fid 查询approve
     public Approve findapprovebyuidandfid(Approve approve);
+
+    //更新审批操作
+    public Integer updateapprobyuidandfid(Approve approve);
+
 
 }

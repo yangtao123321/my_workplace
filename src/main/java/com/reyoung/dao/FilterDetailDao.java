@@ -19,6 +19,4 @@ public interface FilterDetailDao {
     //根据fid查询滤芯的详情
     public List<FilterDetail> findfilterdetailbyfid(FilterPlan filterPlan);
 
-
-
 }

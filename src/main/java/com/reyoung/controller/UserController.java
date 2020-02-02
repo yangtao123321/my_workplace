@@ -177,6 +177,10 @@ public class UserController {
     @RequestMapping("/welcome.do")
     public String climptowelcome(HttpServletRequest request,PageBean<Flowinfos> pageBean) {//分页的显示
 
+
+        //添加字段**********需要给flowinfo添加一个完成的标志字段    默认值为0   完成值为 1 何时完成可以自定义*******
+
+
         User user= (User) request.getSession().getAttribute("userinfo");
 
         String s = GetYear.getDates();

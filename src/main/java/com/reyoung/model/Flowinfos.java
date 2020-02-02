@@ -28,10 +28,12 @@ public class Flowinfos {
 
     private Approve approve;//添加单条审批记录
 
+    private Integer achieve;//完成的标志 默认为0 未完成  1表示已完成
+
     public Flowinfos() {
     }
 
-    public Flowinfos(Integer flowinfoid, Flows flows, String flowabstract, String person, Date startime, Date endtime, User user, Integer incident, Integer flag, Approve approve) {
+    public Flowinfos(Integer flowinfoid, Flows flows, String flowabstract, String person, Date startime, Date endtime, User user, Integer incident, Integer flag, Approve approve, Integer achieve) {
         this.flowinfoid = flowinfoid;
         this.flows = flows;
         this.flowabstract = flowabstract;
@@ -42,6 +44,7 @@ public class Flowinfos {
         this.incident = incident;
         this.flag = flag;
         this.approve = approve;
+        this.achieve = achieve;
     }
 
     public Integer getFlowinfoid() {
@@ -124,6 +127,14 @@ public class Flowinfos {
         this.approve = approve;
     }
 
+    public Integer getAchieve() {
+        return achieve;
+    }
+
+    public void setAchieve(Integer achieve) {
+        this.achieve = achieve;
+    }
+
     @Override
     public String toString() {
         return "Flowinfos{" +
@@ -137,6 +148,7 @@ public class Flowinfos {
                 ", incident=" + incident +
                 ", flag=" + flag +
                 ", approve=" + approve +
+                ", achieve=" + achieve +
                 '}';
     }
 

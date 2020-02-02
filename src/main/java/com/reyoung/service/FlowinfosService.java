@@ -1,5 +1,6 @@
 package com.reyoung.service;
 
+import com.reyoung.model.Approve;
 import com.reyoung.model.Flowinfos;
 import com.reyoung.model.User;
 import com.reyoung.pager.PageBean;
@@ -18,5 +19,8 @@ public interface FlowinfosService {
     public PageBean<Flowinfos> finddealsbyuser(User user,PageBean<Flowinfos> pageBean);
 
     public Flowinfos findflwoinfobyfid(Flowinfos flowinfos);
+
+    //审批flowinfos
+    public Integer updateflowinfobyflowinfoid(Approve approve);
 
 }
