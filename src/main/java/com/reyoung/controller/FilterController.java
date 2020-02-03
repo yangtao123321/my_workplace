@@ -62,6 +62,7 @@ public class FilterController {
 
     }
 
+    //提交滤芯计划
     @RequestMapping("/receivefilter.do")
     public @ResponseBody String receivefilter(HttpServletRequest request,FilterPlan filterPlan,String users,Flowinfos flowinfos) {
 
@@ -169,6 +170,7 @@ public class FilterController {
 
     }
 
+    //滤芯审批页面
     @RequestMapping("/findflowinfinfodetailbyfid.do")
     public String findflowinfinfodetailbyfid(HttpServletRequest request,Flowinfos flowinfos) {
 
@@ -210,6 +212,48 @@ public class FilterController {
 
     }
 
+    //查看滤芯详情的页面
+    @RequestMapping("/finddetailfilterbyapply.do")
+    public String finddetailfilterbyapply(HttpServletRequest request,Flowinfos flowinfos) {
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
+
+        User user= (User)request.getSession().getAttribute("userinfo");
+
+        if (flowinfos1.getFlows().getFlowname().equals("滤芯采购流程")) {//滤芯采购流程审批页面
+
+            FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
+
+            //查询滤芯计划详情表 并将结果添加到filterplan中
+            filterPlan.setFilterDetails(filterDetailService.findfilterdetailbyfid(filterPlan));
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(filterPlan.getReceive());
+
+            request.setAttribute("filterpla", filterPlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/filter/FilterDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("维修保养流程")) {//维修保养流程审核页面
+
+
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
+
+
+
+        }
+
+        return null;
+
+    }
+
     //审批同意了
     @RequestMapping("/agreeflowinfobyuser.do")
     public @ResponseBody String agreeflowinfobyuser(HttpServletRequest request,Flowinfos flowinfos,Approve approve) {
@@ -228,6 +272,33 @@ public class FilterController {
 
     }
 
+    //审批拒绝了
+    @RequestMapping("/approbackflowinfobyuser.do")
+    public @ResponseBody String approbackflowinfobyuser(HttpServletRequest request,Flowinfos flowinfos,Approve approve) {
 
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        approve.setUser(user);
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(approve.getFlowinfos());
+
+        approve.setFlowinfos(flowinfos1);
+
+        flowinfosService.approbackflowinfobyflowinfoid(approve);
+
+        return null;
+
+    }
+
+
+    //查看流程图
+    @RequestMapping("/climpflowpicbyfid.do")
+    public String climpflowpicbyfid(HttpServletRequest request,Flowinfos flowinfos) {
+
+
+
+        return "WEB-INF/Flowpic";
+
+    }
 
 }

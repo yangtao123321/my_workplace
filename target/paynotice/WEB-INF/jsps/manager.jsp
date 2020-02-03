@@ -241,7 +241,9 @@
             //查看流程详情的事件
             $(document).on('click','.flowabstract',function() {
 
-                alert("查看流程详情!");
+                var fid=$($($($(this).parent())).children()).eq(0).text();
+
+                window.open("${pageContext.request.contextPath}/findflowinfinfodetailbyfid.do?flowinfoid="+fid,"_blank");
 
             });
 

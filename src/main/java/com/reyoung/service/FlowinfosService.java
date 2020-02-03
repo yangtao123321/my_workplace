@@ -23,4 +23,13 @@ public interface FlowinfosService {
     //审批flowinfos
     public Integer updateflowinfobyflowinfoid(Approve approve);
 
+    //拒绝的操作
+    public Integer approbackflowinfobyflowinfoid(Approve approve);
+
+    //根据uid查询自己申请的流程数
+    public Integer findflowinfoscountbyuid(User user);
+
+    //根据uid查询自己申请的流程的信息
+    public PageBean<Flowinfos> findflowinfosbyuid(User user,PageBean<Flowinfos> pageBean);
+
 }

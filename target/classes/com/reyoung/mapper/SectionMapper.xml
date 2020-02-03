@@ -6,12 +6,17 @@
 
 <mapper namespace="com.reyoung.dao.SectionDao">
 
-
     <select id="findallsection" resultMap="sectionMap">
 
 
         SELECT * FROM section;
 
+
+    </select>
+
+    <select id="findsectionbyid" parameterType="java.lang.Integer" resultMap="sectionMap">
+
+        SELECT * FROM section WHERE sectionid=#{sectionid};
 
     </select>
 

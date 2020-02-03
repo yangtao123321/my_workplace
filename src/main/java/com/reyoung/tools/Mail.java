@@ -15,21 +15,27 @@ import java.util.Properties;
 public class Mail {
 
     //发送邮件功能  带附件发送
-    public static void sendMail(String send,String psd,String host,String sendemail,String cc1,String subject,String context,File file) throws Exception {
+    public static void sendMail(String send,String psd,String host,String sendemail,String cc1,String subject,String context,File file){
 
-        Properties props = new Properties();                    // 参数配置
-        props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
-        props.setProperty("mail.smtp.host", host);   // 发件人的邮箱的 SMTP 服务器地址
-        props.setProperty("mail.smtp.auth", "true");
+        try{
 
-        Session session = Session.getInstance(props);
-        session.setDebug(false);
-        MimeMessage message = createMimeMessage(session, file,send, sendemail,cc1,subject,context);
+            Properties props = new Properties();                    // 参数配置
+            props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
+            props.setProperty("mail.smtp.host", host);   // 发件人的邮箱的 SMTP 服务器地址
+            props.setProperty("mail.smtp.auth", "true");
 
-        Transport transport = session.getTransport();
-        transport.connect(send, psd);
-        transport.sendMessage(message, message.getAllRecipients());
-        transport.close();
+            Session session = Session.getInstance(props);
+            session.setDebug(false);
+            MimeMessage message = createMimeMessage(session, file,send, sendemail,cc1,subject,context);
+
+            Transport transport = session.getTransport();
+            transport.connect(send, psd);
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+
+        }catch (Exception e) {
+
+        }
 
     }
 
@@ -39,14 +45,12 @@ public class Mail {
         MimeMessage message = new MimeMessage(session);
 
         // 2. From: 发件人
-        message.setFrom(new InternetAddress(sendMail, "流程审批通过提醒", "UTF-8"));
+        message.setFrom(new InternetAddress(sendMail, "计划审批通过", "UTF-8"));
 
         // 3. To: 收件人（可以增加多个收件人、抄送、密送）
 /*        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveMail, "caoke", "UTF-8"));*/
 
-
             message.addRecipient(MimeMessage.RecipientType.TO,new InternetAddress(sendemail,sendemail.substring(0,sendemail.indexOf("@")),"UTF-8"));
-
 
         //抄送
        // message.setRecipient(MimeMessage.RecipientType.CC,new InternetAddress(rec1,rec1.substring(0,rec1.indexOf("@")),"UTF-8"));

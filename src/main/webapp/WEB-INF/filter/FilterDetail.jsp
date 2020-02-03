@@ -11,7 +11,7 @@
 
 <head>
 
-    <title>滤芯计划审批页面</title>
+    <title>滤芯计划详情页面</title>
 
     <script language="JavaScript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.ztree.core-3.5.js"></script>
@@ -23,74 +23,22 @@
 
         $(function() {
 
-            //没
-            $(document).on('click','.refuse',function() {
+            $(document).on('click','.close',function() {
 
-                var flowinfosid=$(".flowinfoid").text();
+                var userAgent = navigator.userAgent;
+                if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                    location.href = "about:blank";
+                } else {
+                    window.opener = null;
+                    window.open('', '_self');
+                }
 
-                var suggest=$(".suggestval").val().trim();
-
-                //发送ajax请求后台服务器
-
-                $.ajax({
-                    url:"${pageContext.request.contextPath}/approbackflowinfobyuser.do",
-                    type:"post",
-                    async:false,
-                    data:{"flowinfos.flowinfoid":flowinfosid,"suggest":suggest,"approflag":"2"},
-                    dataType:"json",
-                    success:function(data) {
-
-
-
-                    }
-
-
-                });
-
-
-            });
-
-            //同意了
-            $(document).on('click','.agree',function() {
-
-                var flowinfosid=$(".flowinfoid").text();
-
-                var suggest=$(".suggestval").val().trim();
-
-                //发送ajax请求后台服务器
-                $.ajax({
-                    url:"${pageContext.request.contextPath}/agreeflowinfobyuser.do",
-                    type:"post",
-                    beforeSend: function (){
-
-                        $(".suggestval").after("<div class='load'><img src='${pageContext.request.contextPath}/picture/load.gif' /></div>");
-
-                    },
-                    async:true,
-                    data:{"flowinfos.flowinfoid":flowinfosid,"suggest":suggest,"approflag":"1"},
-                    dataType:"json",
-                    success:function(data) {
-
-                        $(".load").remove();
-
-                        if(data=='1') {
-
-
-
-                        }
-
-                        alert(data);
-
-                    },
-                    error:function () { //请求数据失败
-                        alert("服务器繁忙!");
-                    }
-
-                });
+                window.close();
 
             });
 
         });
+
 
     </script>
 
@@ -150,19 +98,6 @@
 
         }
 
-        .suggest{
-
-            position: relative;
-            height: 35px;
-            line-height: 35px;
-            margin-left: 1%;
-            text-align: center;
-            float: left;
-            font-weight: bold;
-
-
-        }
-
         .suggestval{
 
             position: relative;
@@ -175,54 +110,6 @@
 
         }
 
-        .agree{
-
-
-            position: relative;
-            border: 1px solid #00a1f5;
-            height: 35px;
-            background-color: #00a1f5;
-            color: white;
-            outline-style: none;
-            width: 10%;
-            margin-top: 3%;
-            margin-left: 10%;
-
-
-            cursor: pointer;
-
-
-
-        }
-
-        .refuse{
-
-            position: relative;
-            border: 1px solid #00a1f5;
-            height: 35px;
-            background-color: #00a1f5;
-            color: white;
-            outline-style: none;
-            width: 10%;
-            margin-top: 3%;
-
-            margin-left: 30%;
-
-
-            cursor: pointer;
-
-
-            margin-bottom: 5%;
-
-        }
-
-        .agree:hover,.refuse:hover{
-
-            border: 1px solid #005796;
-            background-color: #005796;
-
-        }
-
         .load{
 
             position: relative;
@@ -232,13 +119,34 @@
 
         }
 
+        .close{
+
+            position: relative;
+            border: 1px solid #0081c8;
+            margin-bottom: 6%;
+            height: 30px;
+            line-height: 30px;
+            width: 10%;
+            margin-left: 45%;
+            text-align: center;
+            background-color: #0081c8;
+            color: white;
+            cursor: pointer;
+
+        }
+
+        .close:hover{
+            border: 1px solid #005c94;
+            background-color: #005c94;
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<div class="top">滤芯计划审核页面</div>
+<div class="top">滤芯计划申请详情页</div>
 
 <div class="mai">
 
@@ -296,13 +204,13 @@
 
             <tr style="background-color: white">
 
-            <td style="border-left: none">${d.fdetailname}</td>
-            <td>${d.fdetailtype}</td>
-            <td>${d.fdetailsize}</td>
-            <td>${d.fdetailinterface}</td>
-            <td>${d.rek}</td>
-            <td>${d.useing}</td>
-            <td style="border-right: none">${d.fdetailnum}</td>
+                <td style="border-left: none">${d.fdetailname}</td>
+                <td>${d.fdetailtype}</td>
+                <td>${d.fdetailsize}</td>
+                <td>${d.fdetailinterface}</td>
+                <td>${d.rek}</td>
+                <td>${d.useing}</td>
+                <td style="border-right: none">${d.fdetailnum}</td>
 
             </tr>
 
@@ -310,15 +218,7 @@
 
     </table>
 
-    <div class="suggest">审批意见</div>
-
-    <input class="suggestval" type="text" />
-
-    <div style="clear: left"></div>
-
-    <input class="refuse" type="button" value="拒绝" />
-
-    <input class="agree" type="button" value="同意" />
+    <div style="clear: left;font-weight: bold;margin-top: 1%;margin-left: 1%">审批记录</div>
 
     <table class="tb2">
 
@@ -419,6 +319,8 @@
         </c:forEach>
 
     </table>
+
+    <div class="close">关闭</div>
 
 </div>
 

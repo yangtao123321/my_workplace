@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: yangtao
@@ -200,7 +201,6 @@
 
             });
 
-
             //校验原密码是否正确
             $(document).on('blur','.orgpasval',function() {
 
@@ -240,6 +240,47 @@
 
 
             });
+
+            //查看流程图
+            $(document).on('click','.flopic',function() {
+
+                var fid=$($($($(this).parent())).children()).eq(0).text();
+
+                window.open("${pageContext.request.contextPath}/climpflowpicbyfid.do?flowinfoid="+fid,"_blank");
+
+
+            });
+
+            $(document).on('click','.flowabstract',function() {
+
+                var fid=$($($($(this).parent())).children()).eq(0).text();
+
+                window.open("${pageContext.request.contextPath}/finddetailfilterbyapply.do?flowinfoid="+fid,"_blank");
+
+            });
+
+            $(".M-box").pagination({
+                totalData:${page.totalRecord},
+                showData:${page.pageSize},
+                /*pageCount:10,*/
+                jump:true,
+                coping:true,
+                homePage:'首页',
+                endPage:'末页',
+                prevContent:'上页',
+                nextContent:'下页',
+                callback:pageback
+
+            });
+
+            function pageback(cur) {
+
+                alert(cur.getCurrent());
+
+            }
+
+
+
 
 
 
@@ -594,8 +635,138 @@
 
         }
 
+        .tb{
+            position:relative;
+            margin-top: 1%;
+            margin-left: 1px;
+            border-collapse: collapse;
+            border: none;
+            width: 100%;
+
+        }
+
+        .tb td{
+
+            border: 1px solid #d3d2d1;
+            text-align: center;
+            height: 30px;
 
 
+        }
+
+        .tr{
+
+            background-color: #efeeed;
+            font-family: "宋体";
+            font-weight: bold;
+            font-size: 13px;
+
+
+
+
+
+        }
+
+        .tr1{
+
+            font-family: "宋体";
+            font-size: 15px;
+
+        }
+
+        .tr1:hover{
+            background-color: rgba(177, 170, 120, 0.09);
+        }
+
+        .flopic{
+
+            cursor: pointer;
+
+        }
+
+        .flowabstract{
+            color: #3150f2;
+            cursor: pointer;
+            font-weight: 300;
+            font-family: "Courier New";
+        }
+
+
+        /*分页样式表*/
+        .M-box{
+            position: relative;
+            text-align: center;
+            zoom: 1;
+            margin-top: 2%;
+            left: 30%;
+            width: 70%;
+        }
+        .M-box:before,.M-box:after{
+            content:"";
+            display:table;
+        }
+        .M-box:after{
+            clear:both;
+            overflow:hidden;
+        }
+        .M-box span{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            color: #bdbdbd;
+            font-size: 13px;
+        }
+        .M-box .active{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background: #009ae1;
+            color: #fff;
+            font-size: 13px;
+            border: 1px solid #009ae1;
+        }
+        .M-box a{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background: #fff;
+            border: 1px solid #ebebeb;
+            color: #bdbdbd;
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .M-box a:hover{
+            color:#fff;
+            background: #0072af;
+        }
+        .M-box .next,.M-box .prev{
+            /*font-family: "Simsun";*/
+            font-size: 13px;
+            font-family: "Courier New";
+        }
+        .now,.count{
+            padding:0 5px;
+            color: #009ae1;
+        }
+        .M-box input{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #ebebeb;
+            outline: none;
+            color: #2c73d8;
+            font-size: 13px;
+        }
 
     </style>
 
@@ -667,17 +838,52 @@
 
         <%--<div class="flows">付款单审批流程</div>--%>
 
-        <div class="flows">滤芯采购流程</div>
+        <%--<c:forEach items="${flows}" var="f">
 
-        <div class="flows">维修保养流程</div>
+            <div class="flows">${f.flowname}</div>
 
-        <div class="flows">其他采购流程</div>
+        </c:forEach>--%>
+
+
+
+            <table class="tb">
+
+                <tr class="tr">
+                    <td width="5%">序号</td>
+                    <td width="15%">流程名称</td>
+                    <td width="25%">流程内容摘要</td>
+                    <td width="15%">申请时间</td>
+                    <td width="15%">申请单位</td>
+                    <td width="10%">提报人</td>
+                    <td width="5%">流程图</td>
+                    <td width="10%">状态</td>
+                </tr>
+
+
+                <c:forEach items="${page.list}" var="f">
+
+                    <tr class="tr1">
+
+                    <td>${f.flowinfoid}</td>
+                    <td>${f.flows.flowname}</td>
+                    <td class="flowabstract">${f.flowabstract}</td>
+                    <td>${f.startime1}</td>
+                    <td>${f.user.department.deptname}</td>
+                    <td>${f.person}</td>
+                    <td class="flopic"><img src="${pageContext.request.contextPath}/picture/but9.png" /></td>
+                    <td style="color: #00a400">审批中</td>
+
+                    </tr>
+
+                </c:forEach>
+
+            </table>
+
+            <div class="M-box"></div>
 
     </div>
 
 </div>
-
-
 
 </body>
 

@@ -153,6 +153,12 @@
 
     </select>
 
+    <update id="updateapprobyuidandfid" parameterType="com.reyoung.model.Approve">
+
+        UPDATE approve SET dealtime=#{dealtime},signature=#{signature},suggest=#{suggest},approflag=#{approflag} WHERE uid=#{user.uid} AND flowinfoid=#{flowinfos.flowinfoid}
+
+    </update>
+
     <resultMap id="approMap" type="com.reyoung.model.Approve">
 
         <id column="approid" property="approid" />

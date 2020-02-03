@@ -26,7 +26,27 @@
             //没
             $(document).on('click','.refuse',function() {
 
-                alert("0");
+                var flowinfosid=$(".flowinfoid").text();
+
+                var suggest=$(".suggestval").val().trim();
+
+                //发送ajax请求后台服务器
+
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/approbackflowinfobyuser.do",
+                    type:"post",
+                    async:false,
+                    data:{"flowinfos.flowinfoid":flowinfosid,"suggest":suggest,"approflag":"2"},
+                    dataType:"json",
+                    success:function(data) {
+
+
+
+                    }
+
+
+                });
+
 
             });
 
@@ -57,8 +77,6 @@
 
 
 
-
-
                         }
 
                         alert(data);
@@ -73,7 +91,6 @@
             });
 
         });
-
 
     </script>
 

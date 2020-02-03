@@ -17,8 +17,6 @@
 
     </select>
 
-
-
     <!--SELECT * FROM user WHERE username=#{username} AND password=#{password};-->
     <select id="checkdologin" parameterType="com.reyoung.model.User" resultMap="userMap">
 

@@ -38,6 +38,9 @@ public class UserController {
     @Resource(name = "flowinfosService")
     private FlowinfosService flowinfosService;
 
+    @Resource(name = "flowsService")
+    private FlowsService flowsService;
+
     @RequestMapping("/savepas.do")
     public @ResponseBody String savepas(HttpServletRequest request,User user,HttpServletResponse response) {
 
@@ -175,11 +178,10 @@ public class UserController {
     }
 
     @RequestMapping("/welcome.do")
-    public String climptowelcome(HttpServletRequest request,PageBean<Flowinfos> pageBean) {//分页的显示
+    public String climptowelcome(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
 
 
-        //添加字段**********需要给flowinfo添加一个完成的标志字段    默认值为0   完成值为 1 何时完成可以自定义*******
-
+        // 分页的显示 添加字段**********需要给flowinfo添加一个完成的标志字段    默认值为0   完成值为 1 何时完成可以自定义*******
 
         User user= (User) request.getSession().getAttribute("userinfo");
 
@@ -194,6 +196,32 @@ public class UserController {
             request.setAttribute("dates",s);
 
             if (user.getPosition().getPosname().equals("经办人")) {//需要跳转到purchase页面
+
+                //查询所有可以申请的流程
+                List<Flows> flowses = flowsService.findallflows();
+
+                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+                    pageBean.setCurrentPage(1);
+
+                }
+
+                pageBean.setPageSize(15);//设置每页显示的条数
+
+                Integer totalRecord=flowinfosService.findflowinfoscountbyuid(user);
+
+                pageBean.setTotalRecord(totalRecord);
+
+                pageBean.getTotalPage();
+
+                PageBean<Flowinfos> page = flowinfosService.findflowinfosbyuid(user, pageBean);
+
+                request.setAttribute("page",page);
+
+                //根据userid查询flowinfo信息
+                flowinfosService.findflowinfosbyuid(user,pageBean);
+
+                request.setAttribute("flows",flowses);
 
                 return "WEB-INF/jsps/purchase";
 
@@ -252,6 +280,34 @@ public class UserController {
             return "WEB-INF/jsps/purchase";
 
         }
+
+    }
+
+    @RequestMapping("/findoingtask.do")
+    public @ResponseBody String findoingtask(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+            pageBean.setCurrentPage(1);
+
+        }
+
+        pageBean.setPageSize(15);//设置每页显示的条数
+
+        Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+
+        pageBean.setTotalRecord(totalRecord);
+
+        pageBean.getTotalPage();
+
+        //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
+        PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+
+        String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+        return json;
 
     }
 

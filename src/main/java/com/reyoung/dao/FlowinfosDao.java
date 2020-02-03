@@ -1,6 +1,7 @@
 package com.reyoung.dao;
 
 import com.reyoung.model.Flowinfos;
+import com.reyoung.model.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,5 +20,8 @@ public interface FlowinfosDao {
 
     //审批flowinfos
     public Integer updateflowinfobyflowinfoid(Flowinfos flowinfos);
+
+    //根据uid查询流程的信息
+    public List<Flowinfos> findflowinfosbyuid(User user);
 
 }

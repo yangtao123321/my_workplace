@@ -16,6 +16,8 @@ public class Flowinfos {
 
     private String person;//提报人 手动填写的
 
+    private String startime1;
+
     private Date startime;//发起时间
 
     private Date endtime;//结束时间
@@ -33,11 +35,12 @@ public class Flowinfos {
     public Flowinfos() {
     }
 
-    public Flowinfos(Integer flowinfoid, Flows flows, String flowabstract, String person, Date startime, Date endtime, User user, Integer incident, Integer flag, Approve approve, Integer achieve) {
+    public Flowinfos(Integer flowinfoid, Flows flows, String flowabstract, String person, String startime1, Date startime, Date endtime, User user, Integer incident, Integer flag, Approve approve, Integer achieve) {
         this.flowinfoid = flowinfoid;
         this.flows = flows;
         this.flowabstract = flowabstract;
         this.person = person;
+        this.startime1 = startime1;
         this.startime = startime;
         this.endtime = endtime;
         this.user = user;
@@ -135,6 +138,14 @@ public class Flowinfos {
         this.achieve = achieve;
     }
 
+    public String getStartime1() {
+        return startime1;
+    }
+
+    public void setStartime1(String startime1) {
+        this.startime1 = startime1;
+    }
+
     @Override
     public String toString() {
         return "Flowinfos{" +
@@ -142,6 +153,7 @@ public class Flowinfos {
                 ", flows=" + flows +
                 ", flowabstract='" + flowabstract + '\'' +
                 ", person='" + person + '\'' +
+                ", startime1='" + startime1 + '\'' +
                 ", startime=" + startime +
                 ", endtime=" + endtime +
                 ", user=" + user +
