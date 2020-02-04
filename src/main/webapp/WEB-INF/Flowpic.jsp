@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: yangtao
@@ -19,14 +20,7 @@
 
     <script type="text/javascript" language="JavaScript">
 
-        $(function() {
-
-
-
-        });
-
     </script>
-
 
     <style type="text/css">
 
@@ -40,7 +34,7 @@
         .tb{
             position:relative;
             margin-top: 10%;
-            margin-left: 10%;
+            margin-left: 20%;
             border-collapse: collapse;
             border: none;
 
@@ -51,7 +45,6 @@
             border: 1px solid #d3d2d1;
             text-align: center;
             height: 50px;
-
 
         }
 
@@ -66,50 +59,109 @@
 
     <tr>
 
-        <td style="height: 10px;border:none;color: #68b7f5">305车间</td>
-        <td style="height: 10px;border:none;color: #68b7f5"></td>
-        <td style="height: 10px;border:none;color: #68b7f5">陈文东</td>
-        <td style="height: 10px;border:none;color: #68b7f5"></td>
-        <td style="height: 10px;border:none;color: #68b7f5">张娜</td>
-        <td style="height: 10px;border:none;color: #68b7f5"></td>
-        <td style="height: 10px;border:none;color: #68b7f5">张光明</td>
-        <td style="height: 10px;border:none;color: #68b7f5"></td>
-        <td style="height: 10px;border:none;color: #68b7f5">苗得足</td>
-        <td style="height: 10px;border:none;color: #68b7f5"></td>
-        <td style="height: 10px;border:none;color: #68b7f5">结束</td>
+        <c:forEach items="${flowp}" var="f" varStatus="status">
 
+           <c:choose>
+
+               <c:when test="${status.first}">
+
+                   <td style="border: none;height: 90px;width: 200px">
+
+                       <div style="text-align: left;color: #68b7f5">${f.name}</div>
+
+                       <img  width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/start.png" />
+                       <img  width="140px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" />
+
+                       <c:if test="${f.appfag==0}">
+
+                           <div style="text-align: left;font-weight:bold;color: #ff7c6e;margin-top: 3%">未审批</div>
+
+                       </c:if>
+
+                       <c:if test="${f.appfag==1}">
+
+                           <div style="text-align: left;font-weight:bold;color: green;margin-top: 3%">流程提交</div>
+
+                       </c:if>
+
+                       <c:if test="${f.appfag==2}">
+
+                           <div style="text-align: left;font-weight:bold;color: #ff0c07;margin-top: 3%">已拒绝</div>
+
+                       </c:if>
+
+                   </td>
+
+               </c:when>
+
+               <c:when test="${status.last}">
+
+                   <td style="border: none;height: 90px;width: 50px">
+
+                       <div style="text-align: left;color: #68b7f5">${f.name}</div>
+
+                       <img  width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/end.png" />
+
+                       <c:if test="${f.appfag==0}">
+
+                           <div style="text-align: left;font-weight:bold;color: #ff7c6e;margin-top: 3%">未审批</div>
+
+                       </c:if>
+
+                       <c:if test="${f.appfag==1}">
+
+                           <div style="text-align: left;font-weight:bold;color: green;margin-top: 3%">已同意</div>
+
+                       </c:if>
+
+                       <c:if test="${f.appfag==2}">
+
+                           <div style="text-align: left;font-weight:bold;color: #ff0c07;margin-top: 3%">已拒绝</div>
+
+                       </c:if>
+
+                   </td>
+
+               </c:when>
+
+               <c:otherwise>
+
+                   <td style="border: none;height: 90px;width: 200px">
+
+                       <div style="text-align: left;color: #68b7f5">${f.name}</div>
+
+                       <img  width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/person.png" />
+                       <img  width="140px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" />
+
+                       <c:if test="${f.appfag==0}">
+
+                           <div style="text-align: left;font-weight:bold;color: #ff7c6e;margin-top: 3%">未审批</div>
+
+                       </c:if>
+
+                       <c:if test="${f.appfag==1}">
+
+                           <div style="text-align: left;font-weight:bold;color: green;margin-top: 3%">已同意</div>
+
+                       </c:if>
+
+                       <c:if test="${f.appfag==2}">
+
+                           <div style="text-align: left;font-weight:bold;color: #ff0c07;margin-top: 3%">已拒绝</div>
+
+                       </c:if>
+
+                   </td>
+
+               </c:otherwise>
+
+           </c:choose>
+
+        </c:forEach>
 
     </tr>
-
-    <tr>
-
-        <td width="50px" style="border: none"><img width=50px height="50px" src="${pageContext.request.contextPath}/picture/liupic/start.png" /></td>
-        <td width="150px" style="border: none"><img width="150px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" /></td>
-        <td width="50px" style="border: none"><img width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/person.png" /></td>
-        <td width="150px" style="border: none"><img width="150px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" /></td>
-        <td width="50px" style="border: none"><img width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/person.png" /></td>
-        <td width="150px" style="border: none"><img width="150px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" /></td>
-        <td width="50px" style="border: none"><img width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/person.png" /></td>
-        <td width="150px" style="border: none"><img width="150px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" /></td>
-        <td width="50px" style="border: none"><img width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/person.png" /></td>
-        <td width="150px" style="border: none"><img width="150px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" /></td>
-        <td width="200px" colspan="2" style="border: none"><img width="50px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/end.png" /><img width="150px" height="50px" src="${pageContext.request.contextPath}/picture/liupic/jiantou.png" /></td>
-
-    </tr>
-
-    <tr>
-
-        <td colspan="2" style="height: 30px;border:none;color: #008d00;text-align: left">已审核</td>
-        <td style="height: 30px;border:none;color: #008d00">已审核</td>
-
-
-    </tr>
-
-
 
 </table>
-
-
 
 </body>
 

@@ -7,6 +7,7 @@ import com.reyoung.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by yangtao on 2019-12-30.
@@ -41,6 +42,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer updatepas(User user) {
         return userDao.updatepas(user);
+    }
+
+    @Override
+    public User findepartmanager() {
+        return userDao.findepartmanager();
+    }
+
+    @Override
+    public User findwenjianfuzeren() {
+        return userDao.findwenjianfuzeren();
+    }
+
+    @Override
+    public List<User> findunitbyuser(User user) {
+        return userDao.findunitbyuser(user);
     }
 
 }

@@ -3,6 +3,8 @@ package com.reyoung.dao;
 import com.reyoung.model.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by yangtao on 2019-12-30.
  */
@@ -18,5 +20,11 @@ public interface UserDao {
     public User finduserbyname(User user);
 
     public Integer updatepas(User user);
+
+    public User findepartmanager();
+
+    public User findwenjianfuzeren();
+
+    public List<User> findunitbyuser(User user);
 
 }

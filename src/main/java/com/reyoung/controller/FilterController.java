@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +37,9 @@ public class FilterController {
 
     @Resource(name = "approveService")
     private ApproveService approveService;
+
+    @Resource(name = "userService")
+    private UserService userService;
 
     @RequestMapping("/climpfilterpage.do")
     public String climpfilterpage(HttpServletRequest request) {
@@ -290,12 +294,181 @@ public class FilterController {
 
     }
 
-
     //查看流程图
     @RequestMapping("/climpflowpicbyfid.do")
     public String climpflowpicbyfid(HttpServletRequest request,Flowinfos flowinfos) {
 
+        List<FlowPic> flowPics=new ArrayList<>();
 
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
+
+        //根据部门信息查询出部门经理的信息，如果是滤芯需要添加张娜，查询出单位负责人，提报人信息
+
+        if (flowinfos1.getUser().getSection().getSectionid()==1) {//粉针事业部
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos1);
+
+            for (Approve a:approves) {
+
+                System.out.println(a);
+
+            }
+
+            //部门经理
+            User user = userService.findepartmanager();
+
+            boolean f=false;
+
+            FlowPic flowPic=new FlowPic();
+
+            for (Approve a:approves) {
+
+                if (a.getUser().getUid()==user.getUid()) {
+
+                    flowPic.setName(user.getTruename());
+
+                    flowPic.setAppfag(a.getApproflag());
+
+                    flowPics.add(flowPic);
+
+                    f=true;
+
+                    break;
+
+                }else {
+
+                    f=false;
+
+                }
+
+            }
+
+            if (!f) {
+
+                flowPic.setName(user.getTruename());
+
+                flowPic.setAppfag(0);
+
+                flowPics.add(flowPic);
+
+            }
+
+            if (flowinfos1.getFlows().getFlowid()==1) {//滤芯计划
+
+                User user1 = userService.findwenjianfuzeren();
+
+                FlowPic flowPic1=new FlowPic();
+
+                for (Approve a:approves) {
+
+                    if (a.getUser().getUid()==user1.getUid()) {
+
+                        flowPic1.setName(user1.getTruename());
+
+                        flowPic1.setAppfag(a.getApproflag());
+
+                        flowPics.add(flowPic1);
+
+                        f=true;
+
+                        break;
+
+                    }else {
+
+                        f=false;
+
+                    }
+
+                }
+
+
+                if (!f) {
+
+                    flowPic1.setName(user1.getTruename());
+
+                    flowPic1.setAppfag(0);
+
+                    flowPics.add(flowPic1);
+
+                }
+
+
+            }
+
+            //查询单位负责人
+            List<User> list = userService.findunitbyuser(flowinfos1.getUser());
+
+            boolean s=false;
+
+            FlowPic flowPic2=new FlowPic();
+
+            for (User u:list) {
+
+                boolean b=false;
+
+                for (Approve a:approves) {
+
+                    if (a.getUser().getUid()==u.getUid()&&a.getApproflag()>0) {
+
+                        flowPic2.setName(u.getTruename());
+
+                        flowPic2.setAppfag(a.getApproflag());
+
+                        flowPics.add(flowPic2);
+
+                        b=true;
+
+                        break;
+
+                    }
+
+                }
+
+                if (b) {
+
+                    s=true;
+
+                    break;
+
+                }
+
+            }
+
+            if (!s) {
+
+                flowPic2.setName(list.get(0).getTruename());
+
+                flowPic2.setAppfag(0);
+
+                flowPics.add(flowPic2);
+
+            }
+
+            FlowPic flowPic3=new FlowPic();
+
+            flowPic3.setName(flowinfos1.getUser().getTruename());
+
+            flowPic3.setAppfag(1);
+
+            flowPics.add(flowPic3);
+
+            Collections.reverse(flowPics);
+
+            List<FlowPic> flowPics1=new ArrayList<>();
+
+            for (FlowPic f1:flowPics) {
+
+                if (f1.getAppfag()==2) {//拒绝后,就结束了
+
+                    flowPics1.add(f1);
+
+                }
+
+            }
+
+        }
+
+        request.setAttribute("flowp",flowPics);
 
         return "WEB-INF/Flowpic";
 

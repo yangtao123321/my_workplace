@@ -18,6 +18,22 @@ public class FlowPic {
         this.appfag = appfag;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAppfag() {
+        return appfag;
+    }
+
+    public void setAppfag(Integer appfag) {
+        this.appfag = appfag;
+    }
+
     @Override
     public String toString() {
         return "FlowPic{" +

@@ -56,6 +56,104 @@
 
     </select>
 
+    <select id="findepartmanager" resultMap="userMap">
+
+        SELECT
+        `user`.uid,
+        `user`.username,
+        `user`.`password`,
+        `user`.truename,
+        `user`.signaturepath,
+        `user`.email,
+        department.deptid,
+        department.deptname,
+        position.posid,
+        position.posname,
+        position.approflag,
+        position.agreeflag,
+        position.backflag,
+        section.sectionid,
+        section.sectionname
+        FROM
+        `user`,
+        department,
+        section,
+        position
+        WHERE
+        position.posid = `user`.position
+        AND `user`.department = department.deptid
+        AND section.sectionid = `user`.section
+        AND section.sectionid=1
+        AND position.posid=3;
+
+    </select>
+
+    <select id="findwenjianfuzeren" resultMap="userMap">
+
+        SELECT
+        `user`.uid,
+        `user`.username,
+        `user`.`password`,
+        `user`.truename,
+        `user`.signaturepath,
+        `user`.email,
+        department.deptid,
+        department.deptname,
+        position.posid,
+        position.posname,
+        position.approflag,
+        position.agreeflag,
+        position.backflag,
+        section.sectionid,
+        section.sectionname
+        FROM
+        `user`,
+        department,
+        section,
+        position
+        WHERE
+        position.posid = `user`.position
+        AND `user`.department = department.deptid
+        AND section.sectionid = `user`.section
+        AND section.sectionid=1
+        AND position.posid=2
+        AND `user`.username='zhangna';
+
+    </select>
+
+    <select id="findunitbyuser" parameterType="com.reyoung.model.User" resultMap="userMap">
+
+        SELECT
+        `user`.uid,
+        `user`.username,
+        `user`.`password`,
+        `user`.truename,
+        `user`.signaturepath,
+        `user`.email,
+        department.deptid,
+        department.deptname,
+        position.posid,
+        position.posname,
+        position.approflag,
+        position.agreeflag,
+        position.backflag,
+        section.sectionid,
+        section.sectionname
+        FROM
+        `user`,
+        department,
+        section,
+        position
+        WHERE
+        position.posid = `user`.position
+        AND `user`.department = department.deptid
+        AND section.sectionid = `user`.section
+        AND section.sectionid=#{section.sectionid}
+        AND position.posid=2
+        AND department.deptid=#{department.deptid};
+
+    </select>
+
     <update id="updatepas" parameterType="com.reyoung.model.User">
 
         UPDATE user SET password=#{password} WHERE username=#{username};
