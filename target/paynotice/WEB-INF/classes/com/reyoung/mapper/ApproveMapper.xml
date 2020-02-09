@@ -153,6 +153,18 @@
 
     </select>
 
+    <delete id="delapprovesbyaid" parameterType="java.util.List">
+
+        DELETE FROM approve WHERE approid IN
+
+        <foreach collection="approves" item="item" open="(" separator="," close=")">
+
+            #{item.approid}
+
+        </foreach>
+
+    </delete>
+
     <update id="updateapprobyuidandfid" parameterType="com.reyoung.model.Approve">
 
         UPDATE approve SET dealtime=#{dealtime},signature=#{signature},suggest=#{suggest},approflag=#{approflag} WHERE uid=#{user.uid} AND flowinfoid=#{flowinfos.flowinfoid}

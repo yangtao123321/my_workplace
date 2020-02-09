@@ -2,16 +2,15 @@
 <%--
   Created by IntelliJ IDEA.
   User: yangtao
-  Date: 2020-01-20
-  Time: 下午 2:42
+  Date: 2020-02-09
+  Time: 上午 11:19
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-
 <head>
+    <title>维修保养计划详情页</title>
 
-    <title>滤芯计划详情页面</title>
 
     <script language="JavaScript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.ztree.core-3.5.js"></script>
@@ -19,7 +18,8 @@
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/WdatePicker.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.cookie.js" ></script>
 
-    <script type="text/javascript" language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
+
 
         $(function() {
 
@@ -38,6 +38,7 @@
             });
 
         });
+
 
 
     </script>
@@ -74,6 +75,25 @@
             width: 80%;
             margin-left: 10%;
             background-color: #f4f3f2;
+
+        }
+
+        .context{
+
+            position: relative;
+            border: 1px solid #a6aca8;
+            margin-top: 1%;
+            text-align: center;
+            font-size: 19px;
+            padding:0px;
+            overflow: hidden;
+            height: 30%;
+            width: 100%;
+            padding-top: 5%;
+            outline-style: none;
+            color: #000000;
+            font-family: "楷体";
+            font-weight: bold;
 
         }
 
@@ -146,7 +166,7 @@
 
 <body>
 
-<div class="top">滤芯计划申请详情页</div>
+<div class="top">维修计划申请详情页</div>
 
 <div class="mai">
 
@@ -158,67 +178,37 @@
 
         <tr>
             <td width="15%" style="border-left: none">申请单位</td>
-            <td width="20%" style="background-color: white">${filterpla.user.truename}</td>
+            <td width="20%" style="background-color: white">${repaire.user.truename}</td>
             <td width="10%">提报人</td>
-            <td width="15%" style="background-color: white">${filterpla.applyperson}</td>
+            <td width="15%" style="background-color: white">${repaire.applyperson}</td>
             <td width="10%">申请时间</td>
-            <td width="25%" style="background-color:white;border-right: none">${filterpla.applytime}</td>
+            <td width="25%" style="background-color:white;border-right: none">${repaire.applytime}</td>
         </tr>
 
         <tr>
 
             <td style="border-left: none">流程内容摘要</td>
-            <td colspan="2" style="background-color: white">${filterpla.applyabstract}</td>
-            <td>申请原因</td>
-            <td colspan="2" style="background-color: white;border-right: none">${filterpla.applyreason}</td>
+            <td colspan="5" style="background-color: white">${repaire.applyabstract}</td>
 
 
         </tr>
 
         <tr>
 
-            <td style="border-left: none">采购要求</td>
-            <td colspan="2" style="background-color: white">${filterpla.buyrequires}</td>
-            <td>采购单位</td>
+            <td style="border-left: none">施工要求</td>
+            <td colspan="2" style="background-color: white">${repaire.buyrequires}</td>
+            <td>负责单位</td>
             <td style="background-color: white;border-right: none" colspan="2">${sec.sectionname}</td>
 
         </tr>
 
     </table>
 
-    <div style="font-weight: bold;margin-top: 1%;margin-left: 1%">采购详情</div>
+    <div style="font-weight: bold;margin-top: 1%;margin-left: 1%">施工项目现状</div>
 
-    <table class="tb1">
+    <textarea class="context">${repaire.contex}</textarea>
 
-        <tr>
-            <td width="15%" style="border-left: none">材质</td>
-            <td width="15%">型号</td>
-            <td width="15%">尺寸</td>
-            <td width="15%">接口</td>
-            <td width="15%">要求</td>
-            <td width="15%">用途</td>
-            <td width="10%" style="border-right: none">数量</td>
-        </tr>
-
-        <c:forEach items="${filterpla.filterDetails}" var="d">
-
-            <tr style="background-color: white">
-
-                <td style="border-left: none">${d.fdetailname}</td>
-                <td>${d.fdetailtype}</td>
-                <td>${d.fdetailsize}</td>
-                <td>${d.fdetailinterface}</td>
-                <td>${d.rek}</td>
-                <td>${d.useing}</td>
-                <td style="border-right: none">${d.fdetailnum}</td>
-
-            </tr>
-
-        </c:forEach>
-
-    </table>
-
-    <div style="clear: left;font-weight: bold;margin-top: 1%;margin-left: 1%">审批记录</div>
+    <div style="clear: left;font-weight: bold;margin-top: 3%;margin-left: 1%">审批记录</div>
 
     <table class="tb2">
 
@@ -293,7 +283,7 @@
 
                                         <td style="color: #009a00;font-family:仿宋;font-weight: bold">同意</td>
 
-                                 </c:when>
+                                    </c:when>
 
                                     <c:when test="${approve.approflag==2}">
 

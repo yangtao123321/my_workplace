@@ -29,6 +29,9 @@ public class FilterController {
     @Resource(name = "filterPlanService")
     private FilterPlanService filterPlanService;
 
+    @Resource(name = "repairePlanService")
+    private RepairePlanService repairePlanService;
+
     @Resource(name = "filterDetailService")
     private FilterDetailService filterDetailService;
 
@@ -204,7 +207,20 @@ public class FilterController {
 
         }else if (flowinfos1.getFlows().getFlowname().equals("维修保养流程")) {//维修保养流程审核页面
 
+            RepairePlan repairePlan = repairePlanService.findrepairedetailbyrid(flowinfos1);
 
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(repairePlan.getReceive());
+
+            request.setAttribute("repaire", repairePlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/repaire/RepaireApprove";
 
         }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
 
@@ -246,7 +262,22 @@ public class FilterController {
 
         }else if (flowinfos1.getFlows().getFlowname().equals("维修保养流程")) {//维修保养流程审核页面
 
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
 
+            RepairePlan repairePlan=repairePlanService.findrepairedetailbyrid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(repairePlan.getReceive());
+
+            System.out.println(repairePlan);
+
+            request.setAttribute("repaire",repairePlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/repaire/RepaireDetail";
 
         }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
 
@@ -269,8 +300,6 @@ public class FilterController {
         Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(approve.getFlowinfos());
 
         approve.setFlowinfos(flowinfos1);
-
-//        System.out.println(approve);
 
         return flowinfosService.updateflowinfobyflowinfoid(approve)+"";
 
@@ -471,6 +500,70 @@ public class FilterController {
         request.setAttribute("flowp",flowPics);
 
         return "WEB-INF/Flowpic";
+
+    }
+
+    //删除流程的信息
+    @RequestMapping("/delflowinfosbyfid.do")
+    public @ResponseBody String delflowinfosbyfid(HttpServletRequest request,Flowinfos flowinfos) {
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
+
+        if (flowinfos1.getFlows().getFlowid()==1) {//判断滤芯计划
+
+            //查询出flowinfoplan
+            FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
+
+            List<FilterDetail> details = filterDetailService.findfilterdetailbyfid(filterPlan);
+
+            Integer res = filterDetailService.delfilterdetailbylist(details);
+
+            Integer res1=0;
+
+            Integer res3=0;
+
+            if (res==details.size()&&res>0) {//滤芯详情已删除,可以删除filterplan
+
+                 res1 = filterPlanService.delfilterplanbypid(filterPlan);
+
+            }
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos1);
+
+            Integer res2 = approveService.delapprovesbyaid(approves);
+
+
+            if (res2==approves.size()&&res2>0) {//删除flowinfos
+
+                 res3 = flowinfosService.delflowinfosbyfid(flowinfos1);
+
+            }
+
+
+            if (res1==res3&&res1>0) {
+
+                return "ok";
+
+            }else {
+
+                return "fails";
+
+            }
+
+
+        }else if (flowinfos1.getFlows().getFlowid()==2){//维修保养计划
+
+
+
+        }else if (flowinfos1.getFlows().getFlowid()==3) {//其他采购项目
+
+
+
+        }
+
+
+
+        return null;
 
     }
 

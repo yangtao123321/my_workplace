@@ -26,10 +26,26 @@ public interface FlowinfosService {
     //拒绝的操作
     public Integer approbackflowinfobyflowinfoid(Approve approve);
 
+    //查询已处理流程的数量   根据审批记录查询
+    public Integer findflowinfoedcount(User user);
+
+    //查询已处理的流程的信息
+    public PageBean<Flowinfos> findflowinfoedlist(PageBean<Flowinfos> pageBean,User user);
+
+
     //根据uid查询自己申请的流程数
     public Integer findflowinfoscountbyuid(User user);
 
     //根据uid查询自己申请的流程的信息
     public PageBean<Flowinfos> findflowinfosbyuid(User user,PageBean<Flowinfos> pageBean);
+
+    //查询自己申请已处理的流程数
+    public Integer findapplyflowinfoedbyuid(User user);
+
+    public PageBean<Flowinfos> findapplyflowinfoedlistbyuid(PageBean<Flowinfos> pageBean,User user);
+
+
+    //根据fid删除flowinfos
+    public Integer delflowinfosbyfid(Flowinfos flowinfos);
 
 }

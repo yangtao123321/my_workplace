@@ -3,10 +3,8 @@ package com.reyoung.serviceimpl;
 import com.reyoung.dao.FilterDetailDao;
 import com.reyoung.dao.FilterPlanDao;
 import com.reyoung.dao.FlowinfosDao;
-import com.reyoung.model.Approve;
-import com.reyoung.model.FilterPlan;
-import com.reyoung.model.Flowinfos;
-import com.reyoung.model.User;
+import com.reyoung.dao.RepairePlanDao;
+import com.reyoung.model.*;
 import com.reyoung.multidatasource.DataSource;
 import com.reyoung.pager.PageBean;
 import com.reyoung.service.ApproveService;
@@ -39,6 +37,9 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
     @Resource(name = "filterDetailDao")
     private FilterDetailDao filterDetailDao;
+
+    @Resource(name = "repairePlanDao")
+    private RepairePlanDao repairePlanDao;
 
     @Override
     public Integer addflowinfo(Flowinfos flowinfos) {
@@ -108,11 +109,24 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 }else if (f.getFlows().getFlowid()==2) {//维护保养计划
 
-                    if ((user.getDepartment().getDeptid()==f.getUser().getDepartment().getDeptid())&&(user.getPosition().getApproflag()==f.getFlag())) {
+                    if (user.getPosition().getPosid()==2) {
 
-                        flowinfoses1.add(f);
+                        if ((user.getDepartment().getDeptid()==f.getUser().getDepartment().getDeptid())&&(user.getPosition().getApproflag()==f.getFlag())) {
+
+                            flowinfoses1.add(f);
+                        }
+
+                    }else if (user.getPosition().getPosid()==3) {
+
+                        if (user.getSection().getSectionid()==f.getUser().getSection().getSectionid()&&user.getPosition().getApproflag()==f.getFlag()) {
+
+                            flowinfoses1.add(f);
+
+                        }
 
                     }
+
+
 
                 }else {//其他采购计划
 
@@ -194,11 +208,27 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                     }else if (f.getFlows().getFlowid()==2) {//维护保养计划
 
-                        if ((user.getDepartment().getDeptid()==f.getUser().getDepartment().getDeptid())&&(user.getPosition().getApproflag()==f.getFlag())) {
 
-                            flowinfoses1.add(f);
+                        if (user.getPosition().getPosid()==2) {
+
+                            if ((user.getDepartment().getDeptid()==f.getUser().getDepartment().getDeptid())&&(user.getPosition().getApproflag()==f.getFlag())) {
+
+                                flowinfoses1.add(f);
+
+                            }
+
+                        }else if (user.getPosition().getPosid()==3) {
+
+                            if (user.getSection().getSectionid()==f.getUser().getSection().getSectionid()&&user.getPosition().getApproflag()==f.getFlag()) {
+
+                                flowinfoses1.add(f);
+
+                            }
+
 
                         }
+
+
 
                     }else {//其他采购计划
 
@@ -293,6 +323,20 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                         }else if (user.getPosition().getPosid()==3) {//部门负责人审核
 
+
+                            for (Approve a:approves) {
+
+                                if (a.getUser().getPosition().getPosid()==user.getPosition().getPosid()-1&&a.getApproflag()==1) {
+
+                                    approve.setArrivetime(a.getDealtime());
+
+                                    approveService.addapprovebyappro(approve);
+
+                                    break;//跳出本次循环体
+
+                                }
+
+                            }
 
 
                         }
@@ -471,9 +515,110 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
 
 
-
-
         }else if (flowinfos.getFlows().getFlowname().equals("维修保养流程")) {
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos);
+
+            if (user.getPosition().getPosid()==2) {
+
+                for (Approve a:approves) {
+
+                    if (a.getUser().getPosition().getPosid()==2&&a.getApproflag()>0&&a.getUser().getUid()!=user.getUid()) {//筛选出单位负责人并且已经审批过得
+
+                        //此时已经有人审批过了，返回 2表示有人已经审批过了
+
+                        return 2;
+
+                    }
+
+                }
+
+                //如果没有人审批过需要查询出自己的审批记录更新审批值
+                //approveService.
+                Approve approve1 = approveService.findapprovebyuidandfid(approve);
+
+                //处理事件
+                approve1.setDealtime(GetYear.gettimes());
+                approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSuggest(approve.getSuggest());
+                approve1.setApproflag(approve.getApproflag());
+
+                //更新审批操作
+                Integer res = approveService.updateapprobyuidandfid(approve1);
+
+                if (res==1) {//审批记录更新成功后，更新flowinfo中的审批记录
+
+                    Flowinfos f=approve.getFlowinfos();
+                    f.setFlag(approve.getUser().getPosition().getAgreeflag());
+
+                    Integer r = flowinfosDao.updateflowinfobyflowinfoid(f);
+
+                    if (r==1) {
+
+                        return 1;
+
+                    }
+
+                }
+
+            }else if (user.getPosition().getPosid()==3) {//部门经理审批   可以指定流程是否到这一步便结束
+
+                approve.setDealtime(GetYear.gettimes());
+
+                approve.setSignature(user.getSignaturepath());
+
+                Integer res = approveService.updateapprobyuidandfid(approve);
+
+                if (res==1) {//审批记录更新完成了
+
+                    //更新flowinfo中的审批的数值
+//                  System.out.println("部门经理审批"+approve+"***");
+
+                    RepairePlan repairePlan = repairePlanDao.findrepairedetailbyrid(flowinfos);
+
+                    if (approve.getUser().getSection().getSectionid()==repairePlan.getReceive()) {//同一个部门
+
+                        flowinfos.setFlag(user.getPosition().getAgreeflag());
+
+                        flowinfos.setAchieve(1);//流程完成标志   1 表示全部同意 2 表示单位负责人退回 3 表示张主任退回 4 表示部门经理退回 5 表示总经理退回
+
+                        Integer r = flowinfosDao.updateflowinfobyflowinfoid(flowinfos);
+
+                        if (r==1) {//审批成功了，需要发送一封附件给相关人员
+
+                            RepairePlan plan = repairePlanDao.findrepairedetailbyrid(flowinfos);
+
+                            /*FiltersTools.makereport(plan,flowinfos);
+
+                            File file=new File("D:\\"+flowinfos.getFlowabstract()+".pdf");
+
+                            Mail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3","yangtao@reyoung.com","","流程审批通过","你好,附件是审批完成的计划表",file);
+
+
+*/
+                            System.out.println("审批通过了!");
+
+
+
+                            return 1;
+
+                        }
+
+                    }else {
+
+                        flowinfos.setFlag(user.getPosition().getAgreeflag());
+
+                        flowinfosDao.updateflowinfobyflowinfoid(flowinfos);
+
+                    }
+
+                }
+
+            }else if (user.getPosition().getPosid()==4) {//公司总裁审批
+
+
+
+            }
 
 
 
@@ -482,8 +627,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
 
         }
-
-
 
         return null;
 
@@ -508,7 +651,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
                 approve1.setDealtime(GetYear.gettimes());
                 //approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
-                approve1.setApproflag(approve.getApproflag()+2);
+                approve1.setApproflag(approve.getApproflag());
 
                 //更新审批操作
                 Integer res = approveService.updateapprobyuidandfid(approve1);
@@ -684,6 +827,131 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
         return pageBean;
 
+    }
+
+    @Override
+    public Integer findflowinfoedcount(User user) {
+
+        List<Flowinfos> flowinfoses = flowinfosDao.findealflowinfos();
+
+        List<Flowinfos> flowinfoses1=new ArrayList<>();
+
+        for (Flowinfos f:flowinfoses) {
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(f);
+
+            for (Approve a:approves) {
+
+                if (user.getUid()==a.getUser().getUid()&&a.getApproflag()>0) {//查询自己审批的流程
+
+                    flowinfoses1.add(f);
+
+                }
+
+            }
+
+        }
+
+        return flowinfoses1.size();
+    }
+
+    @Override
+    public PageBean<Flowinfos> findflowinfoedlist(PageBean<Flowinfos> pageBean, User user) {
+
+        List<Flowinfos> flowinfoses = flowinfosDao.findealflowinfos();
+
+        List<Flowinfos> flowinfoses1=new ArrayList<>();
+
+        for (Flowinfos f:flowinfoses) {
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(f);
+
+            for (Approve a:approves) {
+
+                if (user.getUid()==a.getUser().getUid()&&a.getApproflag()>0) {//查询自己审批的流程
+
+                    flowinfoses1.add(f);
+
+                }
+
+            }
+
+        }
+
+        //根据uid、fid查询approve信息
+        Approve approve=new Approve();
+
+        approve.setUser(user);
+
+        for (Flowinfos f:flowinfoses1) {
+
+            approve.setFlowinfos(f);
+
+            f.setApprove(approveService.findapprovebyuidandfid(approve));
+
+        }
+
+        for (Flowinfos f:flowinfoses1) {
+
+            System.out.println(f);
+
+        }
+
+        List<Flowinfos> flowinfoses2=null;
+
+        if (pageBean.getCurrentPage()==pageBean.getTotalPage()) {
+            flowinfoses2= flowinfoses1.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), flowinfoses1.size());
+        }else if (pageBean.getCurrentPage()<pageBean.getTotalPage()){
+            flowinfoses2 = flowinfoses1.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), pageBean.getCurrentPage()*pageBean.getPageSize());
+        }else {
+            flowinfoses2=null;
+        }
+
+        pageBean.setList(flowinfoses2);
+
+        return pageBean;
+
+    }
+
+    @Override
+    public Integer findapplyflowinfoedbyuid(User user) {
+
+        List<Flowinfos> flowinfoses = flowinfosDao.findapplyflowinfoedlist(user);
+
+        return flowinfoses.size();
+
+    }
+
+    @Override
+    public PageBean<Flowinfos> findapplyflowinfoedlistbyuid(PageBean<Flowinfos> pageBean, User user) {
+
+        List<Flowinfos> flowinfoses = flowinfosDao.findapplyflowinfoedlist(user);
+
+        for (Flowinfos f:flowinfoses) {
+
+            f.setStartime1(GetYear.getstrtim(f.getStartime()));
+
+        }
+
+        List<Flowinfos> flowinfoses1=null;
+
+        if (pageBean.getCurrentPage()==pageBean.getTotalPage()) {
+            flowinfoses1= flowinfoses.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), flowinfoses.size());
+        }else if (pageBean.getCurrentPage()<pageBean.getTotalPage()){
+            flowinfoses1 = flowinfoses.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), pageBean.getCurrentPage()*pageBean.getPageSize());
+        }else {
+            flowinfoses1=null;
+        }
+
+        pageBean.setList(flowinfoses1);
+
+        return pageBean;
+
+    }
+
+    @Override
+    public Integer delflowinfosbyfid(Flowinfos flowinfos) {
+        return flowinfosDao.delflowinfosbyfid(flowinfos);
     }
 
 }

@@ -13,4 +13,7 @@ public interface FilterPlanService {
 
     public FilterPlan findfilterplanbyincident(Flowinfos flowinfos);
 
+
+    public Integer delfilterplanbypid(FilterPlan filterPlan);
+
 }

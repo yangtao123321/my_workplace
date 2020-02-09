@@ -28,12 +28,23 @@
 
     </insert>
 
+    <delete id="delfilterdetailbylist" parameterType="java.util.List">
+
+        DELETE FROM filterdetail WHERE fdetailid IN
+
+        <foreach collection="filterDetails" item="item" index="index" separator="," open="(" close=")">
+
+        #{item.fdetailid}
+
+        </foreach>
+
+    </delete>
+
     <select id="findfilterdetailbyfid" parameterType="com.reyoung.model.FilterPlan" resultMap="filterdetailMap">
 
         SELECT * FROM filterdetail WHERE fid=#{filterid}
 
     </select>
-
 
     <resultMap id="filterdetailMap" type="com.reyoung.model.FilterDetail">
 

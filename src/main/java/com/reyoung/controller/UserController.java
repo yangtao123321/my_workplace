@@ -163,6 +163,8 @@ public class UserController {
 
             request.getSession().setAttribute("userinfo",user1);//将用户信息保存到session域中
 
+            request.getSession().setMaxInactiveInterval(60*60);//设置session 1小时候后 失效
+
             System.out.println(user1);
 
             String json = JSONObject.toJSONString(user1, SerializerFeature.WriteMapNullValue);
@@ -179,7 +181,6 @@ public class UserController {
 
     @RequestMapping("/welcome.do")
     public String climptowelcome(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
-
 
         // 分页的显示 添加字段**********需要给flowinfo添加一个完成的标志字段    默认值为0   完成值为 1 何时完成可以自定义*******
 
@@ -283,10 +284,67 @@ public class UserController {
 
     }
 
+    //查询待办的任务
     @RequestMapping("/findoingtask.do")
     public @ResponseBody String findoingtask(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
 
         User user= (User) request.getSession().getAttribute("userinfo");
+
+        if (user.getPosition().getPosid()==1) {//提报人的查询
+
+            if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+                pageBean.setCurrentPage(1);
+
+            }
+
+            pageBean.setPageSize(15);//设置每页显示的条数
+
+            Integer totalRecord=flowinfosService.findflowinfoscountbyuid(user);
+
+            pageBean.setTotalRecord(totalRecord);
+
+            pageBean.getTotalPage();
+
+            PageBean<Flowinfos> page = flowinfosService.findflowinfosbyuid(user, pageBean);
+
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+        }else {
+
+            if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+                pageBean.setCurrentPage(1);
+
+            }
+
+            pageBean.setPageSize(15);//设置每页显示的条数
+
+            Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+
+            pageBean.setTotalRecord(totalRecord);
+
+            pageBean.getTotalPage();
+
+            //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
+            PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+        }
+
+
+    }
+
+    //查询已处理的任务
+    @RequestMapping("/findealtask.do")
+    public @ResponseBody String findealtask(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
+
+        User user= (User)request.getSession().getAttribute("userinfo");
 
         if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
 
@@ -294,23 +352,59 @@ public class UserController {
 
         }
 
-        pageBean.setPageSize(15);//设置每页显示的条数
+        pageBean.setPageSize(15);
 
-        Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+        if (user.getPosition().getPosid()==1) {//提报人查询已处理任务
 
-        pageBean.setTotalRecord(totalRecord);
+            Integer totalRecord=flowinfosService.findapplyflowinfoedbyuid(user);
 
-        pageBean.getTotalPage();
+            pageBean.setTotalRecord(totalRecord);
 
-        //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
-        PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+            pageBean.getTotalPage();
 
-        String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+            PageBean<Flowinfos> page = flowinfosService.findapplyflowinfoedlistbyuid(pageBean, user);
 
-        return json;
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+        }else if(user.getPosition().getPosid()==2) {//经办人查询已处理的任务
+
+            Integer totalRecord = flowinfosService.findflowinfoedcount(user);
+
+            pageBean.setTotalRecord(totalRecord);
+
+            pageBean.getTotalPage();
+
+            PageBean<Flowinfos> page = flowinfosService.findflowinfoedlist(pageBean, user);
+
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+
+        }else if(user.getPosition().getPosid()==3) {//部门经理查询已处理的任务
+
+
+
+            Integer totalRecord = flowinfosService.findflowinfoedcount(user);
+
+            pageBean.setTotalRecord(totalRecord);
+
+            pageBean.getTotalPage();
+
+            PageBean<Flowinfos> page = flowinfosService.findflowinfoedlist(pageBean, user);
+
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+        }
+
+
+        return null;
 
     }
-
 
     /*显示待办任务的功能*/
 
@@ -370,6 +464,18 @@ public class UserController {
             return "fails";
 
         }
+
+    }
+
+    //查询所有的流程
+    @RequestMapping("/queryallflows.do")
+    public @ResponseBody String queryallflows(HttpServletRequest request) {
+
+        List<Flows> flowses = flowsService.findallflows();
+
+        String json = JSONObject.toJSONString(flowses, SerializerFeature.WriteMapNullValue);
+
+        return json;
 
     }
 

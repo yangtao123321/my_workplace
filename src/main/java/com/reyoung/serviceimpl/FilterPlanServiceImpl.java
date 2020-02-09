@@ -41,4 +41,10 @@ public class FilterPlanServiceImpl implements FilterPlanService {
         return filterPlan;
 
     }
+
+    @Override
+    public Integer delfilterplanbypid(FilterPlan filterPlan) {
+        return filterPlanDao.delfilterplanbypid(filterPlan);
+    }
+
 }

@@ -24,4 +24,13 @@ public interface FlowinfosDao {
     //根据uid查询流程的信息
     public List<Flowinfos> findflowinfosbyuid(User user);
 
+    //查询已处理的流程
+    public List<Flowinfos> findealflowinfos();
+
+    //经办人查询已处理的流程
+    public List<Flowinfos> findapplyflowinfoedlist(User user);
+
+    //根据fid删除flowinfos
+    public Integer delflowinfosbyfid(Flowinfos flowinfos);
+
 }

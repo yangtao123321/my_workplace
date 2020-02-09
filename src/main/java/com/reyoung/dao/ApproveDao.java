@@ -2,6 +2,7 @@ package com.reyoung.dao;
 
 import com.reyoung.model.Approve;
 import com.reyoung.model.Flowinfos;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,5 +26,8 @@ public interface ApproveDao {
 
     //更新审批操作
     public Integer updateapprobyuidandfid(Approve approve);
+
+    //批量删除approves
+    public Integer delapprovesbyaid(@Param("approves") List<Approve> approves);
 
 }

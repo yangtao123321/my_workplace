@@ -11,6 +11,12 @@
 
     </insert>
 
+    <delete id="delfilterplanbypid" parameterType="com.reyoung.model.FilterPlan">
+
+        DELETE FROM filterplan WHERE filterid=#{filterid};
+
+    </delete>
+
     <select id="findfilterplanbyincident" parameterType="com.reyoung.model.Flowinfos" resultMap="filterplanMap">
 
         SELECT

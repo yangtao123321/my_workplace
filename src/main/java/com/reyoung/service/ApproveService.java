@@ -24,5 +24,8 @@ public interface ApproveService {
     //更新审批操作
     public Integer updateapprobyuidandfid(Approve approve);
 
+    //批量删除approves
+    public Integer delapprovesbyaid(List<Approve> approves);
+
 
 }

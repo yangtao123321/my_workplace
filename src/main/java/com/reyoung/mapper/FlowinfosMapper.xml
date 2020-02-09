@@ -5,6 +5,12 @@
 
 <mapper namespace="com.reyoung.dao.FlowinfosDao">
 
+    <delete id="delflowinfosbyfid" parameterType="com.reyoung.model.Flowinfos">
+
+        DELETE FROM flowinfos WHERE flowinfoid=#{flowinfoid};
+
+    </delete>
+
     <update id="updateflowinfobyflowinfoid" parameterType="com.reyoung.model.Flowinfos">
 
         UPDATE flowinfos SET flag=#{flag},achieve=#{achieve} WHERE flowinfoid=#{flowinfoid};
@@ -134,6 +140,88 @@
         d.deptid=c.department
         AND
         a.flowinfoid=#{flowinfoid};
+
+    </select>
+
+    <select id="findealflowinfos" resultMap="flowinfoMap">
+
+        SELECT
+        a.flowinfoid,
+        a.flowabstract,
+        a.person,
+        a.startime,
+        a.endtime,
+        a.incident,
+        a.flag,
+        a.achieve,
+        b.flowid,
+        b.flowname,
+        c.uid,
+        c.username,
+        c.`password`,
+        c.truename,
+        c.position,
+        c.department,
+        c.signaturepath,
+        c.email,
+        c.section,
+        d.deptid,
+		d.deptname
+        FROM
+        flowinfos a,
+        flows b,
+        `user` c,
+        department d
+        WHERE
+        a.`user` = c.uid
+        AND
+        a.flows = b.flowid
+        AND
+        d.deptid=c.department
+        AND
+        a.flag &gt;0;
+
+    </select>
+
+    <select id="findapplyflowinfoedlist" parameterType="com.reyoung.model.User" resultMap="flowinfoMap">
+
+        SELECT
+        a.flowinfoid,
+        a.flowabstract,
+        a.person,
+        a.startime,
+        a.endtime,
+        a.incident,
+        a.flag,
+        a.achieve,
+        b.flowid,
+        b.flowname,
+        c.uid,
+        c.username,
+        c.`password`,
+        c.truename,
+        c.position,
+        c.department,
+        c.signaturepath,
+        c.email,
+        c.section,
+        d.deptid,
+		d.deptname
+        FROM
+        flowinfos a,
+        flows b,
+        `user` c,
+        department d
+        WHERE
+        a.`user` = c.uid
+        AND
+        a.flows = b.flowid
+        AND
+        d.deptid=c.department
+        AND
+        c.uid=#{uid}
+        AND
+        a.achieve &gt;0
 
     </select>
 

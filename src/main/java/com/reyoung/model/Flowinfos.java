@@ -33,6 +33,9 @@ public class Flowinfos {
     private Integer achieve;//完成的标志 默认为0 未完成  1表示已完成
 
     public Flowinfos() {
+
+
+
     }
 
     public Flowinfos(Integer flowinfoid, Flows flows, String flowabstract, String person, String startime1, Date startime, Date endtime, User user, Integer incident, Integer flag, Approve approve, Integer achieve) {

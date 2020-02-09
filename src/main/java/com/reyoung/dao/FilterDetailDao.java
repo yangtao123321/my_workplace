@@ -19,4 +19,7 @@ public interface FilterDetailDao {
     //根据fid查询滤芯的详情
     public List<FilterDetail> findfilterdetailbyfid(FilterPlan filterPlan);
 
+    //循环删除滤芯详情项   返回的是删除成功的条数
+    public Integer delfilterdetailbylist(@Param("filterDetails") List<FilterDetail> filterDetails);
+
 }

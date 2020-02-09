@@ -54,7 +54,6 @@ public class GetYear {
 
     }
 
-
     public static String getstrtim(Date date) {
 
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -62,7 +61,6 @@ public class GetYear {
         return sdf.format(date);
 
     }
-
 
     public static String getformdate(Date date) {
 

@@ -76,29 +76,372 @@
 
                 var v=$(this).text().trim();
 
-                alert(v);
+                if(v=='待办事项') {
 
-            });
+                    $($(".right").children()).remove();
 
-            $(document).on('click','.flows',function() {
+                    //发送ajax请求后台服务器
+                    $.ajax({
+                        url:"${pageContext.request.contextPath}/findoingtask.do",
+                        type:"post",
+                        async:true,
+                        beforeSend: function (){
 
-                var v=$(this).text().trim();
+                            $(".right").append("<div class='load'><img src='${pageContext.request.contextPath}/picture/load1.gif' /></div>");
 
-                if(v=='付款单审批流程') {
+                        },
+                        data:{},
+                        dataType:"json",
+                        success:function(data) {
 
-                    window.open("${pageContext.request.contextPath}/climppaynoticeflow.do","_blank");
+                            $(".load").remove();
 
-                }else if(v=='滤芯采购流程') {
+                            var obj=JSON.parse(data);
 
-                    window.open("${pageContext.request.contextPath}/climpfilterpage.do","_blank");
+                            //获取总条数和每页显示的数量
+                            var totalrecord=obj['totalRecord'];
 
-                }else if(v=='维修保养流程') {
+                            var pagesize=obj['pageSize'];
 
-                    alert("维修保养流程");
+                            for(k in obj) {
 
-                }else if(v=='其他采购流程') {
+                                if(k=='list') {
 
-                    alert("其他采购流程");
+                                    if(obj[k]==null) {//不存在待办任务
+
+                                        var noexit=$("<div class='noexit'>暂时未查询到待办任务!</div>");
+
+                                        $(".right").append(noexit);
+
+
+                                    }else {
+
+                                        $(".noexit").remove();
+
+                                        var obj1=obj[k];
+
+                                        var tb1=$("<table class='tb'></table>");
+
+                                        var tr=$("<tr class='tr'></tr>");
+
+                                        var td1=$("<td width='10%'>序号</td>");
+
+                                        var td2=$("<td width='15%'>流程名称</td>");
+
+                                        var td3=$("<td width='30%'>流程内容摘要</td>");
+
+                                        var td4=$("<td width='15%'>申请单位</td>");
+
+                                        var td5=$("<td width='10%'>提报人</td>");
+
+                                        var td6=$("<td width='20%'>到达时间</td>");
+
+                                        tr.append(td1);
+                                        tr.append(td2);
+                                        tr.append(td3);
+                                        tr.append(td4);
+                                        tr.append(td5);
+                                        tr.append(td6);
+
+                                        tb1.append(tr);
+
+                                        $(".right").append(tb1);
+
+
+                                        for(var i=0;i<obj1.length;i++) {
+
+                                            var tr1=$("<tr class='tr1'></tr>");
+
+                                            var tds1=$("<td></td>");
+
+                                            var tds2=$("<td></td>");
+
+                                            var tds3=$("<td class='flowabstract'></td>");
+
+                                            var tds4=$("<td></td>");
+
+                                            var tds5=$("<td></td>");
+
+                                            var tds6=$("<td></td>");
+
+                                            var obj2=obj1[i];
+
+                                            for(j in obj2) {
+
+                                                if(j=='flowinfoid') {
+
+                                                    tds1.text(obj2[j]);
+
+                                                }else if(j=='flows') {
+
+                                                    tds2.text(obj2[j]['flowname']);
+
+                                                }else if(j=='flowabstract') {
+
+                                                    tds3.text(obj2[j]);
+
+                                                }else if(j=='user') {
+
+                                                    tds4.text(obj2[j]['department']['deptname']);
+
+                                                }else if(j=='person') {
+
+                                                    tds5.text(obj2[j]);
+
+                                                }else if(j=='approve') {
+
+                                                    tds6.text(obj2[j]['arrivetime']);
+
+                                                }
+
+                                            }
+
+
+                                            tr1.append(tds1);
+                                            tr1.append(tds2);
+                                            tr1.append(tds3);
+                                            tr1.append(tds4);
+                                            tr1.append(tds5);
+                                            tr1.append(tds6);
+
+                                            tb1.append(tr1);
+
+
+
+                                        }
+
+                                        var box=$("<div class='M-box'></div>");
+
+                                        $(".right").append(box);
+
+                                        $(".M-box").pagination({
+
+                                            totalData:totalrecord,
+                                            showData:pagesize,
+                                            /*pageCount:10,*/
+                                            jump:true,
+                                            coping:true,
+                                            homePage:'首页',
+                                            endPage:'末页',
+                                            prevContent:'上页',
+                                            nextContent:'下页',
+                                            callback:pageback
+
+                                        });
+
+                                    }
+
+                                }
+
+
+                            }
+
+                        }
+
+
+                    });
+
+                }else if(v=='已处理事项') {
+
+                    $($(".right").children()).remove();
+
+                    //发送ajax请求后台服务器
+                    $.ajax({
+                        url:"${pageContext.request.contextPath}/findealtask.do",
+                        type:"post",
+                        async:true,
+                        beforeSend:function() {
+                            $(".right").append("<div class='load'><img src='${pageContext.request.contextPath}/picture/load1.gif' /></div>");
+                        },
+                        data:{},
+                        dataType:"json",
+                        success:function(data) {
+
+                            $(".load").remove();
+
+                            var obj=JSON.parse(data);
+
+                            //获取总条数和每页显示的数量
+                            var totalrecord=obj['totalRecord'];
+
+                            var pagesize=obj['pageSize'];
+
+                            for(k in obj) {
+
+                                if(k=='list') {
+
+                                    if(obj[k]==null) {//不存在待办任务
+
+                                        var noexit=$("<div class='noexit'>暂时未查询到待办任务!</div>");
+
+                                        $(".right").append(noexit);
+
+                                    }else {
+
+                                        var obj1=obj[k];
+
+                                        var tb1=$("<table class='tb1'></table>");
+
+                                        var tr=$("<tr class='tr2'></tr>");
+
+                                        var td1=$("<td width='5%'>序号</td>");
+
+                                        var td2=$("<td width='15%'>流程名称</td>");
+
+                                        var td3=$("<td width='25%'>流程内容摘要</td>");
+
+                                        var td4=$("<td width='10%'>申请单位</td>");
+
+                                        var td5=$("<td width='10%'>提报人</td>");
+
+                                        var td6=$("<td width='20%'>处理时间</td>");
+
+                                        var td7=$("<td width='5%'>流程图</td>");
+
+                                        var td8=$("<td width='10%'>流程状态</td>");
+
+
+                                        tr.append(td1);
+                                        tr.append(td2);
+                                        tr.append(td3);
+                                        tr.append(td4);
+                                        tr.append(td5);
+                                        tr.append(td6);
+                                        tr.append(td7);
+                                        tr.append(td8);
+
+                                        tb1.append(tr);
+
+                                        $(".right").append(tb1);
+
+                                        for(var i=0;i<obj1.length;i++) {
+
+                                            var tr1=$("<tr class='tr3'></tr>");
+
+                                            var tds1=$("<td></td>");
+
+                                            var tds2=$("<td></td>");
+
+                                            var tds3=$("<td class='flowabstract1'></td>");
+
+                                            var tds4=$("<td></td>");
+
+                                            var tds5=$("<td></td>");
+
+                                            var tds6=$("<td></td>");
+
+                                            var tds7=$("<td class='flopic'></td>");
+
+                                            var tds8=$("<td style='color:#008d00'></td>");
+
+                                            var img=$("<img />");
+
+                                            img.attr("src","${pageContext.request.contextPath}/picture/but9.png");
+
+                                            tds7.append(img);
+
+                                            var obj2=obj1[i];
+
+                                            for(j in obj2) {
+
+                                                if(j=='flowinfoid') {
+
+                                                    tds1.text(obj2[j]);
+
+                                                }else if(j=='flows') {
+
+                                                    var obj3=obj2[j];
+
+                                                    for(l in obj3) {
+
+                                                        if(l=='flowname') {
+
+                                                            tds2.text(obj3[l]);
+
+                                                        }
+
+                                                    }
+
+                                                }else if(j=='flowabstract') {
+
+                                                    tds3.text(obj2[j]);
+
+                                                }else if(j=='user') {
+
+                                                    tds4.text(obj2[j]['department']['deptname']);
+
+                                                }else if(j=='person') {
+
+                                                    tds5.text(obj2[j]);
+
+                                                }else if(j=='approve') {
+
+                                                    tds6.text(obj2[j]['dealtime']);
+
+                                                }else if(j=='achieve') {
+
+                                                    if(obj2[j]==0) {
+
+                                                        tds8.text("处理中");
+
+                                                    }else if(obj2[j]==1) {
+
+                                                        tds8.text("已同意");
+
+                                                    }else {
+
+                                                        tds8.text("已拒绝");
+
+                                                    }
+
+                                                }
+
+                                            }
+
+                                            tr1.append(tds1);
+                                            tr1.append(tds2);
+                                            tr1.append(tds3);
+                                            tr1.append(tds4);
+                                            tr1.append(tds5);
+                                            tr1.append(tds6);
+                                            tr1.append(tds7);
+                                            tr1.append(tds8);
+
+
+                                            tb1.append(tr1);
+
+
+                                        }
+
+                                        var box=$("<div class='M-box1'></div>");
+
+                                        $(".right").append(box);
+
+                                        $(".M-box1").pagination({
+
+                                            totalData:totalrecord,
+                                            showData:pagesize,
+                                            /*pageCount:10,*/
+                                            jump:true,
+                                            coping:true,
+                                            homePage:'首页',
+                                            endPage:'末页',
+                                            prevContent:'上页',
+                                            nextContent:'下页',
+                                            callback:pageback1
+
+                                        });
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+
+                    });
 
                 }
 
@@ -111,6 +454,54 @@
                 $(".ceng").show();
                 $('.uppasdiv').css({"z-index":"2"});
                 $(".uppasdiv").fadeIn(300);
+
+            });
+
+            //查看流程详情的事件
+            $(document).on('click','.flowabstract',function() {
+
+                var fid=$($($($(this).parent())).children()).eq(0).text();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/findflowinfinfodetailbyfid.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "flowinfoid").val(fid);
+
+                form.append(input1);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
+
+            });
+
+            //查看流程详情的页面   没有审批的选项
+            $(document).on('click','.flowabstract1',function() {
+
+                var fid=$($($($(this).parent())).children()).eq(0).text();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/finddetailfilterbyapply.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "flowinfoid").val(fid);
+
+                form.append(input1);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
+
+            });
+
+            //查看流程图
+            $(document).on('click','.flopic',function() {
+
+                var fid=$($($($(this).parent())).children()).eq(0).text();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/climpflowpicbyfid.do?flowinfoid.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "flowinfoid").val(fid);
+
+                form.append(input1);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
 
             });
 
@@ -238,15 +629,6 @@
 
             });
 
-            //查看流程详情的事件
-            $(document).on('click','.flowabstract',function() {
-
-                var fid=$($($($(this).parent())).children()).eq(0).text();
-
-                window.open("${pageContext.request.contextPath}/findflowinfinfodetailbyfid.do?flowinfoid="+fid,"_blank");
-
-            });
-
             $(".M-box").pagination({
                 totalData:${page.totalRecord},
                 showData:${page.pageSize},
@@ -263,10 +645,378 @@
 
             function pageback(cur) {
 
-                alert(cur.getCurrent());
+                var currentPage=cur.getCurrent();
+
+                $(".right").children().remove();
+
+                //发送ajax请求后台服务器
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/findoingtask.do",
+                    type:"post",
+                    async:false,
+                    beforeSend:function() {
+                        $(".right").append("<div class='load'><img src='${pageContext.request.contextPath}/picture/load1.gif' /></div>");
+                    },
+                    data:{"currentPage":currentPage},
+                    dataType:"json",
+                    success:function(data) {
+
+                        $(".load").remove();
+
+                        var obj=JSON.parse(data);
+
+                        //获取总条数和每页显示的数量
+                        var totalrecord=obj['totalRecord'];
+
+                        var pagesize=obj['pageSize'];
+
+                        for(k in obj) {
+
+                            if(k=='list') {
+
+                                if(obj[k]==null) {//不存在待办任务
+
+                                    var noexit=$("<div class='noexit'>暂时未查询到待办任务!</div>");
+
+                                    $(".right").append(noexit);
+
+
+                                }else {
+
+                                    $(".noexit").remove();
+
+                                    var obj1=obj[k];
+
+                                    var tb1=$("<table class='tb'></table>");
+
+                                    var tr=$("<tr class='tr'></tr>");
+
+                                    var td1=$("<td width='10%'>序号</td>");
+
+                                    var td2=$("<td width='15%'>流程名称</td>");
+
+                                    var td3=$("<td width='30%'>流程内容摘要</td>");
+
+                                    var td4=$("<td width='15%'>申请单位</td>");
+
+                                    var td5=$("<td width='10%'>提报人</td>");
+
+                                    var td6=$("<td width='20%'>到达时间</td>");
+
+                                    tr.append(td1);
+                                    tr.append(td2);
+                                    tr.append(td3);
+                                    tr.append(td4);
+                                    tr.append(td5);
+                                    tr.append(td6);
+
+                                    tb1.append(tr);
+
+                                    $(".right").append(tb1);
+
+
+                                    for(var i=0;i<obj1.length;i++) {
+
+                                        var tr1=$("<tr class='tr1'></tr>");
+
+                                        var tds1=$("<td></td>");
+
+                                        var tds2=$("<td></td>");
+
+                                        var tds3=$("<td class='flowabstract'></td>");
+
+                                        var tds4=$("<td></td>");
+
+                                        var tds5=$("<td></td>");
+
+                                        var tds6=$("<td></td>");
+
+                                        var obj2=obj1[i];
+
+                                        for(j in obj2) {
+
+                                            if(j=='flowinfoid') {
+
+                                                tds1.text(obj2[j]);
+
+                                            }else if(j=='flows') {
+
+                                                tds2.text(obj2[j]['flowname']);
+
+                                            }else if(j=='flowabstract') {
+
+                                                tds3.text(obj2[j]);
+
+                                            }else if(j=='user') {
+
+                                                tds4.text(obj2[j]['department']['deptname']);
+
+                                            }else if(j=='person') {
+
+                                                tds5.text(obj2[j]);
+
+                                            }else if(j=='approve') {
+
+                                                tds6.text(obj2[j]['arrivetime']);
+
+                                            }
+
+                                        }
+
+
+                                        tr1.append(tds1);
+                                        tr1.append(tds2);
+                                        tr1.append(tds3);
+                                        tr1.append(tds4);
+                                        tr1.append(tds5);
+                                        tr1.append(tds6);
+
+                                        tb1.append(tr1);
+
+
+
+                                    }
+
+                                    var box=$("<div class='M-box'></div>");
+
+                                    $(".right").append(box);
+
+                                    $(".M-box").pagination({
+
+                                        totalData:totalrecord,
+                                        showData:pagesize,
+                                        /*pageCount:10,*/
+                                        current:currentPage,
+                                        jump:true,
+                                        coping:true,
+                                        homePage:'首页',
+                                        endPage:'末页',
+                                        prevContent:'上页',
+                                        nextContent:'下页',
+                                        callback:pageback
+
+                                    });
+
+                                }
+
+                            }
+
+
+                        }
+
+                    }
+
+                });
 
             }
 
+            function pageback1(cur) {
+
+                var currentPage=cur.getCurrent();
+
+                $(".right").children().remove();
+
+                //发送ajax请求后台服务器
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/findealtask.do",
+                    type:"post",
+                    async:true,
+                    beforeSend:function() {
+                        $(".right").append("<div class='load'><img src='${pageContext.request.contextPath}/picture/load1.gif' /></div>");
+                    },
+                    data:{"currentPage":currentPage},
+                    dataType:"json",
+                    success:function(data) {
+
+                        $(".load").remove();
+
+                        var obj=JSON.parse(data);
+
+                        //获取总条数和每页显示的数量
+                        var totalrecord=obj['totalRecord'];
+
+                        var pagesize=obj['pageSize'];
+
+                        for(k in obj) {
+
+                            if(k=='list') {
+
+                                if(obj[k]==null) {//不存在待办任务
+
+                                    var noexit=$("<div class='noexit'>暂时未查询到待办任务!</div>");
+
+                                    $(".right").append(noexit);
+
+                                }else {
+
+                                    var obj1=obj[k];
+
+                                    var tb1=$("<table class='tb1'></table>");
+
+                                    var tr=$("<tr class='tr2'></tr>");
+
+                                    var td1=$("<td width='5%'>序号</td>");
+
+                                    var td2=$("<td width='15%'>流程名称</td>");
+
+                                    var td3=$("<td width='25%'>流程内容摘要</td>");
+
+                                    var td4=$("<td width='10%'>申请单位</td>");
+
+                                    var td5=$("<td width='10%'>提报人</td>");
+
+                                    var td6=$("<td width='20%'>处理时间</td>");
+
+                                    var td7=$("<td width='5%'>流程图</td>");
+
+                                    var td8=$("<td width='10%'>流程状态</td>");
+
+
+                                    tr.append(td1);
+                                    tr.append(td2);
+                                    tr.append(td3);
+                                    tr.append(td4);
+                                    tr.append(td5);
+                                    tr.append(td6);
+                                    tr.append(td7);
+                                    tr.append(td8);
+
+                                    tb1.append(tr);
+
+                                    $(".right").append(tb1);
+
+                                    for(var i=0;i<obj1.length;i++) {
+
+                                        var tr1=$("<tr class='tr3'></tr>");
+
+                                        var tds1=$("<td></td>");
+
+                                        var tds2=$("<td></td>");
+
+                                        var tds3=$("<td class='flowabstract1'></td>");
+
+                                        var tds4=$("<td></td>");
+
+                                        var tds5=$("<td></td>");
+
+                                        var tds6=$("<td></td>");
+
+                                        var tds7=$("<td class='flopic'></td>");
+
+                                        var tds8=$("<td style='color:#008d00'></td>");
+
+                                        var img=$("<img />");
+
+                                        img.attr("src","${pageContext.request.contextPath}/picture/but9.png");
+
+                                        tds7.append(img);
+
+                                        var obj2=obj1[i];
+
+                                        for(j in obj2) {
+
+                                            if(j=='flowinfoid') {
+
+                                                tds1.text(obj2[j]);
+
+                                            }else if(j=='flows') {
+
+                                                var obj3=obj2[j];
+
+                                                for(l in obj3) {
+
+                                                    if(l=='flowname') {
+
+                                                        tds2.text(obj3[l]);
+
+                                                    }
+
+                                                }
+
+                                            }else if(j=='flowabstract') {
+
+                                                tds3.text(obj2[j]);
+
+                                            }else if(j=='user') {
+
+                                                tds4.text(obj2[j]['department']['deptname']);
+
+                                            }else if(j=='person') {
+
+                                                tds5.text(obj2[j]);
+
+                                            }else if(j=='approve') {
+
+                                                tds6.text(obj2[j]['dealtime']);
+
+                                            }else if(j=='achieve') {
+
+                                                if(obj2[j]==0) {
+
+                                                    tds8.text("处理中");
+
+                                                }else if(obj2[j]==1) {
+
+                                                    tds8.text("已同意");
+
+                                                }else {
+
+                                                    tds8.text("已拒绝");
+
+                                                }
+
+                                            }
+
+                                        }
+
+                                        tr1.append(tds1);
+                                        tr1.append(tds2);
+                                        tr1.append(tds3);
+                                        tr1.append(tds4);
+                                        tr1.append(tds5);
+                                        tr1.append(tds6);
+                                        tr1.append(tds7);
+                                        tr1.append(tds8);
+
+
+                                        tb1.append(tr1);
+
+
+                                    }
+
+                                    var box=$("<div class='M-box1'></div>");
+
+                                    $(".right").append(box);
+
+                                    $(".M-box1").pagination({
+
+                                        totalData:totalrecord,
+                                        showData:pagesize,
+                                        /*pageCount:10,*/
+                                        current:currentPage,
+                                        jump:true,
+                                        coping:true,
+                                        homePage:'首页',
+                                        endPage:'末页',
+                                        prevContent:'上页',
+                                        nextContent:'下页',
+                                        callback:pageback1
+
+                                    });
+
+                                }
+
+                            }
+
+                        }
+
+
+                    }
+
+
+                });
+
+            }
 
         });
 
@@ -594,7 +1344,6 @@
             margin-left: 30%;
             margin-top: 10%;
 
-
         }
 
         .save{
@@ -619,7 +1368,7 @@
 
         }
 
-        .tb{
+        .tb,.tb1{
             position:relative;
             margin-top: 1%;
             margin-left: 1px;
@@ -629,7 +1378,7 @@
 
         }
 
-        .tb td{
+        .tb td,.tb1 td{
 
             border: 1px solid #d3d2d1;
             text-align: center;
@@ -638,7 +1387,7 @@
 
         }
 
-        .tr{
+        .tr,.tr2{
 
             background-color: #efeeed;
             font-family: "宋体";
@@ -651,19 +1400,18 @@
 
         }
 
-        .tr1{
+        .tr1,.tr3{
 
             font-family: "宋体";
             font-size: 15px;
 
         }
 
-        .tr1:hover{
+        .tr1:hover,.tr3:hover{
             background-color: #edeceb;
         }
 
-
-        .flowabstract{
+        .flowabstract,.flowabstract1{
 
             color: #3150f2;
             cursor: pointer;
@@ -671,8 +1419,6 @@
             font-family: "Courier New";
 
         }
-
-
 
         /*分页样式表*/
         .M-box{
@@ -750,6 +1496,112 @@
             font-size: 13px;
         }
 
+        /*分页样式表2*/
+        .M-box1{
+            position: relative;
+            text-align: center;
+            zoom: 1;
+            margin-top: 2%;
+            left: 30%;
+            width: 70%;
+        }
+        .M-box1:before,.M-box1:after{
+            content:"";
+            display:table;
+        }
+        .M-box1:after{
+            clear:both;
+            overflow:hidden;
+        }
+        .M-box1 span{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            color: #bdbdbd;
+            font-size: 13px;
+        }
+        .M-box1 .active{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background: #009ae1;
+            color: #fff;
+            font-size: 13px;
+            border: 1px solid #009ae1;
+        }
+        .M-box1 a{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            background: #fff;
+            border: 1px solid #ebebeb;
+            color: #bdbdbd;
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .M-box1 a:hover{
+            color:#fff;
+            background: #0072af;
+        }
+        .M-box1 .next,.M-box1 .prev{
+            /*font-family: "Simsun";*/
+            font-size: 13px;
+            font-family: "Courier New";
+        }
+        .now,.count{
+            padding:0 5px;
+            color: #009ae1;
+        }
+        .M-box1 input{
+            float: left;
+            margin:0 5px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #ebebeb;
+            outline: none;
+            color: #2c73d8;
+            font-size: 13px;
+        }
+
+        /*待办任务不存在*/
+        .noexit{
+
+            position: relative;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            color: red;
+            font-weight: bold;
+            font-size: 21px;
+            margin-top: 1%;
+            font-family: "仿宋";
+
+        }
+
+        .load{
+
+            position: absolute;
+            text-align: center;
+            top: 40%;
+            left: 40%;
+
+        }
+
+        .flopic{
+
+            cursor: pointer;
+
+        }
+
     </style>
 
 </head>
@@ -818,14 +1670,6 @@
 
     <div class="right">
 
-        <%--<div class="flows">付款单审批流程</div>--%>
-
-        <%--<div class="flows">滤芯采购流程</div>
-
-        <div class="flows">维修保养流程</div>
-
-        <div class="flows">其他采购流程</div>--%>
-
         <table class="tb">
 
             <tr class="tr">
@@ -851,33 +1695,6 @@
                 </tr>
 
             </c:forEach>
-
-            <%--<tr class="tr1">
-                <td>1</td>
-                <td>滤芯采购计划</td>
-                <td class="flowabstract">305车间采购滤芯计划</td>
-                <td>305车间</td>
-                <td>左志泰</td>
-                <td>2020-01-17 08:08:50</td>
-            </tr>
-
-            <tr class="tr1">
-                <td>1</td>
-                <td>滤芯采购计划</td>
-                <td class="flowabstract">305车间采购滤芯计划</td>
-                <td>305车间</td>
-                <td>左志泰</td>
-                <td>2020-01-17 08:08:50</td>
-            </tr>
-
-            <tr class="tr1">
-                <td>1</td>
-                <td>滤芯采购计划</td>
-                <td class="flowabstract">305车间采购滤芯计划</td>
-                <td>305车间</td>
-                <td>左志泰</td>
-                <td>2020-01-17 08:08:50</td>
-            </tr>--%>
 
         </table>
 

@@ -14,4 +14,6 @@ public interface FilterPlanDao {
 
     public FilterPlan findfilterplanbyincident(Flowinfos flowinfos);
 
+    public Integer delfilterplanbypid(FilterPlan filterPlan);
+
 }

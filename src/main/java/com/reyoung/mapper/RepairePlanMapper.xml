@@ -3,31 +3,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.reyoung.dao.FilterPlanDao">
+<mapper namespace="com.reyoung.dao.RepairePlanDao">
 
-    <insert id="addfilterplan" parameterType="com.reyoung.model.FilterPlan" useGeneratedKeys="true" keyProperty="filterid" keyColumn="filterid">
+    <insert id="addrepaireplan" parameterType="com.reyoung.model.RepairePlan" useGeneratedKeys="true" keyProperty="repaireid" keyColumn="repaireid">
 
-        INSERT INTO filterplan(userid,filtertotle,applyperson,applyreason,applyabstract,applytime,buyrequires,receive) VALUES(#{user.uid},#{filtertotle},#{applyperson},#{applyreason},#{applyabstract},#{applytime1},#{buyrequires},#{receive});
+        INSERT INTO repaireplan(userid,repairetitle,applyperson,applyabstract,receive,applytime,applytime1,buyrequires,supplier,contex) VALUES (#{user.uid},#{repairetitle},#{applyperson},#{applyabstract},#{receive},#{applytime},#{applytime},#{buyrequires},#{supplier},#{contex});
 
     </insert>
 
-    <delete id="delfilterplanbypid" parameterType="com.reyoung.model.FilterPlan">
-
-        DELETE FROM filterplan WHERE filterid=#{filterid};
-
-    </delete>
-
-    <select id="findfilterplanbyincident" parameterType="com.reyoung.model.Flowinfos" resultMap="filterplanMap">
+    <select id="findrepairedetailbyrid" parameterType="com.reyoung.model.Flowinfos" resultMap="repaireplanMap">
 
         SELECT
-        p.filterid,
-        p.filtertotle,
-        p.applyperson,
-        p.applyreason,
-        p.applyabstract,
-        p.applytime,
-        p.buyrequires,
-        p.receive,
+        a.repaireid,
+        a.repairetitle,
+        a.applyperson,
+        a.applyabstract,
+        a.receive,
+        a.applytime,
+        a.applytime1,
+        a.buyrequires,
+        a.supplier,
+        a.contex,
         u.uid,
         u.username,
         u.`password`,
@@ -47,13 +43,13 @@
         s.sectionid,
         s.sectionname
         FROM
-        filterplan p,
+        repaireplan a,
         `user` u,
         department d,
         position e,
         section s
         WHERE
-	    p.userid = u.uid
+        a.userid = u.uid
         AND
         d.deptid = u.department
         AND
@@ -61,21 +57,24 @@
         AND
         s.sectionid = u.section
         AND
-        p.filterid=#{incident};
+        a.repaireid=#{incident}
 
     </select>
 
-    <resultMap id="filterplanMap" type="com.reyoung.model.FilterPlan">
+    <resultMap id="repaireplanMap" type="com.reyoung.model.RepairePlan">
 
-        <id column="filterid" property="filterid" />
+        <id column="repaireid" property="repaireid" />
         <result column="userid" property="user.uid" />
-        <result column="filtertotle" property="filtertotle" />
+        <result column="repairetitle" property="repairetitle" />
         <result column="applyperson" property="applyperson" />
-        <result column="applyreason" property="applyreason" />
         <result column="applyabstract" property="applyabstract" />
-        <result column="applytime" property="applytime1" />
-        <result column="buyrequires" property="buyrequires" />
         <result column="receive" property="receive" />
+        <result column="applytime" property="applytime" />
+        <result column="applytime1" property="applytime1" />
+        <result column="buyrequires" property="buyrequires" />
+        <result column="supplier" property="supplier" />
+        <result column="contex" property="contex" />
+
 
         <association property="user" javaType="com.reyoung.model.User">
 
@@ -114,6 +113,8 @@
             </association>
 
         </association>
+
+
 
     </resultMap>
 

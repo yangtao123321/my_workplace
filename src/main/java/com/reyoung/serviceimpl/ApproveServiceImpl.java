@@ -76,21 +76,21 @@ public class ApproveServiceImpl implements ApproveService {
 
             approves1.add(approve);
 
-        }else {//进行其他的操作 筛选出审批通过的人员 添加到approve中
-
+        }
             for (Approve a:approves) {
 
-                if (a.getUser().getPosition().getPosid()>1&&a.getApproflag()==1) {//筛选出审批通过的人员的记录
+                if (a.getUser().getPosition().getPosid()>1&&a.getApproflag()>0) {//筛选出审批通过的人员的记录
 
                     approves1.add(a);
 
                 }
 
-
             }
 
 
-        }
+
+        for (Approve a:approves1)
+            System.out.println(a);
 
         //对list集合进行倒排序
         Collections.reverse(approves1);
@@ -123,6 +123,11 @@ public class ApproveServiceImpl implements ApproveService {
 
         return approveDao.updateapprobyuidandfid(approve);
 
+    }
+
+    @Override
+    public Integer delapprovesbyaid(List<Approve> approves) {
+        return approveDao.delapprovesbyaid(approves);
     }
 
 }

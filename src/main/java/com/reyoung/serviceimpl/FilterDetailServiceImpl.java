@@ -32,4 +32,9 @@ public class FilterDetailServiceImpl implements FilterDetailService {
         return filterDetailDao.findfilterdetailbyfid(filterPlan);
     }
 
+    @Override
+    public Integer delfilterdetailbylist(List<FilterDetail> filterDetails) {
+        return filterDetailDao.delfilterdetailbylist(filterDetails);
+    }
+
 }
