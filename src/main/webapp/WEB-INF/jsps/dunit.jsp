@@ -611,7 +611,7 @@
 
             });
 
-            //查看流程详情的事件
+            //查看流程详情的事件   批流程
             $(document).on('click','.flowabstract',function() {
 
                 var fid=$($($($(this).parent())).children()).eq(0).text();
@@ -1766,7 +1766,7 @@
 <script type="text/javascript" language="JavaScript">
 
     //刷新执行该段代码
-    /*(function() {
+    (function() {
 
         $(".flowtop").css({"background-color":"white"});
 
@@ -1927,7 +1927,7 @@
 
                                 totalData:totalrecord,
                                 showData:pagesize,
-                                *//*pageCount:10,*//*
+                                /*pageCount:10,*/
                                 jump:true,
                                 coping:true,
                                 homePage:'首页',
@@ -1937,10 +1937,6 @@
                                 callback:pageback3
 
                             });
-
-
-
-
 
                         }
 
@@ -1956,7 +1952,7 @@
 
 
 
-    })();*/
+    })();
 
     function pageback3(cur) {
 

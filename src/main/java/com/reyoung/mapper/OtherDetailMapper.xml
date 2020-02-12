@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.OtherDetailDao">
+
+    <insert id="addotherdetailbyotherdetail" parameterType="java.util.List" useGeneratedKeys="false">
+
+        INSERT INTO otherdetail(otherproname,othersupplier,otherspecial,othernum,otherplanid) VALUES
+
+        <foreach collection="otherDetails" item="item" index="index" separator=",">
+
+            (
+            #{item.otherproname},
+            #{item.othersupplier},
+            #{item.otherspecial},
+            #{item.othernum},
+            #{item.otherplanid}
+            )
+
+        </foreach>
+
+    </insert>
+
+    <select id="findotherdetailbyotherplan" parameterType="com.reyoung.model.OtherPlan" resultMap="otherdetaolMap">
+
+        SELECT * FROM otherdetail WHERE otherplanid=#{otherplanid};
+
+    </select>
+
+    <resultMap id="otherdetaolMap" type="com.reyoung.model.OtherDetail">
+
+        <id column="otherdetailid" property="otherdetailid" />
+        <result column="otherproname" property="otherproname" />
+        <result column="othersupplier" property="othersupplier" />
+        <result column="otherspecial" property="otherspecial" />
+        <result column="othernum" property="othernum" />
+        <result column="otherplanid" property="otherplanid" />
+
+    </resultMap>
+
+</mapper>
+

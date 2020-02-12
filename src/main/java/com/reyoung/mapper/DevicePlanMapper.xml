@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.reyoung.dao.DevicePlanDao">
+
+    <insert id="adddeviceplan" parameterType="com.reyoung.model.DevicePlan" useGeneratedKeys="true" keyProperty="deviceid" keyColumn="deviceid">
+
+        INSERT INTO deviceplan(userid,devicetitle,applyperson,applyabstract,receive,applytime,applytime1,buyreson) VALUES(#{user.uid},#{devicetitle},#{applyperson},#{applyabstract},#{receive},#{applytime},#{applytime1},#{buyreson});
+
+    </insert>
+
+    <select id="finddeviceplanbyflowinfo" parameterType="com.reyoung.model.Flowinfos" resultMap="deviceplanMap">
+
+        SELECT
+        p.deviceid,
+        p.devicetitle,
+        p.applyperson,
+        p.applyabstract,
+        p.receive,
+        p.applytime,
+        p.applytime1,
+        p.buyreson,
+        u.uid,
+        u.username,
+        u.`password`,
+        u.truename,
+        u.position,
+        u.department,
+        u.signaturepath,
+        u.email,
+        u.section,
+        d.deptid,
+        d.deptname,
+        e.posid,
+        e.posname,
+        e.approflag,
+        e.agreeflag,
+        e.backflag,
+        s.sectionid,
+        s.sectionname
+        FROM
+        deviceplan p,
+        USER u,
+        department d,
+        section s,
+        position e
+        WHERE
+        p.userid = u.uid
+        AND
+        u.department = d.deptid
+        AND
+        u.position = e.posid
+        AND
+        u.section = s.sectionid
+        AND
+        p.deviceid=#{incident}
+
+    </select>
+
+    <resultMap id="deviceplanMap" type="com.reyoung.model.DevicePlan">
+
+        <id column="deviceid" property="deviceid" />
+        <result column="userid" property="user.uid" />
+        <result column="devicetitle" property="devicetitle" />
+        <result column="applyperson" property="applyperson" />
+        <result column="applyabstract" property="applyabstract" />
+        <result column="receive" property="receive" />
+        <result column="applytime" property="applytime" />
+        <result column="applytime1" property="applytime1" />
+        <result column="buyreson" property="buyreson" />
+
+        <association property="user" javaType="com.reyoung.model.User">
+
+            <id column="uid" property="uid" />
+            <result column="username" property="username" />
+            <result column="password" property="password" />
+            <result column="truename" property="truename" />
+            <result column="position" property="position.posid" />
+            <result column="department" property="department.deptid" />
+            <result column="signaturepath" property="signaturepath" />
+            <result column="email" property="email" />
+            <result column="section" property="section.sectionid" />
+
+            <association property="department" javaType="com.reyoung.model.Department">
+
+                <id column="deptid" property="deptid" />
+                <result column="deptname" property="deptname" />
+
+            </association>
+
+            <association property="position" javaType="com.reyoung.model.Position">
+
+                <id column="posid" property="posid"  />
+                <result column="posname" property="posname" />
+                <result column="approflag" property="approflag" />
+                <result column="agreeflag" property="agreeflag" />
+                <result column="backflag" property="backflag" />
+
+            </association>
+
+            <association property="section" javaType="com.reyoung.model.Section">
+
+                <id column="sectionid" property="sectionid" />
+                <result column="sectionname" property="sectionname" />
+
+            </association>
+
+        </association>
+
+    </resultMap>
+
+</mapper>

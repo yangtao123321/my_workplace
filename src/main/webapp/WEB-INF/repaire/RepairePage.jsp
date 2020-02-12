@@ -8,6 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+
 <head>
     <title>维修计划申请单</title>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
@@ -26,7 +27,7 @@
 
                 var flowid=$(".flowid").text();
 
-                var repairetitle="维  修  计  划  表";
+                var repairetitle="维    修    计    划    表";
 
                 var person=$(".apperson").val().trim();
 
@@ -93,10 +94,6 @@
 
 
             });
-
-
-
-
 
         });
 
@@ -198,7 +195,7 @@
             position: relative;
             border: 1px solid #a6aca8;
             margin-top: 1%;
-            text-align: center;
+            text-align: left;
             font-size: 21px;
             padding:0px;
             overflow: hidden;
@@ -378,4 +375,5 @@
 </div>
 
 </body>
+
 </html>

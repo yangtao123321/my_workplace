@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.DeviceDetailDao">
+
+    <insert id="adddevicedetailbydetails" parameterType="java.util.List" useGeneratedKeys="false">
+
+        INSERT INTO devicedetail(devicename,devicebank,devicenum,deviceplanid)
+
+        VALUES
+
+        <foreach collection="deviceDetails" item="item" index="index" separator=",">
+
+            (
+            #{item.devicename},
+            #{item.devicebank},
+            #{item.devicenum},
+            #{item.deviceplanid}
+            )
+
+        </foreach>
+
+    </insert>
+
+    <select id="finddevicedetaillistbydeviceplan" parameterType="com.reyoung.model.DevicePlan" resultMap="devicedetailMap">
+
+        SELECT * FROM devicedetail WHERE deviceplanid=#{deviceid};
+
+    </select>
+
+    <resultMap id="devicedetailMap" type="com.reyoung.model.DeviceDetail">
+
+        <id column="devicedetailid" property="devicedetailid" />
+        <result column="devicename" property="devicename" />
+        <result column="devicebank" property="devicebank" />
+        <result column="devicenum" property="devicenum" />
+        <result column="deviceplanid" property="deviceplanid" />
+
+    </resultMap>
+
+</mapper>

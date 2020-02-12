@@ -166,7 +166,6 @@ public class FiltersTools {
 
     }
 
-
     //负责产生天成图片的单元格对象
     public static PdfPCell createpdfcell(Image image,int row,int col) {
 
@@ -452,6 +451,5 @@ public class FiltersTools {
 
 
     }
-
 
 }

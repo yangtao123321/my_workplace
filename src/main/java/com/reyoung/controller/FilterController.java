@@ -32,6 +32,18 @@ public class FilterController {
     @Resource(name = "repairePlanService")
     private RepairePlanService repairePlanService;
 
+    @Resource(name = "devicePlanService")
+    private DevicePlanService devicePlanService;
+
+    @Resource(name = "deviceDetailService")
+    private DeviceDetailService deviceDetailService;
+
+    @Resource(name = "otherPlanService")
+    private OtherPlanService otherPlanService;
+
+    @Resource(name = "otherDetailService")
+    private OtherDetailService otherDetailService;
+
     @Resource(name = "filterDetailService")
     private FilterDetailService filterDetailService;
 
@@ -131,8 +143,6 @@ public class FilterController {
 
           if (filterDetails.size()==t) {//全部插入成功后的逻辑   需要将流程信息的详情添加到流程信息表
 
-              System.out.println(filterPlan);
-
               flowinfos.setFlows(new Flows(filterPlan.getFlowid()));//设置所属的流程
 
               flowinfos.setPerson(filterPlan.getApplyperson());//设置提报人
@@ -159,8 +169,6 @@ public class FilterController {
                   return "fails";
 
               }
-
-
 
           }else {
 
@@ -222,9 +230,41 @@ public class FilterController {
 
             return "WEB-INF/repaire/RepaireApprove";
 
+        }else if (flowinfos1.getFlows().getFlowname().equals("设备类采购流程")) {
+
+            DevicePlan devicePlan = devicePlanService.finddeviceplanbyflowinfo(flowinfos1);
+
+            devicePlan.setDeviceDetails(deviceDetailService.finddevicedetaillistbydeviceplan(devicePlan));
+
+            Section section = sectionService.findsectionbyid(devicePlan.getReceive());
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            request.setAttribute("deviceplan",devicePlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/device/DeviceApprove";
+
         }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
 
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
 
+            OtherPlan otherPlan = otherPlanService.findotherplanbyflowinfos(flowinfos1);
+
+            otherPlan.setOtherDetails(otherDetailService.findotherdetailbyotherplan(otherPlan));
+
+            Section section = sectionService.findsectionbyid(otherPlan.getReceive());
+
+            request.setAttribute("otherplan",otherPlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/other/OtherApprove";
 
         }
 
@@ -269,8 +309,6 @@ public class FilterController {
 
             Section section = sectionService.findsectionbyid(repairePlan.getReceive());
 
-            System.out.println(repairePlan);
-
             request.setAttribute("repaire",repairePlan);
 
             request.setAttribute("sec",section);
@@ -279,9 +317,42 @@ public class FilterController {
 
             return "WEB-INF/repaire/RepaireDetail";
 
+        }else if (flowinfos1.getFlows().getFlowname().equals("设备类采购流程")) {
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            DevicePlan devicePlan = devicePlanService.finddeviceplanbyflowinfo(flowinfos1);
+
+            devicePlan.setDeviceDetails(deviceDetailService.finddevicedetaillistbydeviceplan(devicePlan));
+
+            Section section = sectionService.findsectionbyid(devicePlan.getReceive());
+
+            request.setAttribute("deviceplan",devicePlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/device/DeviceDetail";
+
         }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
 
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
 
+            OtherPlan otherPlan = otherPlanService.findotherplanbyflowinfos(flowinfos1);
+
+            otherPlan.setOtherDetails(otherDetailService.findotherdetailbyotherplan(otherPlan));
+
+            Section section = sectionService.findsectionbyid(otherPlan.getReceive());
+
+
+            request.setAttribute("otherplan",otherPlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/other/OtherDetail";
 
         }
 
@@ -511,7 +582,6 @@ public class FilterController {
 
         if (flowinfos1.getFlows().getFlowid()==1) {//判断滤芯计划
 
-            //查询出flowinfoplan
             FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
 
             List<FilterDetail> details = filterDetailService.findfilterdetailbyfid(filterPlan);
@@ -552,6 +622,8 @@ public class FilterController {
 
 
         }else if (flowinfos1.getFlows().getFlowid()==2){//维修保养计划
+
+            RepairePlan repairePlan = repairePlanService.findrepairedetailbyrid(flowinfos1);
 
 
 

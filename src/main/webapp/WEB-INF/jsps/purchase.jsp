@@ -500,9 +500,13 @@
 
                     window.open("${pageContext.request.contextPath}/climptorepaire.do","_blank");
 
+                }else if(v=='设备类采购流程') {
+
+                    window.open("${pageContext.request.contextPath}/climpdevicepage.do","_blank");
+
                 }else if(v=='其他采购流程') {
 
-                    alert("其他采购流程");
+                    window.open("${pageContext.request.contextPath}/climpotherpage.do","_blank");
 
                 }
 

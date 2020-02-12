@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -128,6 +129,14 @@ public class UserController {
     @RequestMapping("/login.do")
     public @ResponseBody String login(HttpServletRequest request,User user,HttpServletResponse response) {
 
+       File file=new File(request.getSession().getServletContext().getRealPath("/signature"));
+
+        File[] files = file.listFiles();
+
+        for (File f:files)
+
+            System.out.println(f.getAbsolutePath()+"***"+f.getParentFile().getAbsolutePath());
+
         String pas=user.getPassword();
 
         user.setPassword(DigestUtils.md5Hex(user.getUsername() + user.getPassword()));
@@ -164,8 +173,6 @@ public class UserController {
             request.getSession().setAttribute("userinfo",user1);//将用户信息保存到session域中
 
             request.getSession().setMaxInactiveInterval(60*60);//设置session 1小时候后 失效
-
-            System.out.println(user1);
 
             String json = JSONObject.toJSONString(user1, SerializerFeature.WriteMapNullValue);
 
