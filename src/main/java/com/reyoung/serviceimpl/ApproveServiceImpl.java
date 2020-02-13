@@ -87,11 +87,6 @@ public class ApproveServiceImpl implements ApproveService {
 
             }
 
-
-
-        for (Approve a:approves1)
-            System.out.println(a);
-
         //对list集合进行倒排序
         Collections.reverse(approves1);
 
@@ -128,6 +123,13 @@ public class ApproveServiceImpl implements ApproveService {
     @Override
     public Integer delapprovesbyaid(List<Approve> approves) {
         return approveDao.delapprovesbyaid(approves);
+    }
+
+    @Override
+    public List<Approve> findapprobyok(Flowinfos flowinfos) {
+
+        return approveDao.findapprobyok(flowinfos);
+
     }
 
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.reyoung.dao.fdao.FinterfaceDao">
+
+    <select id="findallfinterface" resultMap="finterfaceMap">
+
+        SELECT * FROM finterface;
+
+    </select>
+
+
+    <resultMap id="finterfaceMap" type="com.reyoung.model.filter.Finterface">
+
+
+        <id column="finterfaceid" property="finterfaceid" />
+        <result column="finterfacename" property="finterfacename" />
+
+
+
+    </resultMap>
+
+</mapper>

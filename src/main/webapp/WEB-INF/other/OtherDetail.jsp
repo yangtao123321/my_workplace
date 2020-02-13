@@ -147,7 +147,7 @@
 
 <body>
 
-<div class="top">设备采购计划详情页</div>
+<div class="top">其他计划详情页</div>
 
 <div class="mai">
 

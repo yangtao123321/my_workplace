@@ -11,6 +11,7 @@ import com.reyoung.tools.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -385,7 +386,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
                         }
 
 
-
                     }else {
 
                         if (user.getPosition().getPosid()==2) {//单位负责人审核
@@ -416,7 +416,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
                     }
 
                 }
-
 
             }
 
@@ -452,7 +451,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
     }
 
     @Override
-    public Integer updateflowinfobyflowinfoid(Approve approve) {
+    public Integer updateflowinfobyflowinfoid(Approve approve,HttpServletRequest request) {
 
         Flowinfos flowinfos = approve.getFlowinfos();
 
@@ -536,9 +535,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 if (res==1) {//审批记录更新完成了
 
-                    //更新flowinfo中的审批的数值
-//                  System.out.println("部门经理审批"+approve+"***");
-
                     FilterPlan filterPlan = filterPlanDao.findfilterplanbyincident(approve.getFlowinfos());
 
                     if (approve.getUser().getSection().getSectionid()==filterPlan.getReceive()) {
@@ -549,13 +545,16 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                         Integer r = flowinfosDao.updateflowinfobyflowinfoid(flowinfos);
 
-                        if (r==1) {//审批成功了，需要发送一封附件给相关人员
+                        if (r==1) {
+
+                            //需要查询审批完成的审批的记录
+                            List<Approve> approves1 = approveService.findapprobyok(flowinfos);
 
                             FilterPlan plan = filterPlanDao.findfilterplanbyincident(flowinfos);
 
                             plan.setFilterDetails(filterDetailDao.findfilterdetailbyfid(plan));
 
-                            FiltersTools.makereport(plan,flowinfos);
+                            FiltersTools.makereport(plan,flowinfos,approves1,request);
 
                             File file=new File("D:\\"+flowinfos.getFlowabstract()+".pdf");
 
@@ -639,9 +638,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
                 Integer res = approveService.updateapprobyuidandfid(approve);
 
                 if (res==1) {//审批记录更新完成了
-
-                    //更新flowinfo中的审批的数值
-//                  System.out.println("部门经理审批"+approve+"***");
 
                     RepairePlan repairePlan = repairePlanDao.findrepairedetailbyrid(flowinfos);
 

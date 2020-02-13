@@ -7,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 
 <head>
@@ -470,6 +471,8 @@
                 // 这步很重要，如果没有这步，则会报错无法建立连接
                 $("body").append($(form));
                 form.submit();
+
+                $(this).parent().remove();
 
             });
 
@@ -1707,7 +1710,6 @@
 </body>
 
 </html>
-
 
 <script type="text/javascript" language="JavaScript">
 

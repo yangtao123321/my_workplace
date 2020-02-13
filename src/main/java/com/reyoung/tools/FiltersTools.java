@@ -5,14 +5,18 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.reyoung.model.Approve;
 import com.reyoung.model.FilterDetail;
 import com.reyoung.model.FilterPlan;
 import com.reyoung.model.Flowinfos;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by yangtao on 2020-01-08.
@@ -236,11 +240,49 @@ public class FiltersTools {
 
     }
 
-    public static void makereport(FilterPlan f,Flowinfos flowinfos) {
+    public static void makereport(FilterPlan f,Flowinfos flowinfos,List<Approve> approves,HttpServletRequest request) {
 
-        System.out.println(f);
+        String zhangzong=null;
 
-        System.out.println(flowinfos);
+        String zhangna=null;
+
+        String dunit=null;
+
+        for (Approve a:approves) {
+
+            if (a.getUser().getPosition().getPosid()==3) {
+
+                File[] files= new File(request.getSession().getServletContext().getRealPath(a.getSignature())).getParentFile().listFiles();
+
+                Random random=new Random();
+
+                File files1=files[random.nextInt(files.length)];
+
+                zhangzong=files1.getAbsolutePath();
+
+            }else if (a.getUser().getPosition().getPosid()==2&&a.getUser().getUsername().equals("zhangna")) {
+
+                File[] files= new File(request.getSession().getServletContext().getRealPath(a.getSignature())).getParentFile().listFiles();
+
+                Random random=new Random();
+
+                File files1=files[random.nextInt(files.length)];
+
+                zhangna=files1.getAbsolutePath();
+
+            }else if (a.getUser().getPosition().getPosid()==2) {
+
+                File[] files= new File(request.getSession().getServletContext().getRealPath(a.getSignature())).getParentFile().listFiles();
+
+                Random random=new Random();
+
+                File files1=files[random.nextInt(files.length)];
+
+                dunit=files1.getAbsolutePath();
+
+            }
+
+        }
 
         try{
 
@@ -258,36 +300,30 @@ public class FiltersTools {
 
             d.add(elements);
 
-            Image img = Image.getInstance("D://zhangzong.jpg");
+            Image chapter = Image.getInstance(request.getSession().getServletContext().getRealPath("/chapter/fenzhenzhang.png"));
 
-            Image cui=Image.getInstance("D://cuilingling.jpg");
+            Image img = Image.getInstance(zhangzong);
 
-            Image zhao=Image.getInstance("D://zhaowei.jpg");
+            Image a=Image.getInstance(dunit);
+
+            Image zhangna1=Image.getInstance(zhangna);
 
             img.scaleToFit(65, 65);
 
-            cui.scaleToFit(50,50);
+            a.scaleToFit(50,50);
 
-            zhao.scaleToFit(50,50);
+            zhangna1.scaleToFit(50,50);
+
+            chapter.scaleToFit(105,105);
 
             //设置绝对路径
-            img.setAbsolutePosition(90,360);
-            //zhao.setAbsolutePosition(90,360);
-
-            //d.add(img);
-
-            //d.add(zhao);
-
-            //d.newPage();
+            chapter.setAbsolutePosition(210,700);
 
             //创建表格对象
             PdfPTable datatable = new PdfPTable(8);
 
             datatable.setSpacingBefore(20);
 
-            //int[] cellsWidth = { 1, 1, 1, 1, 1, 1 };
-
-            //datatable.setWidths(cellsWidth);
             datatable.setTotalWidth(new float[] { 50, 100, 90, 100,70,60,100,100 });
 
             datatable.setWidthPercentage(100);// 表格的宽度百分比
@@ -297,16 +333,6 @@ public class FiltersTools {
             // 设置表格的底色
             datatable.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
             datatable.getDefaultCell().setHorizontalAlignment(Element.BODY);
-
-            //datatable.getDefaultCell().setMinimumHeight(30);
-
-            //构建每个单元格
-            /*PdfPCell cell1 = new PdfPCell(new Paragraph("时间:",setbodyfont()));
-
-            cell1.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell1.setBorderWidth(0);
-            cell1.setMinimumHeight(25);*/
 
             PdfPCell pCell = createlvxintitlecell("提报单位", 1, 1);
 
@@ -358,87 +384,15 @@ public class FiltersTools {
 
             datatable.addCell(createlvxinsignaturenamecell("部门经理:", 3, 1));
 
+            datatable.addCell(createpdfcell(a, 3, 1));
+
+            datatable.addCell(createpdfcell(zhangna1, 2, 1));
+
             datatable.addCell(createpdfcell(img, 3, 1));
-
-            datatable.addCell(createpdfcell(img, 2, 1));
-
-            datatable.addCell(createpdfcell(img, 3, 1));
-
-        /*PdfPCell cell = createpdfcell("2019/12/26", 3);
-
-        datatable.addCell(cell);
-
-        datatable.addCell(createpdfcell("合同实例号:",0));
-
-        datatable.addCell(createpdfcell("32725",0));
-
-        PdfPCell cell1 = createpdfcell("申请单位代码:", 0);
-
-        datatable.addCell(cell1);
-
-        PdfPCell cell2 = createpdfcell("1E04-01-001：粉针事业部综合办公室", 3);
-
-        datatable.addCell(cell2);
-
-        datatable.addCell(createpdfcell("支付方式:",0));
-
-        datatable.addCell(createpdfcell("电子承兑",0));
-
-        datatable.addCell(createpdfcell("供应商代码:",0));
-
-        datatable.addCell(createpdfcell("378520",3));
-
-        datatable.addCell(createpdfcell("工程代码:",0));
-
-        datatable.addCell(createpdfcell("————",0));
-
-        datatable.addCell(createpdfcell("供应商名称:",0));
-
-        datatable.addCell(createpdfcell("山东耀智信息科技有限公司",3));
-
-        datatable.addCell(createpdfcell("工程描述:",0));
-
-        datatable.addCell(createpdfcell("201709 305 车间新版GMP 改造",0));
-
-        datatable.addCell(createpdfcell("开户银行:",0));
-
-        datatable.addCell(createpdfcell("上海浦东发展银行股份有限公司济南开发区支行",5));
-
-        datatable.addCell(createpdfcell("银行账号:",0));
-
-        datatable.addCell(createpdfcell("74130154740007689",5));
-
-        datatable.addCell(createpdfcell("用途：大类：",0));
-
-        datatable.addCell(createpdfcell("车间费用",2));
-
-        datatable.addCell(createpdfcell1("明细项目:",0));
-
-        datatable.addCell(createpdfcell("305更换悬浮粒子计数器",2));
-
-        datatable.addCell(createpdfcell("合计金额（小写）:",0));
-
-        datatable.addCell(createpdfcell("￥21000",2));
-
-        datatable.addCell(createpdfcell1("大写:",0));
-
-        datatable.addCell(createpdfcell("叁万元整",2));
-
-        datatable.addCell(createpdfcell("\r\n",6));
-
-        datatable.addCell(createpdfcell("部门负责人:\r\n\r\n财务审核:",0));
-
-        datatable.addCell(createpdfcell(img,0));
-
-        datatable.addCell(createpdfcell("单位负责人:\r\n\r\n(单位盖章):",0));
-
-        datatable.addCell(createpdfcell(cui,0));
-
-        datatable.addCell(createpdfcell("经办人:\r\n\r\n付款编码:",0));
-
-        datatable.addCell(createpdfcell(zhao,0));*/
 
             d.add(datatable);
+
+            d.add(chapter);
 
             d.close();
 
@@ -447,8 +401,6 @@ public class FiltersTools {
 
 
         }
-
-
 
     }
 

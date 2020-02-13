@@ -4,7 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.reyoung.model.*;
+import com.reyoung.model.filter.Fdgree;
+import com.reyoung.model.filter.Finterface;
+import com.reyoung.model.filter.Fname;
+import com.reyoung.model.filter.Fsize;
 import com.reyoung.service.*;
+import com.reyoung.service.fservice.FdgreeService;
+import com.reyoung.service.fservice.FinterfaceService;
+import com.reyoung.service.fservice.FnameService;
+import com.reyoung.service.fservice.FsizeService;
 import com.reyoung.tools.GetYear;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +64,20 @@ public class FilterController {
     @Resource(name = "userService")
     private UserService userService;
 
+    //查询滤芯详细内容相关的service
+
+    @Resource(name = "fnameService")
+    private FnameService fnameService;
+
+    @Resource(name = "fsizeService")
+    private FsizeService fsizeService;
+
+    @Resource(name = "fdgreeService")
+    private FdgreeService fdgreeService;
+
+    @Resource(name = "finterfaceService")
+    private FinterfaceService finterfaceService;
+
     @RequestMapping("/climpfilterpage.do")
     public String climpfilterpage(HttpServletRequest request) {
 
@@ -64,6 +86,14 @@ public class FilterController {
         String s= GetYear.gettimes();
 
         List<Section> sections = sectionService.findallsection();
+
+        List<Fname> fnames = fnameService.findallfname();
+
+        List<Fsize> fsizes = fsizeService.findallfsize();
+
+        List<Fdgree> fdgrees = fdgreeService.findallfdgree();
+
+        List<Finterface> finterfaces = finterfaceService.findallfinterface();
 
         if (user==null) {
 
@@ -74,6 +104,14 @@ public class FilterController {
             request.setAttribute("starttime",s);
 
             request.setAttribute("sections",sections);
+
+            request.setAttribute("fnames",fnames);
+
+            request.setAttribute("fsizes",fsizes);
+
+            request.setAttribute("fdgrees",fdgrees);
+
+            request.setAttribute("finterfaces",finterfaces);
 
             return "WEB-INF/filter/FilterPage";
 
@@ -372,7 +410,7 @@ public class FilterController {
 
         approve.setFlowinfos(flowinfos1);
 
-        return flowinfosService.updateflowinfobyflowinfoid(approve)+"";
+        return flowinfosService.updateflowinfobyflowinfoid(approve,request)+"";
 
     }
 

@@ -73,13 +73,19 @@
 
                         $(".load").remove();
 
-                        if(data=='1') {
+                        if(data=='1') {//关闭当前页
 
+                            var userAgent = navigator.userAgent;
+                            if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                                location.href = "about:blank";
+                            } else {
+                                window.opener = null;
+                                window.open('', '_self');
+                            }
 
+                            window.close();
 
                         }
-
-                        alert(data);
 
                     },
                     error:function () { //请求数据失败
@@ -320,7 +326,7 @@
 
     <input class="agree" type="button" value="同意" />
 
-    <table class="tb2">
+    <table class="tb2" style="font-size: 15px">
 
         <tr>
             <td width="10%" style="border-left: none;font-weight: bold">审批环节</td>
@@ -344,7 +350,7 @@
                         <td></td>
                         <td>${approve.dealtime}</td>
                         <td>${approve.suggest}</td>
-                        <td style="border-right: none"></td>
+                        <td style="height: 50px" style="border-right: none"></td>
 
                     </tr>
 
@@ -365,21 +371,21 @@
 
                                     <c:when test="${approve.approflag==1}">
 
-                                        <td>同意</td>
+                                        <td style="color: #00aa00;font-family: 仿宋;font-weight: bold">同意</td>
 
                                     </c:when>
 
 
                                     <c:when test="${approve.approflag==2}">
 
-                                        <td>退回</td>
+                                        <td style="color: #e70000;font-family: 仿宋;font-weight: bold">退回</td>
 
                                     </c:when>
 
                                 </c:choose>
                                 <td>${approve.dealtime}</td>
-                                <td>${approve.suggest}</td>
-                                <td style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
+                                <td style="color: #e70000;font-weight: bold">${approve.suggest}</td>
+                                <td style="height: 50px"  style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
 
                             </c:when>
 
@@ -388,13 +394,27 @@
 
                                 <td style="border-left: none">部门经理审核</td>
                                 <td>${approve.user.truename}</td>
-                                <td>${approve.approflag}</td>
+                                <c:choose>
+
+                                    <c:when test="${approve.approflag==1}">
+
+                                        <td style="color: #00aa00;font-family: 仿宋;font-weight: bold">同意</td>
+
+                                    </c:when>
+
+
+                                    <c:when test="${approve.approflag==2}">
+
+                                        <td style="color: #e70000;font-family: 仿宋;font-weight: bold">退回</td>
+
+                                    </c:when>
+
+                                </c:choose>
                                 <td>${approve.dealtime}</td>
-                                <td>${approve.suggest}</td>
-                                <td style="border-right: none">${approve.signature}</td>
+                                <td style="color: #e70000;font-weight: bold">${approve.suggest}</td>
+                                <td style="height: 50px" style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
 
                             </c:when>
-
 
                             <c:when test="${approve.user.position.posid==4}">
 
@@ -406,7 +426,6 @@
                                 <td style="border-right: none">${approve.signature}</td>
 
                             </c:when>
-
 
                         </c:choose>
 

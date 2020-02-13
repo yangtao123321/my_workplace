@@ -77,9 +77,6 @@
 
                 });
 
-
-
-
                 /*******************滤芯计划类变量赋值***********************/
 
                 var uid=$(".userid").text();
@@ -98,7 +95,7 @@
 
                 var flowid=$(".flowid").text();
 
-                var receive=$(".receiver option:checked").val();
+                var receive='1';//粉针事业部采购
 
                 if(person=='') {
 
@@ -300,10 +297,11 @@
 
             position: relative;
             height: 30px;
-            font-family: "宋体";
+            font-family: "仿宋";
             line-height: 30px;
             margin-left: 5%;
             font-weight: bold;
+            font-size: 19px;
 
         }
 
@@ -317,15 +315,14 @@
             width: 100%;
             margin-bottom: 3%;
 
-
         }
 
         .apptb td,.appdetailtb td,.caigouyaoqiu td{
 
             font-family: "宋体";
-            border: 1px solid #00223c;
+            border: 1px solid rgba(61, 130, 173, 0.65);
             text-align: center;
-            height: 45px;
+            height: 40px;
 
         }
 
@@ -339,7 +336,7 @@
 
         }
 
-        .apperson,.appreason,.abstract,.caizhi,.xinghao,.chicun,.inter,.yaoqiu,.yongtu,.num,.caigouyaoqiuval{
+        .apperson,.appreason,.abstract,.xinghao,.chicun,.inter,.yaoqiu,.yongtu,.num,.caigouyaoqiuval{
 
             position: relative;
             height: 100%;
@@ -347,7 +344,20 @@
             outline-style: none;
             border: 1px solid white;
             text-align: center;
-            font-size: 19px;
+            font-size: 16px;
+            font-family: "仿宋";
+
+        }
+
+        .fname,.fsize,.fdgree,.finterface{
+
+            position: relative;
+            height: 100%;
+            width: 100%;
+            outline-style: none;
+            text-align: center;
+            font-size: 16px;
+            font-family: "楷体";
 
         }
 
@@ -359,7 +369,7 @@
             outline-style: none;
             border: 1px solid #ffffff;
             text-align: center;
-            font-size: 19px;
+            font-size: 16px;
             color: #3a7daa;
 
         }
@@ -368,11 +378,12 @@
 
             position: relative;
             height: 30px;
-            font-family: "宋体";
+            font-family: "仿宋";
             line-height: 30px;
             margin-left: 5%;
             font-weight: bold;
             float: left;
+            font-size: 19px;
 
         }
 
@@ -535,7 +546,7 @@
         </tr>
 
         <tr>
-            <td width="15%">摘要<span style="color: red">*</span></td>
+            <td width="15%">计划名称<span style="color: red">*</span></td>
             <td width="30%"><input class="abstract" type="text" /></td>
             <td width="15%">发起时间</td>
             <td width="30%"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
@@ -545,31 +556,62 @@
 
     <div class="appdetail">申请详情</div>
 
-    <div class="receive">选择接收部门</div>
-
-    <select class="receiver">
-
-        <option value="0">请选择</option>
-
-        <c:forEach items="${sections}" var="s">
-
-            <option value="${s.sectionid}">${s.sectionname}</option>
-
-        </c:forEach>
-
-    </select>
-
     <table class="appdetailtb">
 
         <tr>
-            <td width="5%">材质<span style="color: red">*</span></td>
-            <td width="15%"><input class="caizhi" type="text" /></td>
-            <td width="5%">型号<span style="color: red">*</span></td>
-            <td width="15%"><input class="xinghao" type="text" /></td>
+            <td width="5%">名称<span style="color: red">*</span></td>
+            <td width="15%">
+                <select class="fname">
+                    <option value="0">请选择</option>
+                    <c:forEach items="${fnames}" var="f">
+
+                        <option value="${f.filterid}">${f.filtername}</option>
+
+                    </c:forEach>
+                </select>
+            </td><%--<input class="caizhi" type="text" />--%>
             <td width="5%">尺寸<span style="color: red">*</span></td>
-            <td width="15%"><input class="chicun" type="text" /></td>
+            <td width="15%">
+                <select class="fsize">
+
+                    <option value="0">请选择</option>
+
+                    <c:forEach items="${fsizes}" var="f">
+
+                        <option value="${f.fsizeid}">${f.fsizename}</option>
+
+                    </c:forEach>
+
+               </select>
+            </td>
+            <td width="5%">精度<span style="color: red">*</span></td>
+            <td width="15%">
+                <select class="fdgree">
+
+                <option value="0">请选择</option>
+
+                    <c:forEach items="${fdgrees}" var="f">
+
+                        <option value="${f.fdgreeid}">${f.fdgreename}</option>
+
+                    </c:forEach>
+
+                </select>
+            </td>
             <td width="5%">接口</td>
-            <td width="15%"><input class="inter" type="text" /></td>
+            <td width="15%">
+                <select class="finterface">
+
+                <option value="0">请选择</option>
+
+                    <c:forEach items="${finterfaces}" var="f">
+
+                        <option value="${f.finterfaceid}">${f.finterfacename}</option>
+
+                    </c:forEach>
+
+               </select>
+            </td>
         </tr>
 
         <tr>
@@ -588,7 +630,7 @@
     <table class="caigouyaoqiu">
 
         <tr>
-            <td width="10%" style="font-weight: bold">采购要求</td>
+            <td width="10%" style="font-weight: bold;font-family: 仿宋">生产厂家</td>
             <td><input class="caigouyaoqiuval" type="text"  /></td>
         </tr>
 

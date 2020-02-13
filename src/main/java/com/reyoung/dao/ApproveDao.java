@@ -30,4 +30,6 @@ public interface ApproveDao {
     //批量删除approves
     public Integer delapprovesbyaid(@Param("approves") List<Approve> approves);
 
+    public List<Approve> findapprobyok(Flowinfos flowinfos);
+
 }

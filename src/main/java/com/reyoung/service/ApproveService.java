@@ -27,5 +27,7 @@ public interface ApproveService {
     //批量删除approves
     public Integer delapprovesbyaid(List<Approve> approves);
 
+    public List<Approve> findapprobyok(Flowinfos flowinfos);
+
 
 }

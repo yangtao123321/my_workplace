@@ -55,7 +55,9 @@
         AND
         c.uid=#{uid}
         AND
-        a.achieve=0;
+        a.achieve=0
+        ORDER BY
+        a.flowinfoid DESC;
 
     </select>
 
@@ -222,6 +224,8 @@
         c.uid=#{uid}
         AND
         a.achieve &gt;0
+        ORDER BY
+        a.flowinfoid DESC;
 
     </select>
 

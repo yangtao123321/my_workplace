@@ -153,6 +153,53 @@
 
     </select>
 
+    <select id="findapprobyok" parameterType="com.reyoung.model.Flowinfos" resultMap="approMap">
+
+        SELECT
+        a.approid,
+        a.arrivetime,
+        a.dealtime,
+        a.signature,
+        a.suggest,
+        a.approflag,
+        b.uid,
+        b.username,
+        b.`password`,
+        b.truename,
+        b.position,
+        b.department,
+        b.signaturepath,
+        b.email,
+        b.section,
+        c.flowinfoid,
+        c.flowabstract,
+        c.person,
+        c.startime,
+        c.endtime,
+        c.incident,
+        c.flag,
+        c.flows,
+        c.user,
+        d.deptid,
+        d.deptname
+        FROM
+        approve a,
+        USER b,
+        flowinfos c,
+        department d
+        WHERE
+        a.flowinfoid=c.flowinfoid
+        AND
+        b.uid=a.uid
+        AND
+        b.department=d.deptid
+        AND
+        a.flowinfoid=#{flowinfoid}
+        AND
+        a.approflag=1;
+
+    </select>
+
     <delete id="delapprovesbyaid" parameterType="java.util.List">
 
         DELETE FROM approve WHERE approid IN

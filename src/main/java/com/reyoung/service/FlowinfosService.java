@@ -5,6 +5,8 @@ import com.reyoung.model.Flowinfos;
 import com.reyoung.model.User;
 import com.reyoung.pager.PageBean;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by yangtao on 2020-01-16.
  */
@@ -21,7 +23,7 @@ public interface FlowinfosService {
     public Flowinfos findflwoinfobyfid(Flowinfos flowinfos);
 
     //审批flowinfos
-    public Integer updateflowinfobyflowinfoid(Approve approve);
+    public Integer updateflowinfobyflowinfoid(Approve approve,HttpServletRequest request);
 
     //拒绝的操作
     public Integer approbackflowinfobyflowinfoid(Approve approve);
