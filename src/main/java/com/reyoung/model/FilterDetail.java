@@ -8,17 +8,17 @@ public class FilterDetail {
 
     private Integer fdetailid;
 
-    private String fdetailname;//材质
-
-    private String fdetailtype;//型号
+    private String fdetailname;//名称
 
     private String fdetailsize;//尺寸
 
+    private String fdgree;//精度
+
     private String fdetailinterface;//接口
 
-    private String fdetailnum;//数量
+    private String fherpin;//膜层数
 
-    private String rek;//要求
+    private String fdetailnum;//数量
 
     private String useing;//用途
 
@@ -27,14 +27,14 @@ public class FilterDetail {
     public FilterDetail() {
     }
 
-    public FilterDetail(Integer fdetailid, String fdetailname, String fdetailtype, String fdetailsize, String fdetailinterface, String fdetailnum, String rek, String useing, Integer fid) {
+    public FilterDetail(Integer fdetailid, String fdetailname, String fdetailsize, String fdgree, String fdetailinterface, String fherpin, String fdetailnum, String useing, Integer fid) {
         this.fdetailid = fdetailid;
         this.fdetailname = fdetailname;
-        this.fdetailtype = fdetailtype;
         this.fdetailsize = fdetailsize;
+        this.fdgree = fdgree;
         this.fdetailinterface = fdetailinterface;
+        this.fherpin = fherpin;
         this.fdetailnum = fdetailnum;
-        this.rek = rek;
         this.useing = useing;
         this.fid = fid;
     }
@@ -53,14 +53,6 @@ public class FilterDetail {
 
     public void setFdetailname(String fdetailname) {
         this.fdetailname = fdetailname;
-    }
-
-    public String getFdetailtype() {
-        return fdetailtype;
-    }
-
-    public void setFdetailtype(String fdetailtype) {
-        this.fdetailtype = fdetailtype;
     }
 
     public String getFdetailsize() {
@@ -87,14 +79,6 @@ public class FilterDetail {
         this.fdetailnum = fdetailnum;
     }
 
-    public String getRek() {
-        return rek;
-    }
-
-    public void setRek(String rek) {
-        this.rek = rek;
-    }
-
     public String getUseing() {
         return useing;
     }
@@ -111,16 +95,32 @@ public class FilterDetail {
         this.fid = fid;
     }
 
+    public String getFdgree() {
+        return fdgree;
+    }
+
+    public void setFdgree(String fdgree) {
+        this.fdgree = fdgree;
+    }
+
+    public String getFherpin() {
+        return fherpin;
+    }
+
+    public void setFherpin(String fherpin) {
+        this.fherpin = fherpin;
+    }
+
     @Override
     public String toString() {
         return "FilterDetail{" +
                 "fdetailid=" + fdetailid +
                 ", fdetailname='" + fdetailname + '\'' +
-                ", fdetailtype='" + fdetailtype + '\'' +
                 ", fdetailsize='" + fdetailsize + '\'' +
+                ", fdgree='" + fdgree + '\'' +
                 ", fdetailinterface='" + fdetailinterface + '\'' +
+                ", fherpin='" + fherpin + '\'' +
                 ", fdetailnum='" + fdetailnum + '\'' +
-                ", rek='" + rek + '\'' +
                 ", useing='" + useing + '\'' +
                 ", fid=" + fid +
                 '}';

@@ -140,6 +140,16 @@
             background-color: #005c94;
         }
 
+        ::-ms-clear, ::-ms-reveal { display: none; }
+
+        .pic{
+
+            position: relative;
+            border: 1px solid red;
+
+
+        }
+
     </style>
 
 </head>
@@ -158,7 +168,7 @@
 
         <tr>
             <td width="15%" style="border-left: none">申请单位</td>
-            <td width="20%" style="background-color: white">${filterpla.user.truename}</td>
+            <td width="20%" style="background-color: white">${filterpla.user.department.deptname}</td>
             <td width="10%">提报人</td>
             <td width="15%" style="background-color: white">${filterpla.applyperson}</td>
             <td width="10%">申请时间</td>
@@ -191,11 +201,11 @@
     <table class="tb1">
 
         <tr>
-            <td width="15%" style="border-left: none">材质</td>
-            <td width="15%">型号</td>
+            <td width="15%" style="border-left: none">名称</td>
             <td width="15%">尺寸</td>
+            <td width="15%">精度</td>
             <td width="15%">接口</td>
-            <td width="15%">要求</td>
+            <td width="15%">膜层数</td>
             <td width="15%">用途</td>
             <td width="10%" style="border-right: none">数量</td>
         </tr>
@@ -205,10 +215,10 @@
             <tr style="background-color: white">
 
                 <td style="border-left: none">${d.fdetailname}</td>
-                <td>${d.fdetailtype}</td>
                 <td>${d.fdetailsize}</td>
+                <td>${d.fdgree}</td>
                 <td>${d.fdetailinterface}</td>
-                <td>${d.rek}</td>
+                <td>${d.fherpin}</td>
                 <td>${d.useing}</td>
                 <td style="border-right: none">${d.fdetailnum}</td>
 

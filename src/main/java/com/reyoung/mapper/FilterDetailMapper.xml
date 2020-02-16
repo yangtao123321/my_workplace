@@ -7,7 +7,7 @@
 
     <insert id="addfilterdetailbylist" parameterType="java.util.List" useGeneratedKeys="false">
 
-        insert into filterdetail(fdetailname,fdetailtype,fdetailsize,fdetailinterface,fdetailnum,rek,useing,fid)
+        insert into filterdetail(fdetailname,fdetailsize,fdgree,fdetailinterface,fherpin,fdetailnum,useing,fid)
 
         values
 
@@ -15,11 +15,11 @@
 
             (
             #{item.fdetailname},
-            #{item.fdetailtype},
             #{item.fdetailsize},
+            #{item.fdgree},
             #{item.fdetailinterface},
+            #{item.fherpin},
             #{item.fdetailnum},
-            #{item.rek},
             #{item.useing},
             #{item.fid}
             )
@@ -50,11 +50,11 @@
 
         <id column="fdetailid" property="fdetailid" />
         <result column="fdetailname" property="fdetailname" />
-        <result column="fdetailtype" property="fdetailtype" />
         <result column="fdetailsize" property="fdetailsize" />
+        <result column="fdgree" property="fdgree" />
         <result column="fdetailinterface" property="fdetailinterface" />
+        <result column="fherpin" property="fherpin" />
         <result column="fdetailnum" property="fdetailnum" />
-        <result column="rek" property="rek" />
         <result column="useing" property="useing" />
         <result column="fid" property="fid" />
 

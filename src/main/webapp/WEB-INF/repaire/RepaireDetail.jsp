@@ -8,6 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+
 <head>
     <title>维修保养计划详情页</title>
 
@@ -204,7 +205,7 @@
 
     </table>
 
-    <div style="font-weight: bold;margin-top: 1%;margin-left: 1%">施工项目现状</div>
+    <div style="font-weight: bold;margin-top: 1%;margin-left: 1%">设备或项目现状</div>
 
     <textarea class="context">${repaire.contex}</textarea>
 
@@ -233,8 +234,8 @@
                         <td>${approve.user.truename}</td>
                         <td></td>
                         <td>${approve.dealtime}</td>
-                        <td style="font-family: 仿宋;color: #e074a2;background-color: white;font-weight: bold">${approve.suggest}</td>
-                        <td style="border-right: none"></td>
+                        <td style="font-family: 仿宋;color: #e074a2;font-weight: bold">${approve.suggest}</td>
+                        <td style="height: 50px" style="border-right: none"></td>
 
                     </tr>
 
@@ -259,7 +260,6 @@
 
                                     </c:when>
 
-
                                     <c:when test="${approve.approflag==2}">
 
                                         <td style="color: #e70000;font-family:仿宋;font-weight: bold">退回</td>
@@ -268,8 +268,8 @@
 
                                 </c:choose>
                                 <td>${approve.dealtime}</td>
-                                <td style="font-family: 仿宋;color: #e074a2;background-color: white;font-weight: bold">${approve.suggest}</td>
-                                <td style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
+                                <td style="font-family: 仿宋;color: #e70000;font-weight: bold">${approve.suggest}</td>
+                                <td style="height: 50px" style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
 
                             </c:when>
 
@@ -294,8 +294,8 @@
                                 </c:choose>
 
                                 <td>${approve.dealtime}</td>
-                                <td style="font-family: 仿宋;color: #e074a2;background-color: white;font-weight: bold">${approve.suggest}</td>
-                                <td style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
+                                <td style="font-family: 仿宋;color: #e70000;font-weight: bold">${approve.suggest}</td>
+                                <td style="height: 50px" style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
 
                             </c:when>
 

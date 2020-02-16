@@ -150,14 +150,14 @@
 
                                         var tr=$("<tr class='tr'></tr>");
 
-                                        var td1=$("<td width='5%'>序号</td>");
+                                        var td1=$("<td width='5%' style='border-left: none'>序号</td>");
                                         var td2=$("<td width='15%'>流程名称</td>");
                                         var td3=$("<td width='25%'>流程内容摘要</td>");
                                         var td4=$("<td width='15%'>申请时间</td>");
                                         var td5=$("<td width='15%'>申请单位</td>");
                                         var td6=$("<td width='10%'>提报人</td>");
                                         var td7=$("<td width='5%'>流程图</td>");
-                                        var td8=$("<td width='10%'>状态</td>");
+                                        var td8=$("<td width='10%' style='border-right: none'>状态</td>");
 
                                         tr.append(td1);
                                         tr.append(td2);
@@ -176,13 +176,13 @@
 
                                             var tr1=$("<tr class='tr1'></tr>");
 
-                                            var tds1=$("<td></td>");
+                                            var tds1=$("<td style='border-left: none'></td>");
                                             var tds2=$("<td></td>");
                                             var tds3=$("<td class='flowabstract'></td>");
                                             var tds4=$("<td></td>");
                                             var tds5=$("<td></td>");
                                             var tds6=$("<td></td>");
-                                            var tds7=$("<td class='flopic'></td>");
+                                            var tds7=$("<td class='flopic' style='border-right: none'></td>");
 
                                             var img=$("<img />");
 
@@ -318,7 +318,7 @@
 
                                         var tr=$("<tr class='tr2'></tr>");
 
-                                        var td1=$("<td width='5%'>序号</td>");
+                                        var td1=$("<td width='5%' style='border-left: none'>序号</td>");
                                         var td2=$("<td width='15%'>流程名称</td>");
                                         var td3=$("<td width='25%'>流程内容摘要</td>");
                                         var td4=$("<td width='12%'>申请时间</td>");
@@ -326,7 +326,7 @@
                                         var td6=$("<td width='10%'>提报人</td>");
                                         var td7=$("<td width='5%'>流程图</td>");
                                         var td8=$("<td width='10%'>状态</td>");
-                                        var td9=$("<td width='5%'>操作</td>");
+                                        var td9=$("<td width='5%' style='border-right: none'>操作</td>");
 
                                         tr.append(td1);
                                         tr.append(td2);
@@ -346,7 +346,7 @@
 
                                             var tr1=$("<tr class='tr3'></tr>");
 
-                                            var tds1=$("<td></td>");
+                                            var tds1=$("<td style='border-left: none'></td>");
 
                                             var tds2=$("<td></td>");
 
@@ -362,7 +362,7 @@
 
                                             var tds8=$("<td></td>");
 
-                                            var tds9=$("<td></td>");
+                                            var tds9=$("<td style='border-right: none'></td>");
 
                                             var img=$("<img />");
 
@@ -661,7 +661,6 @@
                 // 这步很重要，如果没有这步，则会报错无法建立连接
                 $("body").append($(form));
                 form.submit();
-
 
             });
 
@@ -1184,9 +1183,10 @@
         .uppas{
 
             position: relative;
-            margin-left: 3%;
-            height: 35px;
-            margin-top: 3px;
+            margin-left: 5%;
+            height: 30px;
+            width: 70px;
+            margin-top: 9px;
             float: left;
             display: block;
             cursor: pointer;
@@ -1197,8 +1197,9 @@
 
             position: relative;
             margin-left: 2%;
-            height: 35px;
-            margin-top: 3px;
+            height: 30px;
+            width: 70px;
+            margin-top: 9px;
             float: left;
             display: block;
             cursor: pointer;
@@ -1258,7 +1259,7 @@
             position: relative;
             height: 100%;
             float: left;
-            width: 86.6%;
+            width: 86.8%;
             border-left:none;
             border-top: none;
         }
@@ -1471,7 +1472,6 @@
         .tb,.tb1{
             position:relative;
             margin-top: 1%;
-            margin-left: 1px;
             border-collapse: collapse;
             border: none;
             width: 100%;

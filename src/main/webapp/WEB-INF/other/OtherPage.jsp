@@ -161,7 +161,26 @@
                             dataType:"json",
                             success:function(data) {
 
+                                if(data=='success') {
 
+                                    alert("流程提交成功!");
+
+                                    var userAgent = navigator.userAgent;
+                                    if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                                        location.href = "about:blank";
+                                    } else {
+                                        window.opener = null;
+                                        window.open('', '_self');
+                                    }
+
+                                    window.close();
+
+                                }else {
+
+                                    alert("流程提交失败!");
+                                    window.location="${pageContext.request.contextPath}/climpotherpage.do";
+
+                                }
 
                             }
 

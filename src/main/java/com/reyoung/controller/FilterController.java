@@ -4,15 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.reyoung.model.*;
-import com.reyoung.model.filter.Fdgree;
-import com.reyoung.model.filter.Finterface;
-import com.reyoung.model.filter.Fname;
-import com.reyoung.model.filter.Fsize;
+import com.reyoung.model.filter.*;
 import com.reyoung.service.*;
-import com.reyoung.service.fservice.FdgreeService;
-import com.reyoung.service.fservice.FinterfaceService;
-import com.reyoung.service.fservice.FnameService;
-import com.reyoung.service.fservice.FsizeService;
+import com.reyoung.service.fservice.*;
 import com.reyoung.tools.GetYear;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,6 +72,12 @@ public class FilterController {
     @Resource(name = "finterfaceService")
     private FinterfaceService finterfaceService;
 
+    @Resource(name = "fherbinService")
+    private FherbinService fherbinService;
+
+    @Resource(name = "fsupplierService")
+    private FsupplierService fsupplierService;
+
     @RequestMapping("/climpfilterpage.do")
     public String climpfilterpage(HttpServletRequest request) {
 
@@ -94,6 +94,10 @@ public class FilterController {
         List<Fdgree> fdgrees = fdgreeService.findallfdgree();
 
         List<Finterface> finterfaces = finterfaceService.findallfinterface();
+
+        List<Fherpin> fherpins = fherbinService.findallfherpin();
+
+        List<Fsupplier> fsuppliers = fsupplierService.findallfsupplier();
 
         if (user==null) {
 
@@ -112,6 +116,10 @@ public class FilterController {
             request.setAttribute("fdgrees",fdgrees);
 
             request.setAttribute("finterfaces",finterfaces);
+
+            request.setAttribute("fherpins",fherpins);
+
+            request.setAttribute("fsuppliers",fsuppliers);
 
             return "WEB-INF/filter/FilterPage";
 
@@ -135,31 +143,30 @@ public class FilterController {
 
             String fdetailname = paramjson.getString("fdetailname");
 
-            String fdetailtype = paramjson.getString("fdetailtype");
-
             String fdetailsize = paramjson.getString("fdetailsize");
+
+            String fdgree = paramjson.getString("fdgree");
 
             String fdetailinterface = paramjson.getString("fdetailinterface");
 
-            String fdetailnum = paramjson.getString("fdetailnum");
+            String fherpin = paramjson.getString("fherpin");
 
-            String rek = paramjson.getString("rek");
+            String fdetailnum = paramjson.getString("fdetailnum");
 
             String useing = paramjson.getString("useing");
 
             f.setFdetailname(fdetailname);
-            f.setFdetailtype(fdetailtype);
             f.setFdetailsize(fdetailsize);
+            f.setFdgree(fdgree);
             f.setFdetailinterface(fdetailinterface);
+            f.setFherpin(fherpin);
             f.setFdetailnum(fdetailnum);
-            f.setRek(rek);
             f.setUseing(useing);
 
             filterDetails.add(f);
 
         }
 
-        //将filterplan保存到数据库，并要求发挥id号 用于保存滤芯明细时的外键约束
         Integer res = filterPlanService.addfilterplan(filterPlan);
 
         if (res==1) {//添加成功的标志
@@ -179,47 +186,57 @@ public class FilterController {
 
             //判断插入是否成功
 
-          if (filterDetails.size()==t) {//全部插入成功后的逻辑   需要将流程信息的详情添加到流程信息表
+            if (filterDetails.size()==t) {//全部插入成功后的逻辑   需要将流程信息的详情添加到流程信息表
 
-              flowinfos.setFlows(new Flows(filterPlan.getFlowid()));//设置所属的流程
+                flowinfos.setFlows(new Flows(filterPlan.getFlowid()));//设置所属的流程
 
-              flowinfos.setPerson(filterPlan.getApplyperson());//设置提报人
+                flowinfos.setPerson(filterPlan.getApplyperson());//设置提报人
 
-              flowinfos.setFlowabstract(filterPlan.getApplyabstract());//设置流程内容摘要
+                flowinfos.setFlowabstract(filterPlan.getApplyabstract());//设置流程内容摘要
 
-              flowinfos.setStartime(filterPlan.getApplytime1());
+                flowinfos.setStartime(filterPlan.getApplytime1());
 
-              flowinfos.setUser(filterPlan.getUser());
+                flowinfos.setUser(filterPlan.getUser());
 
-              flowinfos.setIncident(filterPlan.getFilterid());
+                flowinfos.setIncident(filterPlan.getFilterid());
 
-              flowinfos.setFlag(0);//0表示没有任何人审批过
+                flowinfos.setFlag(0);//0表示没有任何人审批过
 
-              //将流程信息添加到数据库
-              Integer r = flowinfosService.addflowinfo(flowinfos);
+                //将流程信息添加到数据库
+                Integer r = flowinfosService.addflowinfo(flowinfos);
 
-              if (r==1) {//提交成功
+                if (r==1) {//提交成功
 
-                  return "success";
+                    return "success";
 
-              }else {//提交失败
+                }else {//提交失败
 
-                  return "fails";
+                    return "fails";
 
-              }
+                }
 
-          }else {
+            }else {
 
-              return "fails";
+                return "fails";
 
-          }
-
+            }
 
         }else {
 
             return "fails";
 
         }
+
+        /*
+
+
+        //将filterplan保存到数据库，并要求发挥id号 用于保存滤芯明细时的外键约束
+        Integer res = filterPlanService.addfilterplan(filterPlan);
+
+
+
+
+        */
 
     }
 
@@ -446,12 +463,6 @@ public class FilterController {
 
             List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos1);
 
-            for (Approve a:approves) {
-
-                System.out.println(a);
-
-            }
-
             //部门经理
             User user = userService.findepartmanager();
 
@@ -672,6 +683,17 @@ public class FilterController {
         }
 
 
+
+        return null;
+
+    }
+
+
+    //查看流程图,生成流程信息前
+    @RequestMapping("/climpflowpicpre.do")
+    public @ResponseBody String climpflowpicpre(HttpServletRequest request,Integer uid,Integer flowid) {
+
+        System.out.println(uid+"***"+flowid);
 
         return null;
 

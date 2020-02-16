@@ -7,9 +7,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 
 <head>
+
     <title>维修计划申请单</title>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.ztree.core-3.5.js"></script>
@@ -64,8 +66,6 @@
 
                 if(person!=''&&abstract!=''&&receive!='0'&&context!='') {//校验通过了
 
-
-
                     //发送ajax请求后台服务器
                     $.ajax({
                         url:"${pageContext.request.contextPath}/applyrepaireplan.do",
@@ -75,7 +75,27 @@
                         dataType:"json",
                         success:function(data) {
 
+                            if(data=='success') {
 
+                                alert("流程提交成功!");
+
+                                var userAgent = navigator.userAgent;
+                                if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                                    location.href = "about:blank";
+                                } else {
+                                    window.opener = null;
+                                    window.open('', '_self');
+                                }
+
+                                window.close();
+
+                            }else{
+
+                                alert("流程提交失败!");
+
+                                window.location="${pageContext.request.contextPath}/climptorepaire.do";
+
+                            }
 
                         }
 

@@ -64,10 +64,10 @@
                     var d=$(this).children();
 
                     details.fdetailname= d.eq(0).text();
-                    details.fdetailtype= d.eq(1).text();
-                    details.fdetailsize= d.eq(2).text();
+                    details.fdetailsize= d.eq(1).text();
+                    details.fdgree= d.eq(2).text();
                     details.fdetailinterface= d.eq(3).text();
-                    details.rek= d.eq(4).text();
+                    details.fherpin= d.eq(4).text();
                     details.fdetailnum= d.eq(5).text();
                     details.useing= d.eq(6).text();
 
@@ -91,7 +91,7 @@
 
                 var startime=$(".startime").val().trim();
 
-                var caigouyaoqiuval=$(".caigouyaoqiuval").val().trim();
+                var caigouyaoqiuval=$(".fsupplier option:checked").text().trim();
 
                 var flowid=$(".flowid").text();
 
@@ -123,6 +123,12 @@
                         alert("请添加采购滤芯的详情!");
 
                     }else {
+
+                        if(caigouyaoqiuval=='请选择') {
+
+                            caigouyaoqiuval='';
+
+                        }
 
                         $.ajax({
                             type:"POST",
@@ -162,17 +168,24 @@
                     }
 
 
-
                 }
-
-
 
             });
 
             //取消申请内容
             $(".cancel").click(function() {
 
-                alert("aaa");
+                $(".fname option[value='0']").prop("selected","selected");
+
+                var fsize=$(".fsize option[value='0']").prop("selected","selected");
+
+                var fdgree=$(".fdgree option[value='0']").prop("selected","selected");
+
+                var finterface=$(".finterface option[value='0']").prop("selected","selected");
+
+                var fherpin=$(".fherpin option[value='0']").prop("selected","selected");
+
+
 
             });
 
@@ -181,39 +194,39 @@
 
                 var detailtb=$(".filterlist");
 
-                var caizhi=$(".caizhi").val().trim();
+                var fname=$(".fname option:checked").text().trim();
 
-                var xinghao=$(".xinghao").val().trim();
+                var fsize=$(".fsize option:checked").text().trim();
 
-                var chicun=$(".chicun").val().trim();
+                var fdgree=$(".fdgree option:checked").text().trim();
 
-                var inter=$(".inter").val().trim();
+                var finterface=$(".finterface option:checked").text().trim();
 
-                var yaoqiu=$(".yaoqiu").val().trim();
+                var fherpin=$(".fherpin option:checked").text().trim();
 
                 var yongtu=$(".yongtu").val().trim();
 
                 var num=$(".num").val().trim();
 
-                if(caizhi=='') {
+                if(fname=='请选择') {
 
-                    alert("滤芯材质不能为空!");
+                    alert("滤芯名称不能为空!");
 
-                }else if(xinghao=='') {
-
-                    alert("滤芯型号不能为空!");
-
-                }else if(chicun=='') {
+                }else if(fsize=='请选择') {
 
                     alert("滤芯尺寸不能为空!");
 
-                }else if(yaoqiu=='') {
+                }else if(fdgree=='请选择') {
 
-                    alert("滤芯要求不能为空!");
+                    alert("滤芯精度不能为空!");
 
-                }else if(yongtu=='') {
+                }else if(finterface=='请选择') {
 
-                    alert("滤芯用途不能为空!");
+                    alert("滤芯接口不能为空!");
+
+                }else if(fherpin=='请选择') {
+
+                    alert("滤芯膜层数不能为空!");
 
                 }else if(num=='') {
 
@@ -221,18 +234,18 @@
 
                 }
 
-                if(caizhi!=''&&xinghao!=''&&chicun!=''&&yaoqiu!=''&&yongtu!=''&&num!='') {
+                if(fname!='请选择'&&fsize!='请选择'&&fdgree!='请选择'&&finterface!='请选择'&&fherpin!='请选择'&&num!='') {
 
                     var tr=$("<tr class='tr1'></tr>");
 
-                    var td1=$("<td>"+caizhi+"</td>");
-                    var td2=$("<td>"+xinghao+"</td>");
-                    var td3=$("<td>"+chicun+"</td>");
-                    var td4=$("<td>"+inter+"</td>");
-                    var td5=$("<td>"+yaoqiu+"</td>");
+                    var td1=$("<td style='border-left:1px solid #cad0cc'>"+fname+"</td>");
+                    var td2=$("<td>"+fsize+"</td>");
+                    var td3=$("<td>"+fdgree+"</td>");
+                    var td4=$("<td>"+finterface+"</td>");
+                    var td5=$("<td>"+fherpin+"</td>");
                     var td6=$("<td>"+num+"</td>");
                     var td8=$("<td hidden='hidden'>"+yongtu+"</td>");
-                    var td7=$("<td><input class='del' type='button' value='删除' /></td>");
+                    var td7=$("<td style='border-right:1px solid #cad0cc'><input class='del' type='button' value='删除' /></td>");
 
                     tr.append(td1);
                     tr.append(td2);
@@ -247,11 +260,57 @@
 
                 }
 
+            });
 
+            //校验是否为数字
+            $(document).on('blur','.num',function() {
 
+                var v=$(this).val().trim();
+
+                var isnum=!isNaN(v);
+
+                if(isnum) {//说明输入的是数字
+
+                    //编写正整数校验值
+
+                    var g = /^[1-9]*[1-9][0-9]*$/;
+
+                    if(!g.test(v)) {//判断不是正整数
+
+                        alert("您输入的不是正整数!");
+
+                    }else {
+
+                        alert("请输入单位!");
+
+                    }
+
+                    $(this).val("");
+
+                }
 
             });
 
+
+            //查看流程图
+            $(".lookpic").click(function() {
+
+                var uid=$(".userid").text().trim();
+
+                var flowid=$(".flowid").text().trim();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/climpflowpicpre.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "uid").val(uid);
+                var input2=$("<input type='hidden'/>").attr("name","flowid").val(flowid);
+
+                form.append(input1);
+                form.append(input2);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
+
+            });
 
         });
 
@@ -270,9 +329,9 @@
         .top{
 
             border: 1px solid #00acf0;
-            height: 45px;
-            text-align: center;
-            line-height: 45px;
+            height: 60px;
+
+            line-height: 60px;
 
             background-color: #00acf0;
             color: white;
@@ -329,7 +388,7 @@
         .filterlist td{
 
             font-family: "宋体";
-            border: 1px solid #00223c;
+            border: 1px solid #0064a6;
             text-align: center;
             height: 30px;
             font-size: 15px;
@@ -349,7 +408,7 @@
 
         }
 
-        .fname,.fsize,.fdgree,.finterface{
+        .fname,.fsize,.fdgree,.finterface,.fherpin,.fsupplier{
 
             position: relative;
             height: 100%;
@@ -513,13 +572,52 @@
 
         }
 
+        ::-ms-clear, ::-ms-reveal { display: none; }
+
+        .lookpic{
+
+            border: 1px solid #dfe1e5;
+
+            height: 30px;
+
+            width: 90px;
+
+            background-color: #dfe1e5;
+
+            color: #000000;
+
+            font-family: "宋体";
+
+            float: right;
+
+            margin-top: 1%;
+
+            margin-right: 5%;
+
+            cursor: pointer;
+
+        }
+
+        .title{
+
+
+            margin-left: 40%;
+
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<div class="top">滤芯计划申请页面</div>
+<div class="top">
+
+    <span class="title">滤芯计划申请页面</span>
+
+    <input class="lookpic" type="button" value="查看流程图" />
+
+</div>
 
 <div class="mai">
 
@@ -532,34 +630,34 @@
     <table class="apptb">
 
         <tr>
-            <td width="15%">申请单位</td>
+            <td width="15%" style="border-left:1px solid #cad0cc">申请单位</td>
             <td width="30%">${sessionScope.get("userinfo").department.deptname}</td>
             <td width="15%">提报人<span style="color: red">*</span></td>
-            <td width="30%"><input class="apperson" type="text" /></td>
+            <td width="30%" style="border-right:1px solid #cad0cc"><input class="apperson" type="text" /></td>
         </tr>
 
         <tr>
 
-            <td width="15%">申请原因<span style="color: red">*</span></td>
-            <td colspan="3"><input class="appreason" type="text" /></td>
+            <td width="15%" style="border-left:1px solid #cad0cc">申请原因<span style="color: red">*</span></td>
+            <td colspan="3" style="border-right:1px solid #cad0cc"><input class="appreason" type="text" /></td>
 
         </tr>
 
         <tr>
-            <td width="15%">计划名称<span style="color: red">*</span></td>
+            <td width="15%" style="border-left:1px solid #cad0cc">计划名称<span style="color: red">*</span></td>
             <td width="30%"><input class="abstract" type="text" /></td>
             <td width="15%">发起时间</td>
-            <td width="30%"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
+            <td width="30%" style="border-right:1px solid #cad0cc"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
         </tr>
 
     </table>
 
-    <div class="appdetail">申请详情</div>
+    <div class="appdetail" style="margin-bottom: 1%">申请详情</div>
 
     <table class="appdetailtb">
 
         <tr>
-            <td width="5%">名称<span style="color: red">*</span></td>
+            <td width="5%" style="border-left:1px solid #cad0cc">名称<span style="color: red">*</span></td>
             <td width="15%">
                 <select class="fname">
                     <option value="0">请选择</option>
@@ -598,8 +696,8 @@
 
                 </select>
             </td>
-            <td width="5%">接口</td>
-            <td width="15%">
+            <td width="5%">接口<span style="color: red">*</span></td>
+            <td width="15%" style="border-right:1px solid #cad0cc">
                 <select class="finterface">
 
                 <option value="0">请选择</option>
@@ -615,13 +713,25 @@
         </tr>
 
         <tr>
-            <td width="5%">要求<span style="color: red">*</span></td>
-            <td width="15%"><input class="yaoqiu" type="text" /></td>
-            <td width="5%">用途<span style="color: red">*</span></td>
+            <td width="5%" style="border-left:1px solid #cad0cc">膜层数<span style="color: red">*</span></td>
+            <td width="15%">
+                <select class="fherpin">
+
+                    <option value="0">请选择</option>
+
+                    <c:forEach items="${fherpins}" var="f">
+
+                        <option value="${f.fherpinid}">${f.fherpinname}</option>
+
+                    </c:forEach>
+
+                </select>
+            </td>
+            <td width="5%">用途</td>
             <td width="15%"><input class="yongtu" type="text" /></td>
             <td width="5%">数量<span style="color: red">*</span></td>
             <td width="15%"><input class="num" type="text" /></td>
-            <td colspan="2"><input class="cancel" type="button" value="取消" /><input class="add" type="button" value="添加" /></td>
+            <td colspan="2" style="border-right:1px solid #cad0cc"><input class="cancel" type="button" value="取消" /><input class="add" type="button" value="添加" /></td>
 
         </tr>
 
@@ -630,22 +740,31 @@
     <table class="caigouyaoqiu">
 
         <tr>
-            <td width="10%" style="font-weight: bold;font-family: 仿宋">生产厂家</td>
-            <td><input class="caigouyaoqiuval" type="text"  /></td>
+            <td width="10%" style="font-weight: bold;font-family: 仿宋;border-left:1px solid #cad0cc">生产厂家</td>
+            <td>
+                <select class="fsupplier">
+                <option value="0">请选择</option>
+                <c:forEach items="${fsuppliers}" var="f">
+
+                    <option value="${f.fsupplierid}">${f.fsuppliername}</option>
+
+                </c:forEach>
+                </select>
+            </td>
         </tr>
 
     </table>
 
     <table class="filterlist">
 
-        <tr>
-            <td width="15%">材质</td>
-            <td width="15%">型号</td>
+        <tr style="font-weight: bold;color: #ad1a26">
+            <td width="15%" style="border-left:1px solid #cad0cc">名称</td>
             <td width="15%">尺寸</td>
+            <td width="15%">精度</td>
             <td width="15%">接口</td>
-            <td width="25%">要求</td>
+            <td width="25%">膜层数</td>
             <td width="10%">数量</td>
-            <td width="5%">操作</td>
+            <td width="5%" style="border-right:1px solid #cad0cc">操作</td>
 
         </tr>
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.reyoung.dao.fdao.FherpinDao">
+
+    <select id="findallfherpin" resultMap="fherpinMap">
+
+        SELECT * FROM fherpin;
+
+    </select>
+
+    <resultMap id="fherpinMap" type="com.reyoung.model.filter.Fherpin">
+
+        <id column="fherpinid" property="fherpinid" />
+        <result column="fherpinname" property="fherpinname" />
+
+
+    </resultMap>
+
+
+
+</mapper>

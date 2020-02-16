@@ -57,8 +57,12 @@
 
                 var suggest=$(".suggestval").val().trim();
 
+                var    str    =    window.prompt("请输入密码","");
+
+                alert(str);
+
                 //发送ajax请求后台服务器
-                $.ajax({
+             /*   $.ajax({
                     url:"${pageContext.request.contextPath}/agreeflowinfobyuser.do",
                     type:"post",
                     beforeSend: function (){
@@ -92,7 +96,7 @@
                         alert("服务器繁忙!");
                     }
 
-                });
+                }); */
 
             });
 
@@ -238,6 +242,8 @@
 
         }
 
+        ::-ms-clear, ::-ms-reveal { display: none; }
+
     </style>
 
 </head>
@@ -289,11 +295,11 @@
     <table class="tb1">
 
         <tr>
-            <td width="15%" style="border-left: none">材质</td>
-            <td width="15%">型号</td>
+            <td width="15%" style="border-left: none">名称</td>
             <td width="15%">尺寸</td>
+            <td width="15%">精度</td>
             <td width="15%">接口</td>
-            <td width="15%">要求</td>
+            <td width="15%">膜层数</td>
             <td width="15%">用途</td>
             <td width="10%" style="border-right: none">数量</td>
         </tr>
@@ -303,10 +309,10 @@
             <tr style="background-color: white">
 
             <td style="border-left: none">${d.fdetailname}</td>
-            <td>${d.fdetailtype}</td>
             <td>${d.fdetailsize}</td>
+            <td>${d.fdgree}</td>
             <td>${d.fdetailinterface}</td>
-            <td>${d.rek}</td>
+            <td>${d.fherpin}</td>
             <td>${d.useing}</td>
             <td style="border-right: none">${d.fdetailnum}</td>
 
@@ -440,6 +446,9 @@
     </table>
 
 </div>
+
+
+<div class="ceng"></div>
 
 </body>
 

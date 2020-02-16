@@ -200,15 +200,11 @@ public class FiltersTools {
 
         detail.setFdetailname("聚四氟乙烯PTFE");
 
-        detail.setFdetailtype("疏水性");
-
         detail.setFdetailsize("10英寸*0.36um");
 
         detail.setFdetailinterface("226接口带翅");
 
         detail.setFdetailnum("8根");
-
-        detail.setRek("过水过汽");
 
         detail.setUseing("模拟分装用");
 
@@ -216,15 +212,11 @@ public class FiltersTools {
 
         detail1.setFdetailname("聚四氟乙烯PTFE");
 
-        detail1.setFdetailtype("疏水性");
-
         detail1.setFdetailsize("10英寸*0.22um");
 
         detail1.setFdetailinterface("226接口带翅");
 
         detail1.setFdetailnum("8根");
-
-        detail1.setRek("过水过汽");
 
         detail1.setUseing("模拟分装用");
 
@@ -324,7 +316,8 @@ public class FiltersTools {
 
             datatable.setSpacingBefore(20);
 
-            datatable.setTotalWidth(new float[] { 50, 100, 90, 100,70,60,100,100 });
+            //50, 100, 90, 100,100,60,100,100
+            datatable.setTotalWidth(new float[] { 50, 40, 50, 50,70,50,60,30 });
 
             datatable.setWidthPercentage(100);// 表格的宽度百分比
 
@@ -352,23 +345,21 @@ public class FiltersTools {
 
             datatable.addCell(createlvxintitlecell("购买明细", 1, s));
 
-            datatable.addCell(createlvxincaizhicell("材质", 1, 1));
-            datatable.addCell(createlvxincaizhicell("型号", 1, 1));
+            datatable.addCell(createlvxincaizhicell("名称", 2, 1));
             datatable.addCell(createlvxincaizhicell("尺寸", 1, 1));
             datatable.addCell(createlvxincaizhicell("接口", 1, 1));
-            datatable.addCell(createlvxincaizhicell("数量", 1, 1));
-            datatable.addCell(createlvxincaizhicell("要求", 1, 1));
+            datatable.addCell(createlvxincaizhicell("膜层数", 1, 1));
             datatable.addCell(createlvxincaizhicell("用途", 1, 1));
+            datatable.addCell(createlvxincaizhicell("数量", 1, 1));
 
             for (FilterDetail filterDetail:f.getFilterDetails()) {
 
-                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailname(), 1, 1));
-                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailtype(), 1, 1));
-                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailsize(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailname(), 2, 1));
+                datatable.addCell(createlvxincaizhicell((filterDetail.getFdgree()==null||filterDetail.getFdgree().trim().equals(""))?filterDetail.getFdetailsize():filterDetail.getFdetailsize()+"*"+filterDetail.getFdgree(), 1, 1));
                 datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailinterface(), 1, 1));
-                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailnum(), 1, 1));
-                datatable.addCell(createlvxincaizhicell(filterDetail.getRek(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFherpin(), 1, 1));
                 datatable.addCell(createlvxincaizhicell(filterDetail.getUseing(), 1, 1));
+                datatable.addCell(createlvxincaizhicell(filterDetail.getFdetailnum(), 1, 1));
 
             }
 

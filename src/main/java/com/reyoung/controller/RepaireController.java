@@ -82,9 +82,21 @@ public class RepaireController {
             //将流程信息添加到数据库
             Integer r = flowinfosService.addflowinfo(flowinfos);
 
+            if (r==1) {//添加成功了
+
+                return "success";
+
+            }else {
+
+                return "fails";
+
+            }
+
+        }else {
+
+            return "fails";
         }
 
-        return null;
 
     }
 

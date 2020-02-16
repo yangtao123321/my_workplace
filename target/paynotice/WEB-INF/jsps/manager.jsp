@@ -125,7 +125,7 @@
 
                                         var tr=$("<tr class='tr'></tr>");
 
-                                        var td1=$("<td width='10%'>序号</td>");
+                                        var td1=$("<td width='10%' style='border-left: none'>序号</td>");
 
                                         var td2=$("<td width='15%'>流程名称</td>");
 
@@ -135,7 +135,7 @@
 
                                         var td5=$("<td width='10%'>提报人</td>");
 
-                                        var td6=$("<td width='20%'>到达时间</td>");
+                                        var td6=$("<td width='20%' style='border-right: none'>到达时间</td>");
 
                                         tr.append(td1);
                                         tr.append(td2);
@@ -148,12 +148,11 @@
 
                                         $(".right").append(tb1);
 
-
                                         for(var i=0;i<obj1.length;i++) {
 
                                             var tr1=$("<tr class='tr1'></tr>");
 
-                                            var tds1=$("<td></td>");
+                                            var tds1=$("<td style='border-left: none'></td>");
 
                                             var tds2=$("<td></td>");
 
@@ -163,7 +162,7 @@
 
                                             var tds5=$("<td></td>");
 
-                                            var tds6=$("<td></td>");
+                                            var tds6=$("<td style='border-right: none'></td>");
 
                                             var obj2=obj1[i];
 
@@ -206,8 +205,6 @@
                                             tr1.append(tds6);
 
                                             tb1.append(tr1);
-
-
 
                                         }
 
@@ -285,7 +282,7 @@
 
                                         var tr=$("<tr class='tr2'></tr>");
 
-                                        var td1=$("<td width='5%'>序号</td>");
+                                        var td1=$("<td width='5%' style='border-left: none'>序号</td>");
 
                                         var td2=$("<td width='15%'>流程名称</td>");
 
@@ -299,7 +296,7 @@
 
                                         var td7=$("<td width='5%'>流程图</td>");
 
-                                        var td8=$("<td width='10%'>流程状态</td>");
+                                        var td8=$("<td width='10%' style='border-right: none'>流程状态</td>");
 
 
                                         tr.append(td1);
@@ -319,7 +316,7 @@
 
                                             var tr1=$("<tr class='tr3'></tr>");
 
-                                            var tds1=$("<td></td>");
+                                            var tds1=$("<td style='border-left: none'></td>");
 
                                             var tds2=$("<td></td>");
 
@@ -333,7 +330,7 @@
 
                                             var tds7=$("<td class='flopic'></td>");
 
-                                            var tds8=$("<td style='color:#008d00'></td>");
+                                            var tds8=$("<td style='color:#008d00;border-right:none'></td>");
 
                                             var img=$("<img />");
 
@@ -440,7 +437,6 @@
                             }
 
                         }
-
 
                     });
 
@@ -582,9 +578,7 @@
 
                         }
 
-
                     });
-
 
 
 
@@ -1145,6 +1139,7 @@
         }
 
         .left{
+
             position: relative;
             border: 1px solid #004575;
             float: left;
@@ -1161,7 +1156,7 @@
             position: relative;
             height: 100%;
             float: left;
-            width: 86.6%;
+            width: 86.8%;
             border-left:none;
             border-top: none;
         }
@@ -1374,7 +1369,6 @@
         .tb,.tb1{
             position:relative;
             margin-top: 1%;
-            margin-left: 1px;
             border-collapse: collapse;
             border: none;
             width: 100%;
@@ -1604,6 +1598,8 @@
             cursor: pointer;
 
         }
+
+        ::-ms-clear, ::-ms-reveal { display: none; }
 
     </style>
 

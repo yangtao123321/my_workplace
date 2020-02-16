@@ -558,7 +558,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                             File file=new File("D:\\"+flowinfos.getFlowabstract()+".pdf");
 
-                            Mail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3","yangtao@reyoung.com","","流程审批通过","你好,附件是审批完成的计划表",file);
+                            Mail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3","zhaowei@reyoung.com","","流程审批通过","你好,附件是审批完成的计划表",file);
 
                             return 1;
 
@@ -1407,12 +1407,6 @@ public class FlowinfosServiceImpl implements FlowinfosService {
             approve.setFlowinfos(f);
 
             f.setApprove(approveService.findapprovebyuidandfid(approve));
-
-        }
-
-        for (Flowinfos f:flowinfoses1) {
-
-            System.out.println(f);
 
         }
 
