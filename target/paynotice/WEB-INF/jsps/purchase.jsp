@@ -182,7 +182,7 @@
                                             var tds4=$("<td></td>");
                                             var tds5=$("<td></td>");
                                             var tds6=$("<td></td>");
-                                            var tds7=$("<td class='flopic' style='border-right: none'></td>");
+                                            var tds7=$("<td class='flopic'></td>");
 
                                             var img=$("<img />");
 
@@ -190,7 +190,7 @@
 
                                             tds7.append(img);
 
-                                            var tds8=$("<td style='color:#00a400'>审批中</td>");
+                                            var tds8=$("<td style='color:#00a400;border-right:none'>审批中</td>");
 
                                             for(j in obj2) {
 
@@ -504,7 +504,7 @@
 
                     window.open("${pageContext.request.contextPath}/climpdevicepage.do","_blank");
 
-                }else if(v=='其他采购流程') {
+                }else if(v=='一致性药品采购流程') {
 
                     window.open("${pageContext.request.contextPath}/climpotherpage.do","_blank");
 
@@ -669,7 +669,7 @@
                 var fid=$($($($(this).parent())).children()).eq(0).text();
 
                 var form = $("<form method='post' target='_blank'></form>");
-                form.attr({"action":"${pageContext.request.contextPath}/finddetailfilterbyapply.do?flowinfoid.do"});
+                form.attr({"action":"${pageContext.request.contextPath}/finddetailfilterbyapply.do"});
                 var input1 = $("<input type='hidden'>").attr("name", "flowinfoid").val(fid);
 
                 form.append(input1);
@@ -772,14 +772,14 @@
 
                                     var tr=$("<tr class='tr'></tr>");
 
-                                    var td1=$("<td width='5%'>序号</td>");
+                                    var td1=$("<td width='5%' style='border-left: none'>序号</td>");
                                     var td2=$("<td width='15%'>流程名称</td>");
                                     var td3=$("<td width='25%'>流程内容摘要</td>");
                                     var td4=$("<td width='15%'>申请时间</td>");
                                     var td5=$("<td width='15%'>申请单位</td>");
                                     var td6=$("<td width='10%'>提报人</td>");
                                     var td7=$("<td width='5%'>流程图</td>");
-                                    var td8=$("<td width='10%'>状态</td>");
+                                    var td8=$("<td width='10%' style='border-right: none'>状态</td>");
 
                                     tr.append(td1);
                                     tr.append(td2);
@@ -798,7 +798,7 @@
 
                                         var tr1=$("<tr class='tr1'></tr>");
 
-                                        var tds1=$("<td></td>");
+                                        var tds1=$("<td style='border-left: none'></td>");
                                         var tds2=$("<td></td>");
                                         var tds3=$("<td class='flowabstract'></td>");
                                         var tds4=$("<td></td>");
@@ -812,7 +812,7 @@
 
                                         tds7.append(img);
 
-                                        var tds8=$("<td style='color:#00a400'>审批中</td>");
+                                        var tds8=$("<td style='color:#00a400;border-right: none'>审批中</td>");
 
                                         for(j in obj2) {
 
@@ -948,7 +948,7 @@
 
                                     var tr=$("<tr class='tr2'></tr>");
 
-                                    var td1=$("<td width='5%'>序号</td>");
+                                    var td1=$("<td width='5%' style='border-left: none'>序号</td>");
                                     var td2=$("<td width='15%'>流程名称</td>");
                                     var td3=$("<td width='25%'>流程内容摘要</td>");
                                     var td4=$("<td width='12%'>申请时间</td>");
@@ -956,7 +956,7 @@
                                     var td6=$("<td width='10%'>提报人</td>");
                                     var td7=$("<td width='5%'>流程图</td>");
                                     var td8=$("<td width='10%'>状态</td>");
-                                    var td9=$("<td width='5%'>操作</td>");
+                                    var td9=$("<td width='5%' style='border-right: none'>操作</td>");
 
                                     tr.append(td1);
                                     tr.append(td2);
@@ -976,7 +976,7 @@
 
                                         var tr1=$("<tr class='tr3'></tr>");
 
-                                        var tds1=$("<td></td>");
+                                        var tds1=$("<td style='border-left: none'></td>");
 
                                         var tds2=$("<td></td>");
 
@@ -992,7 +992,7 @@
 
                                         var tds8=$("<td></td>");
 
-                                        var tds9=$("<td></td>");
+                                        var tds9=$("<td style='border-right: none'></td>");
 
                                         var img=$("<img />");
 
@@ -1262,6 +1262,7 @@
             width: 86.8%;
             border-left:none;
             border-top: none;
+            border-right: none;
         }
 
         .flowcenter,.flowcenter1{
@@ -1470,11 +1471,12 @@
         }
 
         .tb,.tb1{
+
             position:relative;
             margin-top: 1%;
             border-collapse: collapse;
             border: none;
-            width: 100%;
+            width: 100.18%;
 
         }
 
@@ -1493,10 +1495,6 @@
             font-family: "宋体";
             font-weight: bold;
             font-size: 13px;
-
-
-
-
 
         }
 
@@ -1523,7 +1521,6 @@
             font-weight: 300;
             font-family: "Courier New";
         }
-
 
         /*分页样式表*/
         .M-box{
@@ -1600,7 +1597,6 @@
             color: #2c73d8;
             font-size: 13px;
         }
-
 
         /*分页样式表1*/
         .M-box1{
@@ -1750,7 +1746,7 @@
 
 <div class="bannertop">
 
-    <img class="backimg" src="${pageContext.request.contextPath}/picture/fenzhen.png" />
+    <img class="backimg" src="${pageContext.request.contextPath}/picture/fenzhen1.png" />
 
     <img class="userbanner" src="${pageContext.request.contextPath}/picture/user.png" />
 

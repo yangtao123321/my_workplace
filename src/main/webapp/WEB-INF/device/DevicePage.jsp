@@ -64,13 +64,13 @@
 
                     var tr=$("<tr class='devicedetailtr' style='background-color: white'></tr>");
 
-                    var td1=$("<td>"+devicename+"</td>");
+                    var td1=$("<td style='border-left: 1px solid #dfe1e5'>"+devicename+"</td>");
 
                     var td2=$("<td>"+devicenamebank+"</td>");
 
                     var td3=$("<td>"+devicenum+"</td>");
 
-                    var td4=$("<td><input class='deldeviceinfo' type='button' value='删除' /></td>");
+                    var td4=$("<td style='border-right: 1px solid #dfe1e5'><input class='deldeviceinfo' type='button' value='删除' /></td>");
 
                     tr.append(td1);
                     tr.append(td2);
@@ -86,7 +86,15 @@
             //关闭流程提交的页面
             $(document).on('click','.filterclose',function() {
 
-                alert("aaa");
+                var userAgent = navigator.userAgent;
+                if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                    location.href = "about:blank";
+                } else {
+                    window.opener = null;
+                    window.open('', '_self');
+                }
+
+                window.close();
 
             });
 
@@ -219,6 +227,25 @@
 
             });
 
+            $(".lookpic").click(function() {
+
+                var uid=$(".userid").text().trim();
+
+                var flowid=$(".flowid").text().trim();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/climpflowpicpre.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "uid").val(uid);
+                var input2=$("<input type='hidden'/>").attr("name","flowid").val(flowid);
+
+                form.append(input1);
+                form.append(input2);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
+
+            });
+
         });
 
     </script>
@@ -235,14 +262,16 @@
         }
 
         .top{
-            border: 1px solid #009ae3;
+
+            border: 1px solid #00acf0;
             height: 60px;
+
             line-height: 60px;
-            text-align: center;
-            background-color: #009ae3;
+
+            background-color: #00acf0;
             color: white;
             font-size: 26px;
-
+            font-weight: bold;
 
         }
 
@@ -283,10 +312,10 @@
 
         .apptb td,.appdetailtb td,.caigouyaoqiu td,.shigongyaoqiu td,.supplier td,.bydetailtb td,.devicelisttb td{
 
-            font-family: "宋体";
-            border: 1px solid #00223c;
+            font-family: "仿宋";
+            border: 1px solid #2c87c0;
             text-align: center;
-            height: 45px;
+            height: 40px;
 
         }
 
@@ -327,7 +356,7 @@
         .context{
 
             position: relative;
-            border: 1px solid #a6aca8;
+            border: 1px dashed #fc34c9;
             margin-top: 1%;
             text-align: center;
             font-size: 21px;
@@ -519,13 +548,50 @@
 
         }
 
+        .lookpic{
+
+            border: 1px solid #dfe1e5;
+
+            height: 30px;
+
+            width: 90px;
+
+            background-color: #dfe1e5;
+
+            color: #000000;
+
+            font-family: "宋体";
+
+            float: right;
+
+            margin-top: 1%;
+
+            margin-right: 5%;
+
+            cursor: pointer;
+
+        }
+
+        .title{
+
+
+            margin-left: 40%;
+            font-family: "仿宋";
+
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<div class="top">购买设备申请页</div>
+<div class="top">
+
+    <span class="title">购买设备申请页</span>
+    <input class="lookpic" type="button" value="查看流程图" />
+
+</div>
 
 <div class="mai">
 
@@ -538,17 +604,17 @@
     <table class="apptb">
 
         <tr>
-            <td width="15%">申请单位</td>
+            <td width="15%" style="border-left: 1px solid #dfe1e5">申请单位</td>
             <td width="30%">${sessionScope.get("userinfo").department.deptname}</td>
             <td width="15%">提报人<span style="color: red">*</span></td>
-            <td width="30%"><input class="apperson" type="text" /></td>
+            <td width="30%" style="border-right: 1px solid #dfe1e5"><input class="apperson" type="text" /></td>
         </tr>
 
         <tr>
-            <td width="15%">摘要<span style="color: red">*</span></td>
+            <td width="15%" style="border-left: 1px solid #dfe1e5">摘要<span style="color: red">*</span></td>
             <td width="30%"><input class="abstract" type="text" /></td>
             <td width="15%">发起时间</td>
-            <td width="30%"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
+            <td width="30%" style="border-right: 1px solid #dfe1e5"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
         </tr>
 
     </table>
@@ -577,13 +643,13 @@
 
         <tr>
 
-            <td width="5%">名称<span style="color: red">*</span></td>
+            <td width="5%" style="border-left: 1px solid #dfe1e5">名称<span style="color: red">*</span></td>
             <td width="30%"><input style="font-size: 15px" class="devicename" type="text" /></td>
-            <td width="5%">品牌<span style="color: red">*</span></td>
+            <td width="5%">品牌</td>
             <td width="30%"><input style="font-size: 15px" class="devicenamebank" type="text" /></td>
             <td width="5%">数量<span style="color: red">*</span></td>
             <td width="7%"><input style="font-size: 15px" class="devicenum" type="text" /></td>
-            <td width="18%"><input class="cancel" type="button" value="取消" /> <input class="add" type="button" value="添加" /></td>
+            <td width="18%" style="border-right: 1px solid #dfe1e5"><input class="cancel" type="button" value="取消" /> <input class="add" type="button" value="添加" /></td>
 
         </tr>
 
@@ -595,10 +661,10 @@
 
         <tr style="font-weight: bold">
 
-            <td width="40%">设备名称</td>
+            <td width="40%" style="border-left: 1px solid #dfe1e5">设备名称</td>
             <td width="40%">品牌</td>
             <td width="10%">数量</td>
-            <td width="10%">操作</td>
+            <td width="10%" style="border-right: 1px solid #dfe1e5">操作</td>
 
         </tr>
 

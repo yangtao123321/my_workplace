@@ -83,7 +83,7 @@
 
                             }else {
 
-                                window.location="${pageContext.request.contextPath}/welcome.do";
+                                window.location="${pageContext.request.contextPath}/climpwelcomesmall.do";
 
                             }
 
@@ -137,7 +137,7 @@
 
                                 }else {
 
-                                    window.location="${pageContext.request.contextPath}/welcome.do";
+                                    window.location="${pageContext.request.contextPath}/climpwelcomesmall.do";
 
                                 }
 

@@ -25,4 +25,6 @@ public interface UserService {
 
     public List<User> findunitbyuser(User user);
 
+    public User finduserbyuid(Integer uid);
+
 }

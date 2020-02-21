@@ -7,10 +7,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
+
 <head>
 
-    <title>其他采购计划</title>
+    <title>药品采购类流程</title>
 
     <script language="JavaScript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.ztree.core-3.5.js"></script>
@@ -49,11 +51,11 @@
 
                     var tr=$("<tr class='devicedetailtr' style='background-color: white'></tr>");
 
-                    var td1=$("<td>"+proname+"</td>");
+                    var td1=$("<td style='border-left: 1px solid #dfe1e5'>"+proname+"</td>");
                     var td2=$("<td>"+supplier+"</td>");
                     var td3=$("<td>"+special+"</td>");
                     var td4=$("<td>"+pronum+"</td>");
-                    var td5=$("<td><input class='deldeviceinfo' type='button' value='删除' /></td>");
+                    var td5=$("<td style='border-right: 1px solid #dfe1e5'><input class='deldeviceinfo' type='button' value='删除' /></td>");
 
                     tr.append(td1);
                     tr.append(td2);
@@ -201,6 +203,38 @@
 
             });
 
+            $(".lookpic").click(function() {
+
+                var uid=$(".userid").text().trim();
+
+                var flowid=$(".flowid").text().trim();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/climpflowpicpre.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "uid").val(uid);
+                var input2=$("<input type='hidden'/>").attr("name","flowid").val(flowid);
+
+                form.append(input1);
+                form.append(input2);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
+
+            });
+
+            $(document).on('click','.filterclose',function() {
+
+                var userAgent = navigator.userAgent;
+                if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                    location.href = "about:blank";
+                } else {
+                    window.opener = null;
+                    window.open('', '_self');
+                }
+
+                window.close();
+
+            });
 
         });
 
@@ -218,14 +252,16 @@
         }
 
         .top{
-            border: 1px solid #009ae3;
+
+            border: 1px solid #00acf0;
             height: 60px;
+
             line-height: 60px;
-            text-align: center;
-            background-color: #009ae3;
+
+            background-color: #00acf0;
             color: white;
             font-size: 26px;
-
+            font-weight: bold;
 
         }
 
@@ -267,9 +303,9 @@
         .apptb td,.appdetailtb td,.caigouyaoqiu td,.shigongyaoqiu td,.supplier td,.bydetailtb td,.devicelisttb td{
 
             font-family: "宋体";
-            border: 1px solid #00223c;
+            border: 1px solid #2c87c0;
             text-align: center;
-            height: 45px;
+            height: 40px;
 
         }
 
@@ -310,7 +346,7 @@
         .context{
 
             position: relative;
-            border: 1px solid #a6aca8;
+            border: 1px dashed #fc34c9;
             margin-top: 1%;
             text-align: center;
             font-size: 21px;
@@ -502,13 +538,49 @@
 
         }
 
+        .lookpic{
+
+            border: 1px solid #dfe1e5;
+
+            height: 30px;
+
+            width: 90px;
+
+            background-color: #dfe1e5;
+
+            color: #000000;
+
+            font-family: "宋体";
+
+            float: right;
+
+            margin-top: 1%;
+
+            margin-right: 5%;
+
+            cursor: pointer;
+
+        }
+
+        .title{
+
+            margin-left: 40%;
+            font-family: "仿宋";
+
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<div class="top">其他采购计划申请页</div>
+<div class="top">
+
+    <span class="title">一致性药品采购类流程</span>
+    <input class="lookpic" type="button" value="查看流程图"/>
+
+</div>
 
 <div class="mai">
 
@@ -521,17 +593,17 @@
     <table class="apptb">
 
         <tr>
-            <td width="15%">申请单位</td>
+            <td width="15%" style="border-left: 1px solid #dfe1e5">申请单位</td>
             <td width="30%">${sessionScope.get("userinfo").department.deptname}</td>
             <td width="15%">提报人<span style="color: red">*</span></td>
-            <td width="30%"><input class="apperson" type="text" /></td>
+            <td width="30%" style="border-right: 1px solid #dfe1e5"><input class="apperson" type="text" /></td>
         </tr>
 
         <tr>
-            <td width="15%">摘要<span style="color: red">*</span></td>
+            <td width="15%" style="border-left: 1px solid #dfe1e5">摘要<span style="color: red">*</span></td>
             <td width="30%"><input class="abstract" type="text" /></td>
             <td width="15%">发起时间</td>
-            <td width="30%"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
+            <td width="30%" style="border-right: 1px solid #dfe1e5"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
         </tr>
 
     </table>
@@ -560,7 +632,7 @@
 
         <tr>
 
-            <td width="5%">品名<span style="color: red">*</span></td>
+            <td width="5%" style="border-left: 1px solid #dfe1e5">品名<span style="color: red">*</span></td>
             <td width="20%"><input style="font-size: 15px" class="productname" type="text" /></td>
             <td width="5%">厂家</td>
             <td width="20%"><input style="font-size: 15px" class="productsupplier" type="text" /></td>
@@ -568,7 +640,7 @@
             <td width="20%"><input style="font-size: 15px" class="productspecial" type="text" /></td>
             <td width="5%">数量<span style="color: red">*</span></td>
             <td width="7%"><input style="font-size: 15px" class="productnum" type="text" /></td>
-            <td width="18%"><input class="cancel" type="button" value="取消" /> <input class="add" type="button" value="添加" /></td>
+            <td width="18%" style="border-right: 1px solid #dfe1e5"><input class="cancel" type="button" value="取消" /> <input class="add" type="button" value="添加" /></td>
 
         </tr>
 
@@ -580,11 +652,11 @@
 
         <tr style="font-weight: bold">
 
-            <td width="30%">品名</td>
+            <td width="30%" style="border-left: 1px solid #dfe1e5">品名</td>
             <td width="30%">厂家</td>
             <td width="20%">规格</td>
             <td width="10%">数量</td>
-            <td width="10%">操作</td>
+            <td width="10%" style="border-right: 1px solid #dfe1e5">操作</td>
 
         </tr>
 

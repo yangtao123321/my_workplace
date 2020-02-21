@@ -558,7 +558,10 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                             File file=new File("D:\\"+flowinfos.getFlowabstract()+".pdf");
 
-                            Mail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3","zhaowei@reyoung.com","","流程审批通过","你好,附件是审批完成的计划表",file);
+                            String subject="计划通过提醒";
+                            String context="<font face='Terminal' style='font-size:19px'><span style='color: black;'>"+flowinfos.getUser().getTruename()+",您好。</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贵单位提报的计划 &nbsp;&nbsp;&nbsp;实例号:"+flowinfos.getFlowinfoid()+"&nbsp;&nbsp;&nbsp;名称:<span style='color:#00a400;'>"+flowinfos.getFlowabstract()+"</span>&nbsp;&nbsp;&nbsp;已由<span style='color: red;'>"+user.getTruename()+"</span>同意，审批意见:"+approve.getSuggest()+",<br><br>&nbsp;&nbsp;&nbsp;详情请参考附件!</font>";
+
+                            Mail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3","yangtao@reyoung.com","",subject,context,file);
 
                             return 1;
 
@@ -812,7 +815,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
             }
 
 
-        }else if (flowinfos.getFlows().getFlowname().equals("其他采购流程")) {
+        }else if (flowinfos.getFlows().getFlowname().equals("一致性药品采购流程")) {
 
             //查询所有的关于审批的记录   根据flowinfos id
             List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos);
@@ -963,7 +966,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1003,7 +1006,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1032,7 +1035,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag()+2);
 
@@ -1062,7 +1065,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag()+2);
 
@@ -1108,7 +1111,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1137,7 +1140,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1167,7 +1170,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1213,7 +1216,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1242,7 +1245,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1272,7 +1275,7 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
                 //处理事件
                 approve1.setDealtime(GetYear.gettimes());
-                //approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSignature(approve.getUser().getSignaturepath());
                 approve1.setSuggest(approve.getSuggest());
                 approve1.setApproflag(approve.getApproflag());
 
@@ -1297,8 +1300,110 @@ public class FlowinfosServiceImpl implements FlowinfosService {
 
             }
 
-        }else if (flowinfos.getFlows().getFlowname().equals("其他采购流程")) {
+        }else if (flowinfos.getFlows().getFlowname().equals("一致性药品采购流程")) {
 
+
+            List<Approve> approves = approveService.findapprolistbyflowinfoid(flowinfos);
+
+            if (user.getPosition().getPosid()==2) {
+
+                for (Approve a:approves) {
+
+                    if (a.getUser().getPosition().getPosid()==2&&a.getApproflag()>0&&a.getUser().getUid()!=user.getUid()) {//筛选出单位负责人并且已经审批过得
+
+                        //此时已经有人审批过了，返回 2表示有人已经审批过了
+                        return 2;
+
+                    }
+
+                }
+
+                Approve approve1 = approveService.findapprovebyuidandfid(approve);
+
+                //处理事件
+                approve1.setDealtime(GetYear.gettimes());
+                approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSuggest(approve.getSuggest());
+                approve1.setApproflag(approve.getApproflag());
+
+                //更新审批操作
+                Integer res = approveService.updateapprobyuidandfid(approve1);
+
+                if (res==1) {//审批记录更新成功后，更新flowinfo中的审批记录
+
+                    Flowinfos f=approve.getFlowinfos();
+                    f.setFlag(approve.getUser().getPosition().getBackflag());
+                    f.setAchieve(2);
+
+                    Integer r = flowinfosDao.updateflowinfobyflowinfoid(f);
+
+                    if (r==1) {
+
+                        return 1;
+
+                    }
+
+                }
+
+            }else if (user.getPosition().getPosid()==3) {//部门经理审核
+
+                Approve approve1 = approveService.findapprovebyuidandfid(approve);
+
+                //处理事件
+                approve1.setDealtime(GetYear.gettimes());
+                approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSuggest(approve.getSuggest());
+                approve1.setApproflag(approve.getApproflag());
+
+                //更新审批操作
+                Integer res = approveService.updateapprobyuidandfid(approve1);
+
+                if (res==1) {//审批记录更新成功后，更新flowinfo中的审批记录
+
+                    Flowinfos f=approve.getFlowinfos();
+                    f.setFlag(approve.getUser().getPosition().getBackflag());
+                    f.setAchieve(4);
+
+                    Integer r = flowinfosDao.updateflowinfobyflowinfoid(f);
+
+                    if (r==1) {
+
+                        return 1;
+
+                    }
+
+                }
+
+            }else if (user.getPosition().getPosid()==4) {//总经理审核
+
+                Approve approve1 = approveService.findapprovebyuidandfid(approve);
+
+                //处理事件
+                approve1.setDealtime(GetYear.gettimes());
+                approve1.setSignature(approve.getUser().getSignaturepath());
+                approve1.setSuggest(approve.getSuggest());
+                approve1.setApproflag(approve.getApproflag());
+
+                //更新审批操作
+                Integer res = approveService.updateapprobyuidandfid(approve1);
+
+                if (res==1) {//审批记录更新成功后，更新flowinfo中的审批记录
+
+                    Flowinfos f=approve.getFlowinfos();
+                    f.setFlag(approve.getUser().getPosition().getBackflag());
+                    f.setAchieve(5);
+
+                    Integer r = flowinfosDao.updateflowinfobyflowinfoid(f);
+
+                    if (r==1) {
+
+                        return 1;
+
+                    }
+
+                }
+
+            }
 
 
         }
@@ -1465,6 +1570,73 @@ public class FlowinfosServiceImpl implements FlowinfosService {
     @Override
     public Integer delflowinfosbyfid(Flowinfos flowinfos) {
         return flowinfosDao.delflowinfosbyfid(flowinfos);
+    }
+
+    @Override
+    public Integer findallflowinfocount() {
+
+     return  flowinfosDao.findallflowinfos().size();
+
+    }
+
+    @Override
+    public PageBean<Flowinfos> findallflowinfolist(PageBean<Flowinfos> pageBean) {
+
+        List<Flowinfos> flowinfoses = flowinfosDao.findallflowinfos();
+
+        for (Flowinfos f:flowinfoses) {
+
+            f.setStartime1(GetYear.getstrtim(f.getStartime()));
+
+        }
+
+        List<Flowinfos> flowinfoses1=null;
+
+        if (pageBean.getCurrentPage()==pageBean.getTotalPage()) {
+            flowinfoses1= flowinfoses.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), flowinfoses.size());
+        }else if (pageBean.getCurrentPage()<pageBean.getTotalPage()){
+            flowinfoses1 = flowinfoses.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), pageBean.getCurrentPage()*pageBean.getPageSize());
+        }else {
+            flowinfoses1=null;
+        }
+
+        pageBean.setList(flowinfoses1);
+
+        return pageBean;
+
+    }
+
+    @Override
+    public PageBean<Flowinfos> findflowinfosbyid(Flowinfos flowinfos,PageBean<Flowinfos> pageBean) {
+
+        List<Flowinfos> flowinfoses=new ArrayList<>();
+
+        if (flowinfosDao.findflwoinfobyfid(flowinfos)!=null) {
+
+            flowinfoses.add(flowinfosDao.findflwoinfobyfid(flowinfos));
+
+        }
+
+        for (Flowinfos f:flowinfoses) {
+
+            f.setStartime1(GetYear.getstrtim(f.getStartime()));
+
+        }
+
+        List<Flowinfos> flowinfoses1=null;
+
+        if (pageBean.getCurrentPage()==pageBean.getTotalPage()) {
+            flowinfoses1= flowinfoses.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), flowinfoses.size());
+        }else if (pageBean.getCurrentPage()<pageBean.getTotalPage()){
+            flowinfoses1 = flowinfoses.subList((pageBean.getCurrentPage() - 1) * pageBean.getPageSize(), pageBean.getCurrentPage()*pageBean.getPageSize());
+        }else {
+            flowinfoses1=null;
+        }
+
+        pageBean.setList(flowinfoses1);
+
+        return pageBean;
+
     }
 
 }

@@ -49,7 +49,6 @@
 
                 window.close();
 
-
             });
 
             //提交滤芯计划
@@ -290,7 +289,6 @@
                 }
 
             });
-
 
             //查看流程图
             $(".lookpic").click(function() {

@@ -59,7 +59,32 @@ public class DeviceController {
 
         }
 
+    }
 
+
+    //跳转到设备计划申请页面 ie8
+    @RequestMapping("/climpdevicepageie8.do")
+    public String climpdevicepageie8(HttpServletRequest request) {
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        String s= GetYear.gettimes();
+
+        List<Section> sections = sectionService.findallsection();
+
+        if (user==null) {
+
+            return "login";
+
+        }else {
+
+            request.setAttribute("starttime",s);
+
+            request.setAttribute("sections",sections);
+
+            return "WEB-INF/IE8/device/DevicePage";
+
+        }
 
     }
 

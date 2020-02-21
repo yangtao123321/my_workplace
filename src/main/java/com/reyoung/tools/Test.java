@@ -9,6 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Created by yangtao on 2019-11-26.
@@ -695,13 +696,48 @@ public class Test {
 
     }
 
-
-
-
     @org.junit.Test
     public void md5pas() {
 
         System.out.println(DigestUtils.md5Hex("yangtao"+"yangtao"));
+
+    }
+
+    @org.junit.Test
+    public void display() {
+
+        String tmp1="2020/12/13 22:26:30 -1.0745";
+
+        //以下为一些进行匹配处理的正则表达式
+        String prex1 = "\\d{4}/{1}\\d{2}/{1}\\d{2}\\s{1}\\d{2}:{1}\\d{2}:{1}\\d{2}\\s{1}([nN]\\s)?-?\\d+\\.\\d+\\s?[g]?";//正则表达式1
+
+        String prex2 = "\\d{4}/\\d{2}/\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\s?[Ss]?\\s?[Ss]?\\s{1}-?\\d+\\.\\d+\\s?[g]?\\??";//正则表达式2
+
+        String prex3 = "\\d{4}/{1}\\d{2}/{1}\\d{2}\\s{1}\\d{2}\\:{1}\\d{2}\\:{1}\\d{2}H{1}\\s?\\*?\\+?\\-?\\s?\\d+\\.{1}\\d+\\s?g?";//上平数据格式
+
+        String prex4 = "\\d{4}/{1}\\d{2}/{1}\\d{2}\\s{1}\\d{2}\\:{1}\\d{2}\\:{1}\\d{2}b{1}\\s?\\*?\\+?\\-?\\s?\\d+\\.{1}\\d+\\s?g?";
+
+        if (Pattern.matches(prex1, tmp1) || Pattern.matches(prex2, tmp1) || Pattern.matches(prex3, tmp1) || Pattern.matches(prex4, tmp1)){
+
+
+            System.out.println(tmp1);
+
+
+        }
+
+
+        /*Pattern p = Pattern.compile("(-?\\d+(\\.\\d+)?)");
+
+        Matcher m = p.matcher("qqewq\r\nwe12312.643 g");
+
+        if (m.find()) {
+
+            System.out.println(m.group());
+
+        }
+*/
+
+
 
     }
 

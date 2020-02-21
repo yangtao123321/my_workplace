@@ -34,7 +34,6 @@ public interface FlowinfosService {
     //查询已处理的流程的信息
     public PageBean<Flowinfos> findflowinfoedlist(PageBean<Flowinfos> pageBean,User user);
 
-
     //根据uid查询自己申请的流程数
     public Integer findflowinfoscountbyuid(User user);
 
@@ -46,8 +45,15 @@ public interface FlowinfosService {
 
     public PageBean<Flowinfos> findapplyflowinfoedlistbyuid(PageBean<Flowinfos> pageBean,User user);
 
-
     //根据fid删除flowinfos
     public Integer delflowinfosbyfid(Flowinfos flowinfos);
+
+    //查询所有流程的总数量
+    public Integer findallflowinfocount();
+
+    //查询所有流程的列表
+    public PageBean<Flowinfos> findallflowinfolist(PageBean<Flowinfos> pageBean);
+
+    public PageBean<Flowinfos> findflowinfosbyid(Flowinfos flowinfos,PageBean<Flowinfos> pageBean);
 
 }

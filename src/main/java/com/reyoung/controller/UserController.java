@@ -44,8 +44,6 @@ public class UserController {
     @RequestMapping("/savepas.do")
     public @ResponseBody String savepas(HttpServletRequest request,User user,HttpServletResponse response) {
 
-        //System.out.println("aaa");
-
         if (user.getSavefalg()!=null&&"1".equals(user.getSavefalg())) {//要求记住密码
 
             String loginfo=user.getUsername()+","+user.getPassword();
@@ -177,6 +175,29 @@ public class UserController {
 
     }
 
+    //校验用户名和密码是否匹配
+    @RequestMapping("/login1.do")
+    public @ResponseBody String login1(HttpServletRequest request,User user,HttpServletResponse response) {
+
+        String pas=user.getPassword();
+
+        user.setPassword(DigestUtils.md5Hex(user.getUsername() + user.getPassword()));
+
+        //校验用户登录信息的合法性
+        User user1 = userService.checkdologin(user);
+
+        if (user1!=null) {//说明登录成功了。
+
+            return "loginsuccess";
+
+        }else {
+
+            return "loginfail";
+
+        }
+
+    }
+
     @RequestMapping("/welcome.do")
     public String climptowelcome(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
 
@@ -196,33 +217,44 @@ public class UserController {
 
             if (user.getPosition().getPosname().equals("经办人")) {//需要跳转到purchase页面
 
-                //查询所有可以申请的流程
-                List<Flows> flowses = flowsService.findallflows();
+                if (user.getUsername().equals("admin")) {//用来查询信息用的账号
 
-                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+                    return "WEB-INF/query/query";
 
-                    pageBean.setCurrentPage(1);
+                }else {
+
+                    //查询所有可以申请的流程
+                    List<Flows> flowses = flowsService.findallflows();
+
+                    if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+                        pageBean.setCurrentPage(1);
+
+                    }
+
+                    pageBean.setPageSize(15);//设置每页显示的条数
+
+                    Integer totalRecord=flowinfosService.findflowinfoscountbyuid(user);
+
+                    pageBean.setTotalRecord(totalRecord);
+
+                    pageBean.getTotalPage();
+
+                    PageBean<Flowinfos> page = flowinfosService.findflowinfosbyuid(user, pageBean);
+
+                    request.setAttribute("page",page);
+
+                    //根据userid查询flowinfo信息
+                    flowinfosService.findflowinfosbyuid(user,pageBean);
+
+                    request.setAttribute("flows",flowses);
+
+                    return "WEB-INF/jsps/purchase";
+
 
                 }
 
-                pageBean.setPageSize(15);//设置每页显示的条数
 
-                Integer totalRecord=flowinfosService.findflowinfoscountbyuid(user);
-
-                pageBean.setTotalRecord(totalRecord);
-
-                pageBean.getTotalPage();
-
-                PageBean<Flowinfos> page = flowinfosService.findflowinfosbyuid(user, pageBean);
-
-                request.setAttribute("page",page);
-
-                //根据userid查询flowinfo信息
-                flowinfosService.findflowinfosbyuid(user,pageBean);
-
-                request.setAttribute("flows",flowses);
-
-                return "WEB-INF/jsps/purchase";
 
             }else if (user.getPosition().getPosname().equals("单位负责人")) {
 
@@ -273,6 +305,224 @@ public class UserController {
                 request.setAttribute("page",page);
 
                 return "WEB-INF/jsps/manager";
+
+            }
+
+            return "WEB-INF/jsps/purchase";
+
+        }
+
+    }
+
+    @RequestMapping("/climpwelcomesmall.do")
+    public String climpwelcomesmall(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
+
+        // 分页的显示 添加字段**********需要给flowinfo添加一个完成的标志字段    默认值为0   完成值为 1 何时完成可以自定义*******
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        String s = GetYear.getDates();
+
+        if (user==null) {//session失效，需要重新登录
+
+            return "login1";
+
+        }else {
+
+            request.setAttribute("dates",s);
+
+            if (user.getPosition().getPosname().equals("经办人")) {//需要跳转到purchase页面
+
+                //查询所有可以申请的流程
+                List<Flows> flowses = flowsService.findallflows();
+
+                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+                    pageBean.setCurrentPage(1);
+
+                }
+
+                pageBean.setPageSize(15);//设置每页显示的条数
+
+                Integer totalRecord=flowinfosService.findflowinfoscountbyuid(user);
+
+                pageBean.setTotalRecord(totalRecord);
+
+                pageBean.getTotalPage();
+
+                PageBean<Flowinfos> page = flowinfosService.findflowinfosbyuid(user, pageBean);
+
+                request.setAttribute("page",page);
+
+                //根据userid查询flowinfo信息
+                flowinfosService.findflowinfosbyuid(user,pageBean);
+
+                request.setAttribute("flows",flowses);
+
+                return "WEB-INF/smallscreen/jsps/purchase";
+
+            }else if (user.getPosition().getPosname().equals("单位负责人")) {
+
+                //需要查询出自己待审批的任务   根据自己所在的单位和职位查询出需要待审批的Flowinfos
+
+                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {//如果首页不存在则将第一页设置为首页
+
+                    pageBean.setCurrentPage(1);
+
+                }
+
+                pageBean.setPageSize(15);//设置每页显示的条数
+
+                Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+
+                pageBean.setTotalRecord(totalRecord);
+
+                pageBean.getTotalPage();
+
+                //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
+                PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+
+                request.setAttribute("page",page);
+
+                return "WEB-INF/jsps/dunit";
+
+            }else if (user.getPosition().getPosname().equals("部门经理")) {
+
+                //需要查询出自己待审批的任务   根据自己所在的单位和职位查询出需要待审批的Flowinfos
+
+                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {//如果首页不存在则将第一页设置为首页
+
+                    pageBean.setCurrentPage(1);
+
+                }
+
+                pageBean.setPageSize(15);//设置每页显示的条数
+
+                Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+
+                pageBean.setTotalRecord(totalRecord);
+
+                pageBean.getTotalPage();
+
+                //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
+                PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+
+                request.setAttribute("page",page);
+
+                return "WEB-INF/jsps/manager";
+
+            }
+
+            return "WEB-INF/jsps/purchase";
+
+        }
+
+    }
+
+    @RequestMapping("/welcome1.do")//ie8
+    public String climptowelcome1(HttpServletRequest request,PageBean<Flowinfos> pageBean) {
+
+        // 分页的显示 添加字段**********需要给flowinfo添加一个完成的标志字段    默认值为0   完成值为 1 何时完成可以自定义*******
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        String s = GetYear.getDates();
+
+        if (user==null) {//session失效，需要重新登录
+
+            return "ie8/login2";
+
+        }else {
+
+            request.setAttribute("dates",s);
+
+            if (user.getPosition().getPosname().equals("经办人")) {//需要跳转到purchase页面
+
+                if (user.getUsername().equals("admin")) {//用来查询信息用的账号
+
+                    return "WEB-INF/IE8/query/query";
+
+                }else{
+
+                    //查询所有可以申请的流程
+                    List<Flows> flowses = flowsService.findallflows();
+
+                    if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+                        pageBean.setCurrentPage(1);
+
+                    }
+
+                    pageBean.setPageSize(15);//设置每页显示的条数
+
+                    Integer totalRecord=flowinfosService.findflowinfoscountbyuid(user);
+
+                    pageBean.setTotalRecord(totalRecord);
+
+                    pageBean.getTotalPage();
+
+                    PageBean<Flowinfos> page = flowinfosService.findflowinfosbyuid(user, pageBean);
+
+                    request.setAttribute("page",page);
+
+                    //根据userid查询flowinfo信息
+                    flowinfosService.findflowinfosbyuid(user,pageBean);
+
+                    request.setAttribute("flows",flowses);
+
+                    return "WEB-INF/IE8/jsps/purchase";
+
+                }
+
+            }else if (user.getPosition().getPosname().equals("单位负责人")) {
+
+                //需要查询出自己待审批的任务   根据自己所在的单位和职位查询出需要待审批的Flowinfos
+
+                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {//如果首页不存在则将第一页设置为首页
+
+                    pageBean.setCurrentPage(1);
+
+                }
+
+                pageBean.setPageSize(15);//设置每页显示的条数
+
+                Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+
+                pageBean.setTotalRecord(totalRecord);
+
+                pageBean.getTotalPage();
+
+                //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
+                PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+
+                request.setAttribute("page",page);
+
+                return "WEB-INF/IE8/jsps/dunit";
+
+            }else if (user.getPosition().getPosname().equals("部门经理")) {
+
+                //需要查询出自己待审批的任务   根据自己所在的单位和职位查询出需要待审批的Flowinfos
+
+                if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {//如果首页不存在则将第一页设置为首页
+
+                    pageBean.setCurrentPage(1);
+
+                }
+
+                pageBean.setPageSize(15);//设置每页显示的条数
+
+                Integer totalRecord=flowinfosService.finddealscountbyuser(user);//查询待办任务的总条数
+
+                pageBean.setTotalRecord(totalRecord);
+
+                pageBean.getTotalPage();
+
+                //List<Flowinfos> flowinfoses = flowinfosService.finddealsbyuser(user);
+                PageBean<Flowinfos> page = flowinfosService.finddealsbyuser(user, pageBean);
+
+                request.setAttribute("page",page);
+
+                return "WEB-INF/IE8/jsps/manager";
 
             }
 
@@ -416,6 +666,28 @@ public class UserController {
 
     }
 
+
+    //注销功能 小屏幕
+    @RequestMapping("/logout1.do")
+    public String logout1(HttpServletRequest request) {
+
+        request.getSession().removeAttribute("userinfo");
+
+        return "forward:/climpwelcomesmall.do";
+
+    }
+
+
+    @RequestMapping("/logoutie8.do")
+    public String logoutie8(HttpServletRequest request) {
+
+        request.getSession().removeAttribute("userinfo");
+
+        return "forward:/welcome1.do";
+
+    }
+
+
     //校验原密码是否正确
     @RequestMapping("/checkorgpas.do")
     public @ResponseBody String checkorgpas(HttpServletRequest request,User user) {
@@ -474,6 +746,66 @@ public class UserController {
         String json = JSONObject.toJSONString(flowses, SerializerFeature.WriteMapNullValue);
 
         return json;
+
+    }
+
+    @RequestMapping("/test123.do")
+    public @ResponseBody String test123(HttpServletRequest request,String s) {
+
+        System.out.println(s);
+
+        return s;
+
+    }
+
+    //跳转到修改密码的页面
+    @RequestMapping("/climptouppas.do")
+    public String climptouppas(HttpServletRequest request) {
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        if (user==null) {
+
+            return "ie8/login2";
+
+        }
+
+        request.setAttribute("users",user);
+
+        return "WEB-INF/IE8/uppas";
+
+    }
+
+    //校验输入的原密码是否是正确的
+    @RequestMapping("/vailiedpsd.do")
+    public @ResponseBody String vailiedpsd(HttpServletRequest request,User user) {
+
+        User user1 = userService.finduserbyuid(user.getUid());
+
+        if (user1.getPassword().equals(DigestUtils.md5Hex(user1.getUsername() + user.getPassword()))) {
+
+           return "success";
+
+        }else {
+
+           return "fails";
+
+       }
+
+
+    }
+
+    //修改密码功能
+    @RequestMapping("/updatepsd.do")
+    public @ResponseBody String updatepsd(HttpServletRequest request,User user) {
+
+        User user1 = userService.finduserbyuid(user.getUid());
+
+        user1.setPassword(DigestUtils.md5Hex(user1.getUsername() + user.getPassword()));
+
+        Integer res = userService.updatepas(user1);
+
+        return res+"";
 
     }
 

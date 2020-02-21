@@ -61,6 +61,33 @@ public class OtherController {
 
     }
 
+
+    //跳转到其他计划申请页面
+    @RequestMapping("/climpotherpageie8.do")
+    public String climpotherpageie8(HttpServletRequest request) {
+
+        User user= (User) request.getSession().getAttribute("userinfo");
+
+        String s= GetYear.gettimes();
+
+        List<Section> sections = sectionService.findallsection();
+
+        if (user==null) {
+
+            return "login";
+
+        }else {
+
+            request.setAttribute("starttime",s);
+
+            request.setAttribute("sections",sections);
+
+            return "WEB-INF/IE8/other/OtherPage";
+
+        }
+
+    }
+
     //提交采购计划单
     @RequestMapping("/applyotherplan.do")
     public @ResponseBody String applyotherplan(HttpServletRequest request,OtherPlan otherPlan,String details,Flowinfos flowinfos) {

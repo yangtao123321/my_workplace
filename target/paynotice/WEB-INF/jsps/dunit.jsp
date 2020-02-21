@@ -615,6 +615,8 @@
 
                 var fid=$($($($(this).parent())).children()).eq(0).text();
 
+                $(this).parent().remove();
+
                 var form = $("<form method='post' target='_blank'></form>");
                 form.attr({"action":"${pageContext.request.contextPath}/findflowinfinfodetailbyfid.do"});
                 var input1 = $("<input type='hidden'>").attr("name", "flowinfoid").val(fid);
@@ -703,7 +705,7 @@
 
                                     var tr=$("<tr class='tr'></tr>");
 
-                                    var td1=$("<td width='10%'>序号</td>");
+                                    var td1=$("<td width='10%' style='border-left: none'>序号</td>");
 
                                     var td2=$("<td width='15%'>流程名称</td>");
 
@@ -713,7 +715,7 @@
 
                                     var td5=$("<td width='10%'>提报人</td>");
 
-                                    var td6=$("<td width='20%'>到达时间</td>");
+                                    var td6=$("<td width='20%' style='border-right: none'>到达时间</td>");
 
                                     tr.append(td1);
                                     tr.append(td2);
@@ -728,12 +730,12 @@
 
                                         var tr1=$("<tr class='tr1'></tr>");
 
-                                        var tds1=$("<td></td>");
+                                        var tds1=$("<td style='border-left: none'></td>");
                                         var tds2=$("<td></td>");
                                         var tds3=$("<td class='flowabstract'></td>");
                                         var tds4=$("<td></td>");
                                         var tds5=$("<td></td>");
-                                        var tds6=$("<td></td>");
+                                        var tds6=$("<td style='border-right: none'></td>");
 
                                         var obj2=obj1[i];
 
@@ -823,8 +825,6 @@
 
                 });
 
-
-
             }
 
             //分页样式表
@@ -888,13 +888,13 @@
 
                                     var tr=$("<tr class='tr2'></tr>");
 
-                                    var td1=$("<td width='5%'>序号</td>");
+                                    var td1=$("<td width='5%' style='border-left: none'>序号</td>");
 
                                     var td2=$("<td width='15%'>流程名称</td>");
 
                                     var td3=$("<td width='25%'>流程内容摘要</td>");
 
-                                    var td4=$("<td width='10%'>申请单位</td>");
+                                    var td4=$("<td width='14%'>申请单位</td>");
 
                                     var td5=$("<td width='10%'>提报人</td>");
 
@@ -902,7 +902,7 @@
 
                                     var td7=$("<td width='5%'>流程图</td>");
 
-                                    var td8=$("<td width='10%'>流程状态</td>");
+                                    var td8=$("<td width='6%' style='border-right: none'>流程状态</td>");
 
                                     tr.append(td1);
                                     tr.append(td2);
@@ -917,18 +917,17 @@
 
                                     $(".right").append(tb);
 
-
                                     for(var i=0;i<obj1.length;i++) {
 
                                         var tr1=$("<tr class='tr3'></tr>");
 
-                                        var tds1=$("<td></td>");
+                                        var tds1=$("<td style='border-left: none'></td>");
 
                                         var tds2=$("<td></td>");
 
                                         var tds3=$("<td class='flowabstract1'></td>");
 
-                                        var tds4=$("<td></td>");
+                                        var tds4=$("<td style='font-family: 楷体;'></td>");
 
                                         var tds5=$("<td></td>");
 
@@ -936,7 +935,7 @@
 
                                         var tds7=$("<td class='flopic'></td>");
 
-                                        var tds8=$("<td style='color:#008d00'></td>");
+                                        var tds8=$("<td style='color:#00a300;border-right: none;font-family: 仿宋'></td>");
 
                                         var img=$("<img />");
 
@@ -1015,7 +1014,6 @@
                                         tb.append(tr1);
 
                                     }
-
 
                                     var box=$("<div class='M-box1'></div>");
 
@@ -1140,9 +1138,10 @@
         .uppas{
 
             position: relative;
-            margin-left: 3%;
-            height: 35px;
-            margin-top: 3px;
+            margin-left: 5%;
+            height: 30px;
+            width: 70px;
+            margin-top: 9px;
             float: left;
             display: block;
             cursor: pointer;
@@ -1153,8 +1152,9 @@
 
             position: relative;
             margin-left: 2%;
-            height: 35px;
-            margin-top: 3px;
+            height: 30px;
+            width: 70px;
+            margin-top: 9px;
             float: left;
             display: block;
             cursor: pointer;
@@ -1218,6 +1218,7 @@
             width: 86.8%;
             border-left:none;
             border-top: none;
+            border-right: none;
 
         }
 
@@ -1432,7 +1433,7 @@
             margin-top: 1%;
             border-collapse: collapse;
             border: none;
-            width: 100%;
+            width: 100.18%;
 
         }
 
@@ -1699,7 +1700,7 @@
 
 <div class="bannertop">
 
-    <img class="backimg" src="${pageContext.request.contextPath}/picture/fenzhen.png" />
+    <img class="backimg" src="${pageContext.request.contextPath}/picture/fenzhen1.png" />
 
     <img class="userbanner" src="${pageContext.request.contextPath}/picture/user.png" />
 
@@ -1836,7 +1837,7 @@
 
                             var tr=$("<tr class='tr'></tr>");
 
-                            var td1=$("<td width='10%'>序号</td>");
+                            var td1=$("<td width='10%' style='border-left: none'>序号</td>");
 
                             var td2=$("<td width='15%'>流程名称</td>");
 
@@ -1846,7 +1847,7 @@
 
                             var td5=$("<td width='10%'>提报人</td>");
 
-                            var td6=$("<td width='20%'>到达时间</td>");
+                            var td6=$("<td width='20%' style='border-right: none'>到达时间</td>");
 
                             tr.append(td1);
                             tr.append(td2);
@@ -1861,12 +1862,12 @@
 
                                 var tr1=$("<tr class='tr1'></tr>");
 
-                                var tds1=$("<td></td>");
+                                var tds1=$("<td style='border-left: none'></td>");
                                 var tds2=$("<td></td>");
                                 var tds3=$("<td class='flowabstract'></td>");
                                 var tds4=$("<td></td>");
                                 var tds5=$("<td></td>");
-                                var tds6=$("<td></td>");
+                                var tds6=$("<td style='border-right: none'></td>");
 
                                 var obj2=obj1[i];
 
@@ -1945,7 +1946,6 @@
                             });
 
                         }
-
 
                     }
 

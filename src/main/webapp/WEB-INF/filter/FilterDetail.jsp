@@ -182,7 +182,6 @@
             <td>申请原因</td>
             <td colspan="2" style="background-color: white;border-right: none">${filterpla.applyreason}</td>
 
-
         </tr>
 
         <tr>
@@ -254,7 +253,7 @@
                         <td></td>
                         <td>${approve.dealtime}</td>
                         <td style="font-family: 仿宋;color: #e70000;font-weight: bold">${approve.suggest}</td>
-                        <td style="height: 50px" style="border-right: none"></td>
+                        <td style="height: 50px;border-right: none"></td>
 
                     </tr>
 
@@ -289,7 +288,7 @@
                                 </c:choose>
                                 <td>${approve.dealtime}</td>
                                 <td style="font-family: 仿宋;color: #e70000;font-weight: bold">${approve.suggest}</td>
-                                <td style="height: 50px" style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
+                                <td style="height: 50px;border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
 
                             </c:when>
 
@@ -315,7 +314,7 @@
 
                                 <td>${approve.dealtime}</td>
                                 <td style="font-family: 仿宋;color: #e70000;font-weight: bold">${approve.suggest}</td>
-                                <td style="height: 50px" style="border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
+                                <td style="height: 50px;border-right: none"><img width="100%" height="100%" src="${pageContext.request.contextPath}${approve.signature}" /></td>
 
                             </c:when>
 
@@ -327,7 +326,7 @@
                                 <td>${approve.approflag}</td>
                                 <td>${approve.dealtime}</td>
                                 <td font-family: 仿宋;color: #e074a2;background-color: white;font-weight: bold>${approve.suggest}</td>
-                                <td style="border-right: none">${approve.signature}</td>
+                                <td style="border-right: none;border-right: none">${approve.signature}</td>
 
                             </c:when>
 

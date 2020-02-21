@@ -7,17 +7,21 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 
 <head>
 
     <title>滤芯计划审批页面</title>
 
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/xcConfirm.css">
+
     <script language="JavaScript" type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.ztree.core-3.5.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.pagination.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/WdatePicker.js"></script>
     <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/jquery.cookie.js" ></script>
+    <script type="text/javascript" language="JavaScript" src="${pageContext.request.contextPath}/js/xcConfirm.js"></script>
 
     <script type="text/javascript" language="JavaScript">
 
@@ -31,7 +35,6 @@
                 var suggest=$(".suggestval").val().trim();
 
                 //发送ajax请求后台服务器
-
                 $.ajax({
                     url:"${pageContext.request.contextPath}/approbackflowinfobyuser.do",
                     type:"post",
@@ -40,44 +43,7 @@
                     dataType:"json",
                     success:function(data) {
 
-
-
-                    }
-
-
-                });
-
-
-            });
-
-            //同意了
-            $(document).on('click','.agree',function() {
-
-                var flowinfosid=$(".flowinfoid").text();
-
-                var suggest=$(".suggestval").val().trim();
-
-                var    str    =    window.prompt("请输入密码","");
-
-                alert(str);
-
-                //发送ajax请求后台服务器
-             /*   $.ajax({
-                    url:"${pageContext.request.contextPath}/agreeflowinfobyuser.do",
-                    type:"post",
-                    beforeSend: function (){
-
-                        $(".suggestval").after("<div class='load'><img src='${pageContext.request.contextPath}/picture/load.gif' /></div>");
-
-                    },
-                    async:true,
-                    data:{"flowinfos.flowinfoid":flowinfosid,"suggest":suggest,"approflag":"1"},
-                    dataType:"json",
-                    success:function(data) {
-
-                        $(".load").remove();
-
-                        if(data=='1') {//关闭当前页
+                        if(data=='1') {
 
                             var userAgent = navigator.userAgent;
                             if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
@@ -89,14 +55,127 @@
 
                             window.close();
 
+                        }else {
+
+                            alert("操作失败!");
+
                         }
 
-                    },
-                    error:function () { //请求数据失败
-                        alert("服务器繁忙!");
+
                     }
 
-                }); */
+
+                });
+
+            });
+
+            //同意了
+            $(document).on('click','.agree',function() {
+
+                var flowinfosid=$(".flowinfoid").text();
+
+                var suggest=$(".suggestval").val().trim();
+
+                var txt=  "请输入密码";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.input,{
+                    onOk:function(v){
+
+                        if(v.trim()=='') {
+
+                            alert("密码不能为空!");
+
+                        }else {
+
+                            var username=$(".username").text().trim();
+
+                            var password=v;
+
+                            var res='';
+
+                            //发送ajax校验密码的合法性
+
+                            $.ajax({
+
+                                url:"${pageContext.request.contextPath}/login1.do",
+                                type:"post",
+                                async:false,
+                                data:{"username":username,"password":password},
+                                dataType:"json",
+                                success:function(data) {
+
+                                    if(data=='loginsuccess') {//登录成功了
+
+                                        res='1';
+
+                                    }else {//登录失败了
+
+                                        res='0';
+
+                                    }
+
+                                }
+
+
+                            });
+
+                            if(res=='1') {
+
+                                //发送ajax请求后台服务器
+                                //发送ajax请求后台服务器
+                                $.ajax({
+                                    url:"${pageContext.request.contextPath}/agreeflowinfobyuser.do",
+                                    type:"post",
+                                    beforeSend: function (){
+
+                                        $(".suggestval").after("<div class='load'><img src='${pageContext.request.contextPath}/picture/load.gif' /></div>");
+
+                                    },
+                                    async:true,
+                                    data:{"flowinfos.flowinfoid":flowinfosid,"suggest":suggest,"approflag":"1"},
+                                    dataType:"json",
+                                    success:function(data) {
+
+                                        $(".load").remove();
+
+                                        if(data=='1') {//关闭当前页
+
+                                            var userAgent = navigator.userAgent;
+                                            if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                                                location.href = "about:blank";
+                                            } else {
+                                                window.opener = null;
+                                                window.open('', '_self');
+                                            }
+
+                                            window.close();
+
+                                        }
+
+                                    },
+                                    error:function () { //请求数据失败
+                                        alert("服务器繁忙!");
+                                    }
+
+                                });
+
+                            }else{
+
+                                alert("密码输入错误!");
+
+                            }
+
+                        }
+
+
+
+                    }
+                });
+
+
+            });
+
+            //测试弹窗的美化
+            $("#btn6").click(function(){
 
             });
 
@@ -244,6 +323,8 @@
 
         ::-ms-clear, ::-ms-reveal { display: none; }
 
+        .sgBtn{width: 135px; height: 35px; line-height: 35px; margin-left: 10px; margin-top: 10px; text-align: center; background-color: #0095D9; color: #FFFFFF; float: left; border-radius: 5px;}
+
     </style>
 
 </head>
@@ -251,6 +332,8 @@
 <body>
 
 <div class="top">滤芯计划审核页面</div>
+
+<div class="username" hidden="hidden">${sessionScope.get("userinfo").username}</div>
 
 <div class="mai">
 
@@ -262,7 +345,7 @@
 
         <tr>
             <td width="15%" style="border-left: none">申请单位</td>
-            <td width="20%" style="background-color: white">${filterpla.user.truename}</td>
+            <td width="20%" style="background-color: white">${filterpla.user.department.deptname}</td>
             <td width="10%">提报人</td>
             <td width="15%" style="background-color: white">${filterpla.applyperson}</td>
             <td width="10%">申请时间</td>
@@ -446,7 +529,6 @@
     </table>
 
 </div>
-
 
 <div class="ceng"></div>
 

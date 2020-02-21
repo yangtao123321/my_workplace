@@ -115,6 +115,39 @@
 
             });
 
+            $(".lookpic").click(function() {
+
+                var uid=$(".userid").text().trim();
+
+                var flowid=$(".flowid").text().trim();
+
+                var form = $("<form method='post' target='_blank'></form>");
+                form.attr({"action":"${pageContext.request.contextPath}/climpflowpicpre.do"});
+                var input1 = $("<input type='hidden'>").attr("name", "uid").val(uid);
+                var input2=$("<input type='hidden'/>").attr("name","flowid").val(flowid);
+
+                form.append(input1);
+                form.append(input2);
+                // 这步很重要，如果没有这步，则会报错无法建立连接
+                $("body").append($(form));
+                form.submit();
+
+            });
+
+            $(document).on('click','.filterclose',function() {
+
+                var userAgent = navigator.userAgent;
+                if (userAgent.indexOf("Firefox") != -1 || userAgent.indexOf("Chrome") != -1) {
+                    location.href = "about:blank";
+                } else {
+                    window.opener = null;
+                    window.open('', '_self');
+                }
+
+                window.close();
+
+            });
+
         });
 
     </script>
@@ -132,15 +165,14 @@
         .top{
 
             border: 1px solid #00acf0;
-            height: 45px;
-            text-align: center;
-            line-height: 45px;
+            height: 60px;
+
+            line-height: 60px;
 
             background-color: #00acf0;
             color: white;
             font-size: 26px;
             font-weight: bold;
-
 
         }
 
@@ -159,10 +191,11 @@
 
             position: relative;
             height: 30px;
-            font-family: "宋体";
+            font-family: "仿宋";
             line-height: 30px;
             margin-left: 5%;
             font-weight: bold;
+            font-size: 21px;
 
         }
 
@@ -181,10 +214,10 @@
 
         .apptb td,.appdetailtb td,.caigouyaoqiu td,.shigongyaoqiu td,.supplier td{
 
-            font-family: "宋体";
-            border: 1px solid #00223c;
+            font-family: "仿宋";
+            border: 1px solid #2c87c0;
             text-align: center;
-            height: 45px;
+            height: 40px;
 
         }
 
@@ -213,9 +246,9 @@
         .context{
 
             position: relative;
-            border: 1px solid #a6aca8;
+            border: 1px dashed #fc34c9;
+            text-align: center;
             margin-top: 1%;
-            text-align: left;
             font-size: 21px;
             padding:0px;
             overflow: hidden;
@@ -243,11 +276,12 @@
 
             position: relative;
             height: 30px;
-            font-family: "宋体";
+            font-family: "仿宋";
             line-height: 30px;
             margin-left: 5%;
             font-weight: bold;
             float: left;
+            font-size: 21px;
 
         }
 
@@ -257,7 +291,7 @@
             height: 30px;
             font-family: "宋体";
             line-height: 30px;
-            margin-left: 65%;
+            margin-left: 55%;
             color: #0088dd;
             font-weight: bold;
             float: left;
@@ -318,13 +352,49 @@
 
         }
 
+        .lookpic{
+
+            border: 1px solid #dfe1e5;
+
+            height: 30px;
+
+            width: 90px;
+
+            background-color: #dfe1e5;
+
+            color: #000000;
+
+            font-family: "宋体";
+
+            float: right;
+
+            margin-top: 1%;
+
+            margin-right: 5%;
+
+            cursor: pointer;
+
+        }
+
+        .title{
+
+
+            margin-left: 40%;
+
+        }
+
     </style>
 
 </head>
 
 <body>
 
-<div class="top">维修计划申请页面</div>
+<div class="top">
+
+     <span class="title">维修计划申请页面</span>
+     <input class="lookpic" type="button" value="查看流程图" />
+
+</div>
 
 <div class="mai">
 
@@ -337,22 +407,22 @@
     <table class="apptb">
 
         <tr>
-            <td width="15%">申请单位</td>
+            <td width="15%" style="border-left:1px solid #d7d9dd">申请单位</td>
             <td width="30%">${sessionScope.get("userinfo").department.deptname}</td>
             <td width="15%">提报人<span style="color: red">*</span></td>
-            <td width="30%"><input class="apperson" type="text" /></td>
+            <td width="30%" style="border-right: 1px solid #d7d9dd"><input class="apperson" type="text" /></td>
         </tr>
 
         <tr>
-            <td width="15%">摘要<span style="color: red">*</span></td>
+            <td width="15%" style="border-left: 1px solid #d7d9dd">摘要<span style="color: red">*</span></td>
             <td width="30%"><input class="abstract" type="text" /></td>
             <td width="15%">发起时间</td>
-            <td width="30%"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
+            <td width="30%" style="border-right: 1px solid #d7d9dd"><input readonly="true" class="startime" type="text" value="${requestScope.get("starttime")}" /></td>
         </tr>
 
     </table>
 
-    <div class="appdetail">施工项目现状<span style="color: red">*</span></div>
+    <div class="appdetail">设备或项目施工现状<span style="color: red">*</span></div>
 
     <div class="receive">选择接收部门</div>
 
@@ -373,8 +443,8 @@
     <table class="shigongyaoqiu">
 
         <tr>
-            <td width="10%" style="font-weight: bold">施工要求</td>
-            <td><input class="shigongyaoqiuval" type="text"  /></td>
+            <td width="10%" style="font-weight: bold;border-left: 1px solid #d7d9dd">施工要求</td>
+            <td style="border-right: 1px solid #dfe1e5"><input class="shigongyaoqiuval" type="text"  /></td>
         </tr>
 
     </table>
@@ -382,8 +452,8 @@
     <table class="supplier">
 
         <tr>
-            <td width="10%" style="font-weight: bold">施工单位</td>
-            <td><input class="supplierval" type="text"  /></td>
+            <td width="10%" style="font-weight: bold;border-left: 1px solid #dfe1e5">施工单位</td>
+            <td style="border-right: none"><input class="supplierval" type="text"  /></td>
         </tr>
 
     </table>

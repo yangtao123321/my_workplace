@@ -45,7 +45,7 @@ public class Mail {
         MimeMessage message = new MimeMessage(session);
 
         // 2. From: 发件人
-        message.setFrom(new InternetAddress(sendMail, "计划审批通过", "UTF-8"));
+        message.setFrom(new InternetAddress(sendMail, "粉针事业部BPM通知", "UTF-8"));
 
         // 3. To: 收件人（可以增加多个收件人、抄送、密送）
 /*        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveMail, "caoke", "UTF-8"));*/

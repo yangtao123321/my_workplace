@@ -309,7 +309,7 @@
         }
 
         body{
-            background-image: url(${pageContext.request.contextPath}/picture/123.jpg);
+            background-image: url(${pageContext.request.contextPath}/picture/123.png);
             background-repeat: no-repeat;
             overflow-y: hidden;
         }
@@ -419,6 +419,26 @@
 
         ::-ms-clear, ::-ms-reveal { display: none; }
 
+        .bottom{
+
+            position: relative;
+
+            height: 30px;
+
+            text-align: center;
+
+            line-height: 30px;
+
+            margin-top: 6%;
+
+            font-size: 19px;
+
+            font-family: "宋体";
+
+            font-weight: bold;
+
+        }
+
     </style>
 
 </head>
@@ -445,11 +465,9 @@
 
     <input class="button" type="button" value="登录" />
 
-
-
-
-
 </div>
+
+<div class="bottom">&copy;粉针事业部 0533-3227890 67890/66635/69606</div>
 
 </body>
 

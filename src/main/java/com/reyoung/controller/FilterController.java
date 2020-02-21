@@ -3,11 +3,14 @@ package com.reyoung.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.reyoung.model.*;
 import com.reyoung.model.filter.*;
+import com.reyoung.pager.PageBean;
 import com.reyoung.service.*;
 import com.reyoung.service.fservice.*;
 import com.reyoung.tools.GetYear;
+import com.reyoung.tools.TextMail;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -122,6 +125,106 @@ public class FilterController {
             request.setAttribute("fsuppliers",fsuppliers);
 
             return "WEB-INF/filter/FilterPage";
+
+        }
+
+    }
+
+    //跳转到滤芯采购流程申请页面 小屏幕
+    @RequestMapping("climpfilterpage1.do")
+    public String climpfilterpage1(HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("userinfo");
+
+        String s= GetYear.gettimes();
+
+        List<Section> sections = sectionService.findallsection();
+
+        List<Fname> fnames = fnameService.findallfname();
+
+        List<Fsize> fsizes = fsizeService.findallfsize();
+
+        List<Fdgree> fdgrees = fdgreeService.findallfdgree();
+
+        List<Finterface> finterfaces = finterfaceService.findallfinterface();
+
+        List<Fherpin> fherpins = fherbinService.findallfherpin();
+
+        List<Fsupplier> fsuppliers = fsupplierService.findallfsupplier();
+
+        if (user==null) {
+
+            return "login1";
+
+        }else {
+
+            request.setAttribute("starttime",s);
+
+            request.setAttribute("sections",sections);
+
+            request.setAttribute("fnames",fnames);
+
+            request.setAttribute("fsizes",fsizes);
+
+            request.setAttribute("fdgrees",fdgrees);
+
+            request.setAttribute("finterfaces",finterfaces);
+
+            request.setAttribute("fherpins",fherpins);
+
+            request.setAttribute("fsuppliers",fsuppliers);
+
+            return "WEB-INF/smallscreen/filter/FilterPage";
+
+        }
+
+    }
+
+    //跳转到滤芯采购流程申请页面 ie8
+    @RequestMapping("/climpfilterpageie8.do")
+    public String climpfilterpageie8(HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("userinfo");
+
+        String s= GetYear.gettimes();
+
+        List<Section> sections = sectionService.findallsection();
+
+        List<Fname> fnames = fnameService.findallfname();
+
+        List<Fsize> fsizes = fsizeService.findallfsize();
+
+        List<Fdgree> fdgrees = fdgreeService.findallfdgree();
+
+        List<Finterface> finterfaces = finterfaceService.findallfinterface();
+
+        List<Fherpin> fherpins = fherbinService.findallfherpin();
+
+        List<Fsupplier> fsuppliers = fsupplierService.findallfsupplier();
+
+        if (user==null) {
+
+            return "login1";
+
+        }else {
+
+            request.setAttribute("starttime",s);
+
+            request.setAttribute("sections",sections);
+
+            request.setAttribute("fnames",fnames);
+
+            request.setAttribute("fsizes",fsizes);
+
+            request.setAttribute("fdgrees",fdgrees);
+
+            request.setAttribute("finterfaces",finterfaces);
+
+            request.setAttribute("fherpins",fherpins);
+
+            request.setAttribute("fsuppliers",fsuppliers);
+
+            return "WEB-INF/IE8/filter/FilterPage";
 
         }
 
@@ -303,7 +406,7 @@ public class FilterController {
 
             return "WEB-INF/device/DeviceApprove";
 
-        }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
+        }else if (flowinfos1.getFlows().getFlowname().equals("一致性药品采购流程")) {//其它采购流程审批页面
 
             List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
 
@@ -324,6 +427,94 @@ public class FilterController {
         }
 
         return null;
+
+    }
+
+    //滤芯审批页 ie8
+    @RequestMapping("/findflowinfinfodetailbyfidie8.do")
+    public String findflowinfinfodetailbyfidie8(HttpServletRequest request,Flowinfos flowinfos) {
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
+
+        User user= (User)request.getSession().getAttribute("userinfo");
+
+        if (flowinfos1.getFlows().getFlowname().equals("滤芯采购流程")) {//滤芯采购流程审批页面
+
+            FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
+
+            //查询滤芯计划详情表 并将结果添加到filterplan中
+            filterPlan.setFilterDetails(filterDetailService.findfilterdetailbyfid(filterPlan));
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(filterPlan.getReceive());
+
+            request.setAttribute("filterpla", filterPlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/IE8/filter/FilterApprove";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("维修保养流程")) {//维修保养流程审核页面
+
+            RepairePlan repairePlan = repairePlanService.findrepairedetailbyrid(flowinfos1);
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(repairePlan.getReceive());
+
+            request.setAttribute("repaire", repairePlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/IE8/repaire/RepaireApprove";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("设备类采购流程")) {
+
+            DevicePlan devicePlan = devicePlanService.finddeviceplanbyflowinfo(flowinfos1);
+
+            devicePlan.setDeviceDetails(deviceDetailService.finddevicedetaillistbydeviceplan(devicePlan));
+
+            Section section = sectionService.findsectionbyid(devicePlan.getReceive());
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            request.setAttribute("deviceplan",devicePlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/IE8/device/DeviceApprove";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("一致性药品采购流程")) {//其它采购流程审批页面
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            OtherPlan otherPlan = otherPlanService.findotherplanbyflowinfos(flowinfos1);
+
+            otherPlan.setOtherDetails(otherDetailService.findotherdetailbyotherplan(otherPlan));
+
+            Section section = sectionService.findsectionbyid(otherPlan.getReceive());
+
+            request.setAttribute("otherplan",otherPlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/IE8/other/OtherApprove";
+
+        }
+
+        return null;
+
 
     }
 
@@ -370,6 +561,94 @@ public class FilterController {
 
             request.setAttribute("appro",approves);
 
+            return "WEB-INF/IE8/repaire/RepaireDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("设备类采购流程")) {
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            DevicePlan devicePlan = devicePlanService.finddeviceplanbyflowinfo(flowinfos1);
+
+            devicePlan.setDeviceDetails(deviceDetailService.finddevicedetaillistbydeviceplan(devicePlan));
+
+            Section section = sectionService.findsectionbyid(devicePlan.getReceive());
+
+            request.setAttribute("deviceplan",devicePlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/device/DeviceDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("一致性药品采购流程")) {//其它采购流程审批页面
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            OtherPlan otherPlan = otherPlanService.findotherplanbyflowinfos(flowinfos1);
+
+            otherPlan.setOtherDetails(otherDetailService.findotherdetailbyotherplan(otherPlan));
+
+            Section section = sectionService.findsectionbyid(otherPlan.getReceive());
+
+
+            request.setAttribute("otherplan",otherPlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/other/OtherDetail";
+
+        }
+
+        return null;
+
+    }
+
+    //查看滤芯详情页 小屏幕
+    @RequestMapping("/finddetailfilterbyapply1.do")
+    public String finddetailfilterbyapply1(HttpServletRequest request,Flowinfos flowinfos) {
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
+
+        User user= (User)request.getSession().getAttribute("userinfo");
+
+        if (flowinfos1.getFlows().getFlowname().equals("滤芯采购流程")) {//滤芯采购流程审批页面
+
+            FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
+
+            //查询滤芯计划详情表 并将结果添加到filterplan中
+            filterPlan.setFilterDetails(filterDetailService.findfilterdetailbyfid(filterPlan));
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(filterPlan.getReceive());
+
+            request.setAttribute("filterpla", filterPlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/smallscreen/filter/FilterDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("维修保养流程")) {//维修保养流程审核页面
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            RepairePlan repairePlan=repairePlanService.findrepairedetailbyrid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(repairePlan.getReceive());
+
+            request.setAttribute("repaire",repairePlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
             return "WEB-INF/repaire/RepaireDetail";
 
         }else if (flowinfos1.getFlows().getFlowname().equals("设备类采购流程")) {
@@ -390,7 +669,7 @@ public class FilterController {
 
             return "WEB-INF/device/DeviceDetail";
 
-        }else if (flowinfos1.getFlows().getFlowname().equals("其他采购流程")) {//其它采购流程审批页面
+        }else if (flowinfos1.getFlows().getFlowname().equals("一致性药品采购流程")) {//其它采购流程审批页面
 
             List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
 
@@ -408,6 +687,93 @@ public class FilterController {
             request.setAttribute("appro",approves);
 
             return "WEB-INF/other/OtherDetail";
+
+        }
+
+        return null;
+
+    }
+
+    //查看滤芯详情页 ie8
+    @RequestMapping("/finddetailfilterbyapplyie8.do")
+    public String finddetailfilterbyapplyie8(HttpServletRequest request,Flowinfos flowinfos) {
+
+        Flowinfos flowinfos1 = flowinfosService.findflwoinfobyfid(flowinfos);
+
+        User user= (User)request.getSession().getAttribute("userinfo");
+
+        if (flowinfos1.getFlows().getFlowname().equals("滤芯采购流程")) {//滤芯采购流程审批页面
+
+            FilterPlan filterPlan = filterPlanService.findfilterplanbyincident(flowinfos1);
+
+            //查询滤芯计划详情表 并将结果添加到filterplan中
+            filterPlan.setFilterDetails(filterDetailService.findfilterdetailbyfid(filterPlan));
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(filterPlan.getReceive());
+
+            request.setAttribute("filterpla", filterPlan);
+
+            request.setAttribute("appro",approves);
+
+            request.setAttribute("sec",section);
+
+            return "WEB-INF/IE8/filter/FilterDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("维修保养流程")) {//维修保养流程审核页面
+
+            //根据Flowinfoid查询审批记录
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            RepairePlan repairePlan=repairePlanService.findrepairedetailbyrid(flowinfos1);
+
+            Section section = sectionService.findsectionbyid(repairePlan.getReceive());
+
+            request.setAttribute("repaire",repairePlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/IE8/repaire/RepaireDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("设备类采购流程")) {
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            DevicePlan devicePlan = devicePlanService.finddeviceplanbyflowinfo(flowinfos1);
+
+            devicePlan.setDeviceDetails(deviceDetailService.finddevicedetaillistbydeviceplan(devicePlan));
+
+            Section section = sectionService.findsectionbyid(devicePlan.getReceive());
+
+            request.setAttribute("deviceplan",devicePlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/IE8/device/DeviceDetail";
+
+        }else if (flowinfos1.getFlows().getFlowname().equals("一致性药品采购流程")) {//其它采购流程审批页面
+
+            List<Approve> approves = approveService.findapprovedlistbyflowinfoid(flowinfos1);
+
+            OtherPlan otherPlan = otherPlanService.findotherplanbyflowinfos(flowinfos1);
+
+            otherPlan.setOtherDetails(otherDetailService.findotherdetailbyotherplan(otherPlan));
+
+            Section section = sectionService.findsectionbyid(otherPlan.getReceive());
+
+            request.setAttribute("otherplan",otherPlan);
+
+            request.setAttribute("sec",section);
+
+            request.setAttribute("appro",approves);
+
+            return "WEB-INF/IE8/other/OtherDetail";
 
         }
 
@@ -433,7 +799,7 @@ public class FilterController {
 
     //审批拒绝了
     @RequestMapping("/approbackflowinfobyuser.do")
-    public @ResponseBody String approbackflowinfobyuser(HttpServletRequest request,Flowinfos flowinfos,Approve approve) {
+    public @ResponseBody String approbackflowinfobyuser(HttpServletRequest request,Approve approve) throws Exception {
 
         User user= (User) request.getSession().getAttribute("userinfo");
 
@@ -443,9 +809,23 @@ public class FilterController {
 
         approve.setFlowinfos(flowinfos1);
 
-        flowinfosService.approbackflowinfobyflowinfoid(approve);
+        Integer res = flowinfosService.approbackflowinfobyflowinfoid(approve);
 
-        return null;
+        if (res==1) {
+
+            List<String> list=new ArrayList<>();
+
+            list.add(flowinfos1.getUser().getEmail());
+
+            String subject="计划拒绝提醒";
+
+            String context= "<font face='Terminal' style='font-size:19px'><span style='color: black;'>"+flowinfos1.getUser().getTruename()+",您好。</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贵单位提报的计划 &nbsp;&nbsp;&nbsp;实例号:"+flowinfos1.getFlowinfoid()+"&nbsp;&nbsp;&nbsp;名称:<span style='color:#00a400;'>"+flowinfos1.getFlowabstract()+"</span>&nbsp;&nbsp;&nbsp;已被<span style='color: red;'>"+user.getTruename()+"</span>拒绝，原因:"+approve.getSuggest()+"<br><br>&nbsp;&nbsp;&nbsp;请关注!</font>";
+
+            TextMail.sendMail("yangtao@reyoung.com","YANGyang136164","192.168.8.3",list,"yangtao@reyoung.com",subject,context);
+
+        }
+
+        return res+"";
 
     }
 
@@ -530,7 +910,6 @@ public class FilterController {
 
                 }
 
-
                 if (!f) {
 
                     flowPic1.setName(user1.getTruename());
@@ -540,7 +919,6 @@ public class FilterController {
                     flowPics.add(flowPic1);
 
                 }
-
 
             }
 
@@ -688,14 +1066,125 @@ public class FilterController {
 
     }
 
-
     //查看流程图,生成流程信息前
     @RequestMapping("/climpflowpicpre.do")
-    public @ResponseBody String climpflowpicpre(HttpServletRequest request,Integer uid,Integer flowid) {
+    public String climpflowpicpre(HttpServletRequest request,Integer uid,Integer flowid) {
 
-        System.out.println(uid+"***"+flowid);
+        if (uid==null&&flowid==null) {
 
-        return null;
+            request.setAttribute("flowp","fails");
+
+        }else {
+
+            List<FlowPic> flowPics=new ArrayList<>();//用于存放审批人的姓名
+
+            //查询部门经理
+            User user = userService.findepartmanager();
+
+            FlowPic flowPic=new FlowPic();
+
+            if (user!=null) {
+
+                flowPic.setName(user.getTruename());
+
+                flowPics.add(flowPic);
+
+            }
+
+            if (flowid==1) {//滤芯计划
+
+                //查询文件小组负责人
+                User user1 = userService.findwenjianfuzeren();
+
+                FlowPic flowPic1=new FlowPic();
+
+                if (user1!=null) {
+
+                    flowPic1.setName(user1.getTruename());
+
+                    flowPics.add(flowPic1);
+
+                }
+
+            }
+
+            //查询单位负责人
+
+            User user1 = userService.finduserbyuid(uid);
+            List<User> users = userService.findunitbyuser(user1);
+            if (users!=null&&users.size()>0) {
+
+                FlowPic flowPic3=new FlowPic();
+
+                flowPic3.setName(users.get(0).getTruename());
+
+                flowPics.add(flowPic3);
+
+            }
+
+            FlowPic flowPic5=new FlowPic();
+            flowPic5.setName(user1.getTruename());
+
+            flowPics.add(flowPic5);
+
+            //对集合惊醒翻转的操作
+            Collections.reverse(flowPics);
+
+            request.setAttribute("flowp",flowPics);
+
+
+
+        }
+
+        return "WEB-INF/Flowpic1";
+
+    }
+
+    //根据实例号查询流程的信息
+    @RequestMapping("/findflowinfobyfid.do")
+    public @ResponseBody String findflowinfobyfid(HttpServletRequest request,Flowinfos flowinfos,PageBean<Flowinfos> pageBean) {
+
+        if (pageBean.getCurrentPage()==null||pageBean.getCurrentPage()==0) {
+
+            pageBean.setCurrentPage(1);
+
+        }
+
+        if (flowinfos.getFlowinfoid()==null||flowinfos.getFlowinfoid().equals("")) {//查询所有的流程信息
+
+            pageBean.setPageSize(15);
+
+            pageBean.setTotalRecord(flowinfosService.findallflowinfocount());
+
+            pageBean.getTotalPage();
+
+            PageBean<Flowinfos> page = flowinfosService.findallflowinfolist(pageBean);
+
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+
+        }else {//查询单条流程的信息
+
+            pageBean.setPageSize(15);
+
+            Integer totalRecord= flowinfosService.findflwoinfobyfid(flowinfos)==null?0:1;
+
+            pageBean.setTotalRecord(totalRecord);
+
+            pageBean.getTotalPage();
+
+            PageBean<Flowinfos> page = flowinfosService.findflowinfosbyid(flowinfos, pageBean);
+
+            System.out.println(page);
+
+            String json = JSONObject.toJSONString(page, SerializerFeature.WriteMapNullValue);
+
+            return json;
+
+
+        }
 
     }
 

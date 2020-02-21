@@ -53,6 +53,33 @@ public class RepaireController {
 
     }
 
+    //跳转到维修计划申请页 ie8
+    @RequestMapping("/climptorepaireie8.do")
+    public String climptorepaireie8(HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("userinfo");
+
+        String s= GetYear.gettimes();
+
+        List<Section> sections = sectionService.findallsection();
+
+        if (user==null) {
+
+            return "login";
+
+        }else {
+
+            request.setAttribute("starttime",s);
+
+            request.setAttribute("sections",sections);
+
+            return "WEB-INF/IE8/repaire/RepairePage";
+
+        }
+
+    }
+
+
     //提交维修计划
     @RequestMapping("/applyrepaireplan.do")
     public @ResponseBody String applyrepaireplan(HttpServletRequest request,RepairePlan repairePlan,Flowinfos flowinfos) {

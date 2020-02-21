@@ -59,4 +59,9 @@ public class UserServiceImpl implements UserService {
         return userDao.findunitbyuser(user);
     }
 
+    @Override
+    public User finduserbyuid(Integer uid) {
+        return userDao.finduserbyuid(uid);
+    }
+
 }

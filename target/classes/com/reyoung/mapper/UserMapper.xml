@@ -154,6 +154,37 @@
 
     </select>
 
+    <select id="finduserbyuid" parameterType="java.lang.Integer" resultMap="userMap">
+
+        SELECT
+        `user`.uid,
+        `user`.username,
+        `user`.`password`,
+        `user`.truename,
+        `user`.signaturepath,
+        `user`.email,
+        department.deptid,
+        department.deptname,
+        position.posid,
+        position.posname,
+        position.approflag,
+        position.agreeflag,
+        position.backflag,
+        section.sectionid,
+        section.sectionname
+        FROM
+        `user`,
+        department,
+        section,
+        position
+        WHERE
+        position.posid = `user`.position
+        AND `user`.department = department.deptid
+        AND section.sectionid = `user`.section
+        AND `user`.uid=#{uid};
+
+    </select>
+
     <update id="updatepas" parameterType="com.reyoung.model.User">
 
         UPDATE user SET password=#{password} WHERE username=#{username};
@@ -170,7 +201,6 @@
         <result column="department" property="department.deptid" />
         <result column="signaturepath" property="signaturepath" />
         <result column="email" property="email" />
-
 
         <association property="department" javaType="com.reyoung.model.Department">
 

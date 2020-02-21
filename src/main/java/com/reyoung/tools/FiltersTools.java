@@ -331,7 +331,7 @@ public class FiltersTools {
 
             datatable.addCell(pCell);
 
-            datatable.addCell(createlvxintitlecell(f.getUser().getTruename(), 7, 1));
+            datatable.addCell(createlvxintitlecell(f.getUser().getDepartment().getDeptname(), 7, 1));
 
             datatable.addCell(createlvxintitlecell("提报日期", 1, 1));
 
